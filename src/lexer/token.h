@@ -9,18 +9,24 @@ enum token_type
     TOKEN_THEN,
     TOKEN_ELIF,
     TOKEN_ELSE,
+    TOKEN_FI,
     TOKEN_SEMIC,
     TOKEN_NEWL,
     TOKEN_SQUOTE,
-    TOKEN_WORDS,
+    TOKEN_WORD,
     TOKEN_EOF,
-    TOKEN_ERROR
+    TOKEN_ECHO
 };
 
 struct token
 {
-    enum token_type *type;
+    enum token_type type;
     struct vec *val;
 };
+
+// Create a token according to type
+struct token *token_create(enum token_type type);
+
+void token_free(struct token *token);
 
 #endif /* ! TOKEN_H */
