@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CLionExternalBuildManager">
+    <target id="19281312-28b2-434c-bfec-6c8989f64f1a" name="Meson" defaultType="TOOL">
+      <configuration id="c70b57cb-636a-41b1-b815-0ea2051b2a1b" name="Meson">
+        <build type="TOOL">
+          <tool actionId="Tool_External Tools_Ninja" />
+        </build>
+        <clean type="TOOL">
+          <tool actionId="Tool_External Tools_ninja clean" />
+        </clean>
+      </configuration>
+    </target>
+  </component>
+</project>
