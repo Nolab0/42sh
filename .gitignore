@@ -1,0 +1,24 @@
+# EDITORS
+*.swp
+*~
+\#*\#
+.\#*
+.vscode
+
+# BIN
+*.o
+*.a
+*.so
+*.d
+
+
+# TEST SUITE
+__pycache__
+*.pyc
+
+
+# BUILD
+/.pre-commit-config.yaml
+
+# NIX
+/result

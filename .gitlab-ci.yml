@@ -1,0 +1,51 @@
+---
+
+default:
+  image: registry.cri.epita.fr/cri/infrastructure/nixpie/nixos-pie
+  before_script:
+    - mkdir -p /tmp /var/tmp
+    - meson setup -Ddoc=true builddir
+
+stages:
+  - build
+  - test
+  - qa
+  - doc
+
+build:
+  stage: build
+  script:
+    - meson compile -C builddir
+  artifacts:
+    paths:
+      - builddir/42sh
+    expose_as: 42sh
+
+test:
+  stage: test
+  dependencies:
+    - build
+  script:
+    - tests/run_tests builddir/42sh
+
+clang-format:
+  stage: qa
+  needs: []
+  before_script: []
+  script:
+    - find . -type f -name '*.[ch]' -exec clang-format --style=file -i {} ';'
+    - git diff --exit-code > diff
+  artifacts:
+    paths:
+      - diff
+    expose_as: clang-format diff
+
+doc:
+  stage: doc
+  needs: []
+  script:
+    - meson compile -C builddir doxygen_doc
+  artifacts:
+    paths:
+      - builddir/doxygen_doc
+    expose_as: documentation

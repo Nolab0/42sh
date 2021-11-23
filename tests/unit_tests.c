@@ -12,5 +12,6 @@ Test(FirstTest, coucou)
 {
     redirect_stdout();
     print_coucou();
+    fflush(stdout);
     cr_assert_stdout_eq_str("coucou\n");
 }
