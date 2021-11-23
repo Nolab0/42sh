@@ -53,6 +53,7 @@ bin = executable(
 
 tmp = executable(
     'tests',
+    #add all files needed for unit test here
     files('src/test.c', 'tests/unit_tests.c'),
     include_directories: 'src',
     install: true,
@@ -63,7 +64,8 @@ tmp = executable(
 run_tests = meson.source_root() / 'tests/run_tests'
 custom_target(
     'check',
-    command: [run_tests, bin] + get_option('check_args'),
+    #command: [run_tests, bin] + get_option('check_args'),
+    command: [tmp],
     # give the testsuite exclusive access to the terminal, which enables
     # pretty colors and live testsuite results (meson buffers it all otherwise)
     console: true,
