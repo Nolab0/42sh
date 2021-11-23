@@ -36,7 +36,6 @@ add_project_arguments(cflags, language: 'c')
 all_sources = []
 subdir('src')
 
-
 # find readline, which some of the modules below link with
 cc = meson.get_compiler('c')
 readline_dep = cc.find_library('readline', required: true)
