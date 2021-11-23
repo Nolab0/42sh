@@ -12,7 +12,6 @@ enum token_type
     TOKEN_FI,
     TOKEN_SEMIC,
     TOKEN_NEWL,
-    TOKEN_SQUOTE,
     TOKEN_WORD,
     TOKEN_EOF,
     TOKEN_ECHO
@@ -21,7 +20,7 @@ enum token_type
 struct token
 {
     enum token_type type;
-    struct vec *val;
+    char *value;
 };
 
 // Create a token according to type

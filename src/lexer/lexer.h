@@ -5,9 +5,17 @@
 
 #include "token.h"
 
+// Possible state of the lexer
+enum state
+{
+    DEFAULT,
+    SQUOTES
+};
+
 struct lexer
 {
     char *input;
+    enum state state;
     size_t pos;
     struct token *current_tok;
 };
