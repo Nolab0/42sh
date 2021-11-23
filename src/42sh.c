@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <utils/vec.h>
+#include <parser/parser.h>
 
 /**
  * \brief Parse the command line arguments
@@ -40,7 +41,7 @@ static struct cstream *parse_args(int argc, char *argv[])
  * \brief Read and print lines on newlines until EOF
  * \return An error code
  */
-enum error read_print_loop(struct cstream *cs, struct vec *line)
+enum error read_print_loop(struct cstream *cs, struct vec *line, struct parser *parser)
 {
     enum error err;
 
@@ -59,6 +60,12 @@ enum error read_print_loop(struct cstream *cs, struct vec *line)
         if (c == '\n')
         {
             printf(">> line data: %s\n", vec_cstring(line));
+            parser->lexer = lexer_create(line);
+            enum state state = parsing(parser);
+            if (state != PARSER_OK)
+                return PARSER_ERROR;
+            pretty_print(parser->ast);
+
             vec_reset(line);
             continue;
         }
@@ -86,8 +93,10 @@ int main(int argc, char *argv[])
     struct vec line;
     vec_init(&line);
 
+
+    struct parser *parser = create_parser();
     // Run the test loop
-    if (read_print_loop(cs, &line) != NO_ERROR)
+    if (read_print_loop(cs, &line, parser) != NO_ERROR)
     {
         rc = 1;
         goto err_loop;

@@ -49,3 +49,15 @@ char *vec_cstring(struct vec *vec)
         vec_push(vec, '\0');
     return vec->data;
 }
+
+void vec_concat(struct vec *vec, struct vec *vec2)
+{
+    vec->size--;
+    for (size_t i = 0; i < vec2->size; i++)
+    {
+        vec_push(vec, vec2->data[i]);
+    }
+    vec_cstring(vec);
+    vec_reset(vec2);
+    vec_destroy(vec2);
+}
