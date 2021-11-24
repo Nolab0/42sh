@@ -5,15 +5,15 @@
 #include <lexer/lexer.h>
 #include <lexer/token.h>
 #include <stddef.h>
-#include <utils/vec.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
+#include <utils/vec.h>
 
 enum parser_state parse_else_clause(struct parser *parser, struct ast **ast);
 enum parser_state parse_elif(struct parser *parser, struct ast **ast);
 
 static enum parser_state handle_parse_error(enum parser_state state,
-                                             struct parser *parser)
+                                            struct parser *parser)
 {
     warnx("unexpected token");
     ast_free(parser->ast);
@@ -36,7 +36,8 @@ struct parser *create_parser()
     return parser;
 }
 
-static enum parser_state parse_simple_command(struct parser *parser, struct ast **ast)
+static enum parser_state parse_simple_command(struct parser *parser,
+                                              struct ast **ast)
 {
     struct ast *new = create_ast(AST_CMD);
     enum token_type tok_type = lexer_peek(parser->lexer)->type;
@@ -75,7 +76,8 @@ static enum parser_state parse_and_or(struct parser *parser, struct ast **ast)
     return parse_simple_command(parser, ast);
 }
 
-static enum parser_state parse_compound_list(struct parser *parser, struct ast **ast)
+static enum parser_state parse_compound_list(struct parser *parser,
+                                             struct ast **ast)
 {
     struct token *tok;
     while ((tok = lexer_peek(parser->lexer))->type == TOKEN_NEWL)
@@ -209,11 +211,11 @@ static enum parser_state parse_rule_if(struct parser *parser, struct ast **ast)
     return PARSER_OK;
 }
 
-static enum parser_state parse_shell_command(struct parser *parser, struct ast **ast)
+static enum parser_state parse_shell_command(struct parser *parser,
+                                             struct ast **ast)
 {
     return parse_rule_if(parser, ast);
 }
-
 
 static enum parser_state parse_command(struct parser *parser, struct ast **ast)
 {
@@ -253,7 +255,6 @@ static enum parser_state parse_list(struct parser *parser, struct ast **ast)
 
 static enum parser_state parse_input(struct parser *parser, struct ast **ast)
 {
-
     struct token *tok = lexer_peek(parser->lexer);
 
     if (tok->type == TOKEN_EOF)

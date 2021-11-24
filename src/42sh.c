@@ -1,10 +1,10 @@
 #include <err.h>
 #include <io/cstream.h>
+#include <parser/parser.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <utils/vec.h>
-#include <parser/parser.h>
 
 /**
  * \brief Parse the command line arguments
@@ -12,7 +12,6 @@
  */
 static struct cstream *parse_args(int argc, char *argv[])
 {
-
     // If launched without argument, read the standard input
     if (argc == 1)
     {
@@ -42,7 +41,8 @@ static struct cstream *parse_args(int argc, char *argv[])
  * \brief Read and print lines on newlines until EOF
  * \return An error code
  */
-enum error read_print_loop(struct cstream *cs, struct vec *line, struct parser *parser)
+enum error read_print_loop(struct cstream *cs, struct vec *line,
+                           struct parser *parser)
 {
     enum error err;
     struct vec *final = NULL;
@@ -95,7 +95,6 @@ int main(int argc, char *argv[])
 
     // Create a vector to hold the current line
     struct vec *line = vec_init();
-
 
     struct parser *parser = create_parser();
     // Run the test loop

@@ -3,8 +3,8 @@
 #include <ctype.h>
 #include <err.h>
 #include <stddef.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 #include <utils/alloc.h>
 #include <utils/vec.h>
 
@@ -25,8 +25,11 @@ static int is_separator(char c)
 
 static int match_token(char *str, int quote)
 {
-    char *names[SIZE] = { "if", "then", "else", "elif", "fi", ";", "\n", "echo" };
-    int types[SIZE] = { TOKEN_IF, TOKEN_THEN, TOKEN_ELSE, TOKEN_ELIF, TOKEN_FI, TOKEN_SEMIC, TOKEN_NEWL, TOKEN_ECHO };
+    char *names[SIZE] = {
+        "if", "then", "else", "elif", "fi", ";", "\n", "echo"
+    };
+    int types[SIZE] = { TOKEN_IF, TOKEN_THEN,  TOKEN_ELSE, TOKEN_ELIF,
+                        TOKEN_FI, TOKEN_SEMIC, TOKEN_NEWL, TOKEN_ECHO };
     for (size_t i = 0; i < SIZE; i++)
     {
         if (strcmp(str, names[i]) == 0)

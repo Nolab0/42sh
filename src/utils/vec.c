@@ -1,6 +1,6 @@
+#include <stdio.h>
 #include <utils/alloc.h>
 #include <utils/vec.h>
-#include <stdio.h>
 
 struct vec *vec_init(void)
 {
