@@ -3,6 +3,10 @@
 
 #include <utils/vec.h>
 
+/**
+ * \brief possible types for a token
+ * All commands are after TOKEN_ECHO
+ */
 enum token_type
 {
     TOKEN_IF,
@@ -17,6 +21,9 @@ enum token_type
     TOKEN_ECHO
 };
 
+/**
+ * \brief Structure for a token
+ */
 struct token
 {
     enum token_type type;

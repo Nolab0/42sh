@@ -13,7 +13,7 @@ struct vec
 };
 
 /** Initialize a new vector */
-void vec_init(struct vec *vec);
+struct vec *vec_init(void);
 
 /** Releases the memory allocated for the vector */
 void vec_destroy(struct vec *vec);
