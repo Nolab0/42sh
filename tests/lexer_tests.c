@@ -89,7 +89,7 @@ Test(LexerSuite, SquoteHard)
 {
     redirect_stdout();
     char input[] = "'echo'";
-    char expected[] = "78";
+    char expected[] = "98";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -107,7 +107,7 @@ Test(LexerSuite, wordValue)
 Test(LexerSuite, echoNonAlphanum)
 {
     redirect_stdout();
-    char input[] = "echo $";
+    char input[] = "echo !!";
     char expected[] = "978";
     print_tokens(input);
     fflush(NULL);
@@ -119,6 +119,76 @@ Test(LexerSuite, echo_quote)
     redirect_stdout();
     char input[] = "echo'lol'";
     char expected[] = "78";
+    print_tokens(input);
+    fflush(NULL);
+    cr_assert_stdout_eq_str(expected);
+}
+
+Test(LexerSuite, contextTest)
+{
+    redirect_stdout();
+    char input[] = "echo lol 'ife'";
+    char expected[] = "9778";
+    print_tokens(input);
+    fflush(NULL);
+    cr_assert_stdout_eq_str(expected);
+}
+
+Test(LexerSuite, echoPlusPlus)
+{
+    redirect_stdout();
+    char input[] = "echo++";
+    char expected[] = "78";
+    print_tokens(input);
+    fflush(NULL);
+    cr_assert_stdout_eq_str(expected);
+}
+
+Test(LexerSuite, lolQuotes)
+{
+    redirect_stdout();
+    char input[] = "echo 'lo;l'";
+    char expected[] = "978";
+    print_tokens(input);
+    fflush(NULL);
+    cr_assert_stdout_eq_str(expected);
+}
+
+Test(LexerSuite, echolol)
+{
+    redirect_stdout();
+    char input[] = "echo lo;l";
+    char expected[] = "97578";
+    print_tokens(input);
+    fflush(NULL);
+    cr_assert_stdout_eq_str(expected);
+}
+
+Test(LexerSuite, ifQuoted)
+{
+    redirect_stdout();
+    char input[] = "'if'";
+    char expected[] = "78";
+    print_tokens(input);
+    fflush(NULL);
+    cr_assert_stdout_eq_str(expected);
+}
+
+Test(LexerSuite, echoLolQuoted)
+{
+    redirect_stdout();
+    char input[] = "echo'lol'";
+    char expected[] = "echolol";
+    struct lexer *lexer = lexer_create(input);
+    cr_assert_str_eq(expected, lexer->current_tok->value);
+    lexer_free(lexer);
+}
+
+Test(LexerSuite, echoCmdQuoted)
+{
+    redirect_stdout();
+    char input[] = "'echo' popo";
+    char expected[] = "978";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);

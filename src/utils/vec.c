@@ -1,10 +1,13 @@
+#include <utils/alloc.h>
 #include <utils/vec.h>
 
-void vec_init(struct vec *vec)
+struct vec *vec_init(void)
 {
+    struct vec *vec = xmalloc(sizeof(struct vec));
     vec->data = NULL;
     vec->size = 0;
     vec->capacity = 0;
+    return vec;
 }
 
 void vec_destroy(struct vec *vec)

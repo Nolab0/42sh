@@ -5,6 +5,7 @@
 
 /**
  * \brief possible types for a token
+ * All commands are after TOKEN_ECHO
  */
 enum token_type
 {
