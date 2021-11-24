@@ -17,6 +17,7 @@ struct ast
 {
     enum ast_type type;
     struct vec *val;
+    struct ast *cond;
     struct ast *left;
     struct ast *right;
 };

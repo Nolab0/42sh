@@ -1,4 +1,5 @@
 #include <utils/vec.h>
+#include <stdio.h>
 
 void vec_init(struct vec *vec)
 {
@@ -60,4 +61,10 @@ void vec_concat(struct vec *vec, struct vec *vec2)
     vec_cstring(vec);
     vec_reset(vec2);
     vec_destroy(vec2);
+}
+
+void vec_print(struct vec *vec)
+{
+    for (size_t i = 0; i < vec->size; i++)
+        printf("%c", vec->data[i]);
 }
