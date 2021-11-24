@@ -5,13 +5,18 @@
 
 #include "token.h"
 
-// Possible state of the lexer
+/**
+ * \brief Possible states of the lexer.
+ */
 enum state
 {
     DEFAULT,
     SQUOTES
 };
 
+/**
+ * \brief Stucture for lexer.
+ */
 struct lexer
 {
     char *input;
@@ -20,16 +25,31 @@ struct lexer
     struct token *current_tok;
 };
 
-// Create a new lexer with input
+/**
+ * \brief Create and initialize a new lexer
+ * The new lexer is initilialized as follow:
+ * - input: the input string
+ * - state: DEFAULT
+ * - pos: 0
+ * - current_tok: the first token
+ * */
 struct lexer *lexer_create(char *input);
 
-// Free the lexer but not the input
+/**
+ * \brief Free the lexer structure.
+ * */
 void lexer_free(struct lexer *lexer);
 
-// Return the next token without going forward in the input
+/**
+ * \brief Return the current token without going forward in the input.
+ * Multiple calls to lexer_peek will return the same token.
+ * */
 struct token *lexer_peek(struct lexer *lexer);
 
-// Return the next token, removes it from input and update cur_tok
+/**
+ * \brief Return the current token and go forward in the input.
+ * Save the next token in lexer->current_tok
+ * */
 struct token *lexer_pop(struct lexer *lexer);
 
 #endif /* ! LEXER_H */
