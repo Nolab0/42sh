@@ -103,3 +103,23 @@ Test(LexerSuite, wordValue)
     cr_assert_str_eq(expected, lexer->current_tok->value);
     lexer_free(lexer);
 }
+
+Test(LexerSuite, echoNonAlphanum)
+{
+    redirect_stdout();
+    char input[] = "echo $";
+    char expected[] = "978";
+    print_tokens(input);
+    fflush(NULL);
+    cr_assert_stdout_eq_str(expected);
+}
+
+Test(LexerSuite, echo_quote)
+{
+    redirect_stdout();
+    char input[] = "echo'lol'";
+    char expected[] = "78";
+    print_tokens(input);
+    fflush(NULL);
+    cr_assert_stdout_eq_str(expected);
+}
