@@ -94,18 +94,18 @@ int main(int argc, char *argv[])
         return 1;
 
     // Create a vector to hold the current line
-    struct vec line;
-    vec_init(&line);
+    struct vec *line = vec_init();
 
 
     struct parser *parser = create_parser();
     // Run the test loop
-    if (read_print_loop(cs, &line, parser) != NO_ERROR)
+    if (read_print_loop(cs, line, parser) != NO_ERROR)
     {
         rc = 1;
-        vec_destroy(&line);
+        vec_destroy(line);
     }
 
+    free(line);
     cstream_free(cs);
     free(cs);
     parser_free(parser);
