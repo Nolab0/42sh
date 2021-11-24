@@ -4,10 +4,11 @@
 #include <ast/ast.h>
 #include <lexer/lexer.h>
 
-enum state
+enum parser_state
 {
     PARSER_OK,
     PARSER_PANIC,
+    PARSER_ABSENT
 };
 
 struct parser
@@ -16,8 +17,10 @@ struct parser
     struct lexer *lexer;
 };
 
-enum state parsing(struct parser *parser);
+enum parser_state parsing(struct parser *parser);
 
 struct parser *create_parser();
+
+void parser_free(struct parser *parser);
 
 #endif /* ! PARSER_H */

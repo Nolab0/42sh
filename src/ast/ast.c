@@ -17,43 +17,67 @@ struct ast *create_ast(enum ast_type type)
     return new;
 }
 
-void pretty_print(struct ast *ast)
+void ast_free(struct ast *ast)
 {
     if (!ast)
         return;
-    if (ast->type == AST_CMD)
+
+    if (ast->val)
+    {
+        free(ast->val->data);
+        free(ast->val);
+    }
+    ast_free(ast->cond);
+    ast_free(ast->left);
+    ast_free(ast->right);
+    free(ast);
+}
+
+static void pretty_rec(struct ast *ast)
+{
+    if (!ast)
+        return;
+    if (ast->type == AST_ROOT)
+    {
+        pretty_rec(ast->left);
+        pretty_rec(ast->right);
+    }
+    else if (ast->type == AST_CMD)
     {
         printf("command \"");
         vec_print(ast->val);
         printf("\" ");
-        pretty_print(ast->left);
+        pretty_rec(ast->left);
     }
-    if (ast->type == AST_IF)
+    else if (ast->type == AST_IF || ast->type == AST_ELIF)
     {
-        printf("if { ");
-        pretty_print(ast->cond);
-        printf("};");
-        pretty_print(ast->left);
-        pretty_print(ast->right);
+        if (ast->type == AST_IF)
+            printf("if { ");
+        else
+            printf("elif { ");
+        pretty_rec(ast->cond);
+        printf("}; ");
+        pretty_rec(ast->left);
+        pretty_rec(ast->right);
     }
-    if (ast->type == AST_ELIF)
-    {
-        printf("elif { ");
-        pretty_print(ast->cond);
-        printf("};");
-        pretty_print(ast->left);
-        pretty_print(ast->right);
-    }
-    if (ast->type == AST_THEN)
+    else if (ast->type == AST_THEN)
     {
         printf("then { ");
-        pretty_print(ast->left);
-        printf("}");
+        pretty_rec(ast->left);
+        printf("} ");
     }
-    if (ast->type == AST_ELSE)
+    else if (ast->type == AST_ELSE)
     {
         printf("else { ");
-        pretty_print(ast->left);
-        printf("}");
+        pretty_rec(ast->left);
+        printf("} ");
     }
+    else
+        printf("pretty-print : Unknown node type\n");
+}
+
+void pretty_print(struct ast *ast)
+{
+    pretty_rec(ast);
+    printf("\n");
 }

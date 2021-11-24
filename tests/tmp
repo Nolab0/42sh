@@ -1,0 +1,8 @@
+if true; then
+echo true; echo salut
+echo felfew
+fi
+echo sss
+if true; then
+echo 2eme
+fi

@@ -27,4 +27,6 @@ void vec_push(struct vec *vec, char c);
 /** Ensures the array has a NUL byte at the end, and returns it */
 char *vec_cstring(struct vec *vec);
 
+struct vec *vec_concat(struct vec *vec, struct vec *vec2);
+
 void vec_print(struct vec *vec);

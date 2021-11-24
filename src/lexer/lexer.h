@@ -6,7 +6,7 @@
 #include "token.h"
 
 // Possible state of the lexer
-enum state
+enum lexer_state
 {
     DEFAULT,
     SQUOTES
@@ -15,7 +15,7 @@ enum state
 struct lexer
 {
     char *input;
-    enum state state;
+    enum lexer_state state;
     size_t pos;
     struct token *current_tok;
 };

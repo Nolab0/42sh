@@ -12,6 +12,7 @@
  */
 static struct cstream *parse_args(int argc, char *argv[])
 {
+
     // If launched without argument, read the standard input
     if (argc == 1)
     {
@@ -44,6 +45,7 @@ static struct cstream *parse_args(int argc, char *argv[])
 enum error read_print_loop(struct cstream *cs, struct vec *line, struct parser *parser)
 {
     enum error err;
+    struct vec *final = NULL;
 
     while (true)
     {
@@ -59,13 +61,10 @@ enum error read_print_loop(struct cstream *cs, struct vec *line, struct parser *
         // If a newline was met, print the line
         if (c == '\n')
         {
-            printf(">> line data: %s\n", vec_cstring(line));
-            parser->lexer = lexer_create(line);
-            enum state state = parsing(parser);
-            if (state != PARSER_OK)
-                return PARSER_ERROR;
-            pretty_print(parser->ast);
-
+            final = vec_concat(final, line);
+            final->size--;
+            vec_push(final, '\n');
+            vec_push(final, '\0');
             vec_reset(line);
             continue;
         }
@@ -73,21 +72,26 @@ enum error read_print_loop(struct cstream *cs, struct vec *line, struct parser *
         // Otherwise, add the character to the line
         vec_push(line, c);
     }
+    vec_destroy(line);
 
+    parser->lexer = lexer_create(vec_cstring(final));
+    enum parser_state state = parsing(parser);
+    if (state != PARSER_OK)
+        return PARSER_ERROR;
+    pretty_print(parser->ast);
+    vec_destroy(final);
+    free(final);
     return NO_ERROR;
 }
 
 int main(int argc, char *argv[])
 {
-    int rc;
+    int rc = 0;
 
     // Parse command line arguments and get an input stream
     struct cstream *cs;
     if ((cs = parse_args(argc, argv)) == NULL)
-    {
-        rc = 1;
-        goto err_parse_args;
-    }
+        return 1;
 
     // Create a vector to hold the current line
     struct vec line;
@@ -99,15 +103,11 @@ int main(int argc, char *argv[])
     if (read_print_loop(cs, &line, parser) != NO_ERROR)
     {
         rc = 1;
-        goto err_loop;
+        vec_destroy(&line);
     }
 
-    // Success
-    rc = 0;
-
-err_loop:
     cstream_free(cs);
-    vec_destroy(&line);
-err_parse_args:
+    free(cs);
+    parser_free(parser);
     return rc;
 }

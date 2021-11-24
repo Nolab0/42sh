@@ -8,7 +8,7 @@
 
 #define SIZE 8
 
-enum state state = DEFAULT; // Save the current state of the Lexer
+enum lexer_state state = DEFAULT; // Save the current state of the Lexer
 
 static int is_space(char c)
 {
@@ -43,7 +43,7 @@ static struct token *get_token(struct lexer *lexer)
     {
         if (state == DEFAULT)
             state = SQUOTES;
-        else 
+        else
             state = DEFAULT;
         ++pos;
     }

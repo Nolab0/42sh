@@ -3,6 +3,7 @@
 
 enum ast_type
 {
+    AST_ROOT,
     AST_IF,
     AST_THEN,
     AST_ELIF,
@@ -23,6 +24,8 @@ struct ast
 };
 
 struct ast *create_ast(enum ast_type type);
+
+void ast_free(struct ast *ast);
 
 void pretty_print(struct ast *ast);
 
