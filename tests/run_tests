@@ -8,7 +8,6 @@ fi
 
 echo Lexer tests
 ./tests
-./echo_tests
 
 cd ../tests
 ./tests.sh
