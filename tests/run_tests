@@ -1,6 +1,5 @@
 #!/bin/sh
 
-#cd ../tests
 echo Lexer tests
-cd ..
 ./builddir/tests
+./tests/tests.sh

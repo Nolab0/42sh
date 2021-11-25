@@ -64,7 +64,7 @@ run_tests = meson.source_root() / 'tests/run_tests'
 custom_target(
     'check',
     #command: [run_tests, bin] + get_option('check_args'),
-    command: [lexer_tests],
+    command: [run_tests],
     # give the testsuite exclusive access to the terminal, which enables
     # pretty colors and live testsuite results (meson buffers it all otherwise)
     console: true,
