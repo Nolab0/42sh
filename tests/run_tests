@@ -1,7 +1,6 @@
 #!/bin/sh
 
-cd ../tests
-echo Parser suite:
-./tests.sh
+#cd ../tests
+echo Lexer tests
 cd ..
 ./builddir/tests
