@@ -45,16 +45,21 @@ static int match_token(char *str, int quote)
 /**
  * \brief: Fill the vector with the content between quotes.
  * If no matching quotes find, throw an warning
+ * @return value: -1 in case of lexing error
+ *                 0 otherwise
  */
-static void handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
+static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
 {
     lexer->pos++; // skip opening quote
     while (lexer->pos < len && lexer->input[lexer->pos] != '\'')
         vec_push(vec, lexer->input[lexer->pos++]);
     if (lexer->pos == len)
-        errx(42, "Syntax error: Unterminated quoted string");
-    else
-        lexer->pos++; // skip closing quote
+    {
+        fprintf(stderr, "Syntax error: Unterminated quoted string\n");
+        return -1;
+    }
+    lexer->pos++; // skip closing quote
+    return 0;
 }
 
 /**
@@ -62,6 +67,7 @@ static void handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
  * A substring is eneded by a separator.
  * @param len: lenght of lexer->input
  * @return value: return wether the lexed word is quoted.
+ *                -1 if lexing error
  */
 static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
 {
@@ -73,7 +79,9 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
         if (current == '\'')
         {
             quote = 1;
-            handle_quotes(lexer, vec, len);
+            int error = handle_quotes(lexer, vec, len);
+            if (error == -1)
+                return -1;
         }
         else
         {
@@ -100,9 +108,15 @@ struct token *get_token(struct lexer *lexer)
         return token_create(TOKEN_EOF);
     struct vec *vec = vec_init();
     int quote = get_substr(lexer, vec, input_len);
-    char *sub_str = vec_cstring(vec);
-    struct token *tok = token_create(match_token(sub_str, quote));
-    tok->value = strdup(sub_str);
+    struct token *tok = NULL;
+    if (quote == -1)
+        tok = token_create(TOKEN_ERROR);
+    else
+    {
+        char *sub_str = vec_cstring(vec);
+        tok = token_create(match_token(sub_str, quote));
+        tok->value = strdup(sub_str);
+    }
     vec_destroy(vec);
     free(vec);
     return tok;

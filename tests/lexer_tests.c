@@ -192,3 +192,13 @@ Test(LexerSuite, echoCmdQuoted)
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
 }
+
+Test(LexerSuite, errorToken)
+{
+    redirect_stdout();
+    char input[] = "echo 'not finished quotes";
+    char expected[] = "9108";
+    print_tokens(input);
+    fflush(NULL);
+    cr_assert_stdout_eq_str(expected);
+}
