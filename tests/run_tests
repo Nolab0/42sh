@@ -11,5 +11,4 @@ echo Lexer tests
 ./echo_tests
 
 cd ../tests
-./parser_tests.sh
-./exec_tests.sh
+./tests.sh

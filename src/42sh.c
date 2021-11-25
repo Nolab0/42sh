@@ -29,11 +29,15 @@ static struct opts *parse_opts(int argc, char **argv)
             opts->c = 1;
             opts->input = optarg;
             break;
+        case '?':
+            fprintf(stderr, "Usage: %s [OPTIONS] [SCRIPTS] [ARGUMENTS ...]\n", argv[0]);
+            free(opts);
+            return NULL;
         default:
-            fprintf(stderr, "Usage: %s [OPTS] [COMMAND]\n", argv[0]);
             break;
         }
     }
+    opts->optind = optind;
     return opts;
 }
 
@@ -44,22 +48,23 @@ static struct opts *parse_opts(int argc, char **argv)
 static struct cstream *parse_args(int argc, char *argv[], struct opts **opts)
 {
     // If launched without argument, read the standard input
-    if (argc == 1)
+    *opts = parse_opts(argc, argv);
+    if (!(*opts))
+        return NULL;
+    if (argc == 1 || (argc == 2 && (*opts)->p))
     {
         if (isatty(STDIN_FILENO))
             return cstream_readline_create();
         return cstream_file_create(stdin, /* fclose_on_free */ false);
     }
-    else
-        *opts = parse_opts(argc, argv);
 
     // 42sh FILENAME
-    if (argc == 2 && (*opts)->p == 0)
+    if ((argc == 2 && !(*opts)->p) || (argc == 3 && (*opts)->p))
     {
-        FILE *fp = fopen(argv[1], "r");
+        FILE *fp = fopen(argv[(*opts)->optind], "r");
         if (fp == NULL)
         {
-            warn("failed to open input filesfok");
+            warn("failed to open input files");
             return NULL;
         }
 
@@ -138,6 +143,11 @@ int main(int argc, char *argv[])
     // Parse command line arguments and get an input stream
     struct opts *opts = NULL;
     struct cstream *cs = parse_args(argc, argv, &opts);
+    if (!opts || (!cs && !opts->c))
+    {
+        free(opts);
+        return 1;
+    }
 
     // Create a vector to hold the current line
     struct vec *line = vec_init();

@@ -11,6 +11,7 @@ struct opts
 {
     int p;
     int c;
+    int optind;
     char *input;
 };
 
