@@ -1,17 +1,5 @@
 #!/bin/sh
 
-RED=; GREEN=; YELLOW=; BLUE=; BOLD=; RESET=;
-case ${TERM} in
-  '') ;;
-  *)
-      RED=`tput setaf 1`
-      GREEN=`tput setaf 2`
-      YELLOW=`tput setaf 3`
-      BLUE=`tput setaf 6`
-      BOLD=`tput bold`
-      RESET=`tput sgr0`;;
-esac
-
 function test
 {
     expected=$(cat "test_files/$1_res")
