@@ -1,3 +1,7 @@
 #!/bin/sh
 
-echo 'You have to write tests'
+cd ../tests
+echo Parser suite:
+./tests.sh
+cd ..
+./builddir/tests
