@@ -1,5 +1,7 @@
 #!/bin/sh
 
 echo Lexer tests
-./builddir/tests
-./tests/tests.sh
+./tests
+
+cd ../tests
+./tests.sh

@@ -94,7 +94,7 @@ static enum parser_state parse_and_or(struct parser *parser, struct ast **ast)
 }
 
 static enum parser_state parse_compound_list(struct parser *parser,
-        struct ast **ast)
+                                             struct ast **ast)
 {
     struct token *tok;
     while ((tok = lexer_peek(parser->lexer))->type == TOKEN_NEWL)
@@ -238,7 +238,7 @@ static enum parser_state parse_rule_if(struct parser *parser, struct ast **ast)
 }
 
 static enum parser_state parse_shell_command(struct parser *parser,
-        struct ast **ast)
+                                             struct ast **ast)
 {
     return parse_rule_if(parser, ast);
 }
