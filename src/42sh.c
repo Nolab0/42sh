@@ -77,7 +77,11 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
     parser->lexer = lexer_create(vec_cstring(final));
     enum parser_state state = parsing(parser);
     if (state != PARSER_OK)
+    {
+        vec_destroy(final);
+        free(final);
         return PARSER_ERROR;
+    }
     pretty_print(parser->ast);
     vec_destroy(final);
     free(final);

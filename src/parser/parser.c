@@ -41,12 +41,22 @@ static enum parser_state parse_simple_command(struct parser *parser,
 {
     struct ast *new = create_ast(AST_CMD);
     enum token_type tok_type = lexer_peek(parser->lexer)->type;
+    if (tok_type == TOKEN_ERROR)
+    {
+        free(new);
+        return PARSER_PANIC;
+    }
     if (tok_type != TOKEN_WORD && tok_type != TOKEN_ECHO)
     {
         free(new);
         return PARSER_ABSENT;
     }
     struct token *tok = lexer_peek(parser->lexer);
+    if (tok->type == TOKEN_ERROR)
+    {
+        free(new);
+        return PARSER_PANIC;
+    }
     while (tok->type == TOKEN_WORD || tok->type == TOKEN_ECHO)
     {
         struct vec *tmp = zalloc(sizeof(struct vec));
@@ -59,6 +69,13 @@ static enum parser_state parse_simple_command(struct parser *parser,
         lexer_pop(parser->lexer);
         token_free(tok);
         tok = lexer_peek(parser->lexer);
+        if (tok->type == TOKEN_ERROR)
+        {
+            vec_destroy(new->val);
+            free(new->val);
+            free(new);
+            return PARSER_PANIC;
+        }
         if (tok->type == TOKEN_WORD || tok->type == TOKEN_ECHO)
         {
             new->val->size--;
@@ -77,7 +94,7 @@ static enum parser_state parse_and_or(struct parser *parser, struct ast **ast)
 }
 
 static enum parser_state parse_compound_list(struct parser *parser,
-                                             struct ast **ast)
+        struct ast **ast)
 {
     struct token *tok;
     while ((tok = lexer_peek(parser->lexer))->type == TOKEN_NEWL)
@@ -85,6 +102,8 @@ static enum parser_state parse_compound_list(struct parser *parser,
         lexer_pop(parser->lexer);
         token_free(tok);
     }
+    if (tok->type == TOKEN_ERROR)
+        return PARSER_PANIC;
 
     enum parser_state state = parse_and_or(parser, ast);
     if (state != PARSER_OK)
@@ -96,6 +115,8 @@ static enum parser_state parse_compound_list(struct parser *parser,
     {
         struct ast **tmp = &(cur->left);
         tok = lexer_peek(parser->lexer);
+        if (tok->type == TOKEN_ERROR)
+            return PARSER_PANIC;
         if (tok->type != TOKEN_NEWL && tok->type != TOKEN_SEMIC)
             break;
         lexer_pop(parser->lexer);
@@ -105,6 +126,8 @@ static enum parser_state parse_compound_list(struct parser *parser,
             lexer_pop(parser->lexer);
             token_free(tok);
         }
+        if (tok->type == TOKEN_ERROR)
+            return PARSER_PANIC;
 
         state = parse_and_or(parser, tmp);
         if (state == PARSER_ABSENT)
@@ -119,13 +142,16 @@ static enum parser_state parse_compound_list(struct parser *parser,
 enum parser_state parse_else_clause(struct parser *parser, struct ast **ast)
 {
     // checking for else token
-    if (lexer_peek(parser->lexer)->type != TOKEN_ELSE)
+    struct token *tok = lexer_peek(parser->lexer);
+    if (tok->type == TOKEN_ERROR)
+        return PARSER_PANIC;
+    if (tok->type != TOKEN_ELSE)
     {
-        if (lexer_peek(parser->lexer)->type != TOKEN_ELIF)
+        if (tok->type != TOKEN_ELIF)
             return PARSER_ABSENT;
         return parse_elif(parser, ast);
     }
-    struct token *tok = lexer_pop(parser->lexer);
+    tok = lexer_pop(parser->lexer);
     token_free(tok);
     struct ast *new = create_ast(AST_ELSE);
     *ast = new;
@@ -212,7 +238,7 @@ static enum parser_state parse_rule_if(struct parser *parser, struct ast **ast)
 }
 
 static enum parser_state parse_shell_command(struct parser *parser,
-                                             struct ast **ast)
+        struct ast **ast)
 {
     return parse_rule_if(parser, ast);
 }
@@ -239,6 +265,8 @@ static enum parser_state parse_list(struct parser *parser, struct ast **ast)
     {
         struct ast **tmp = &(cur->left);
         struct token *tok = lexer_peek(parser->lexer);
+        if (tok->type == TOKEN_ERROR)
+            return PARSER_PANIC;
         if (tok->type != TOKEN_SEMIC)
             break;
         lexer_pop(parser->lexer);
@@ -257,6 +285,8 @@ static enum parser_state parse_input(struct parser *parser, struct ast **ast)
 {
     struct token *tok = lexer_peek(parser->lexer);
 
+    if (tok->type == TOKEN_ERROR)
+        return PARSER_PANIC;
     if (tok->type == TOKEN_EOF)
         return PARSER_OK;
 
@@ -278,6 +308,8 @@ static enum parser_state parse_input(struct parser *parser, struct ast **ast)
 
     tok = lexer_peek(parser->lexer);
 
+    if (tok->type == TOKEN_ERROR)
+        return PARSER_PANIC;
     if (tok->type == TOKEN_EOF)
         return PARSER_OK;
 

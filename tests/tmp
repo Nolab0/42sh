@@ -1,3 +1,6 @@
-if true; then
-echo'lol'
+if echo test; then
+echo 'chewfhwe'
+ls test
+else
+echo falde
 fi
