@@ -59,6 +59,14 @@ lexer_tests = executable(
     dependencies: [criterion_dep],
 )
 
+echo_tests = executable(
+    'echo_tests',
+    #add all files needed for unit test here
+    files('src/utils/vec.c', 'src/builtins/echo.c', 'tests/echo_test.c'),
+    include_directories: 'src',
+    install: true,
+    dependencies: [criterion_dep],
+)
 
 run_tests = meson.source_root() / 'tests/run_tests'
 custom_target(
