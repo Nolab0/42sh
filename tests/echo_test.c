@@ -1,6 +1,6 @@
+#include <builtins/builtin.h>
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
-#include <builtins/builtin.h>
 
 void redirect_stdout(void)
 {

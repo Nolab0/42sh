@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <utils/alloc.h>
-#include <utils/vec.h>
 #include <utils/utils.h>
+#include <utils/vec.h>
 
 #define SIZE 8
 

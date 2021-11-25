@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <utils/alloc.h>
 #include <utils/vec.h>
 
 #include "builtin.h"
@@ -13,7 +14,9 @@ static size_t parse_options(char *args, int *opt, size_t len)
     {
         if (args[i] == '-')
         {
-            char option[3] = { 0, };
+            char option[3] = {
+                0,
+            };
             size_t j = i + 1;
             for (; j < len && args[j] != ' '; ++j)
             {
@@ -41,13 +44,13 @@ static size_t parse_options(char *args, int *opt, size_t len)
     return i;
 }
 
-void echo(char *args)
+bool echo(char *args)
 {
     size_t len = strlen(args);
 
     // options[0] => -n
     // options[1] => -e
-    int *options = calloc(2, sizeof(int));
+    int *options = zalloc(sizeof(int) * 2);
     size_t begin = parse_options(args, options, len);
 
     struct vec *vector = vec_init();
@@ -77,4 +80,5 @@ void echo(char *args)
     free(options);
     vec_destroy(vector);
     free(vector);
+    return true;
 }

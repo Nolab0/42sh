@@ -12,11 +12,10 @@
 static struct opts *parse_opts(int argc, char **argv)
 {
     struct opts *opts = zalloc(sizeof(struct opts));
-    static struct option long_options[] =
-    {
-        {"pretty-print", no_argument, NULL, 'p'},
-        {"c", required_argument, NULL, 'c'},
-        {NULL, 0, NULL, 0}
+    static struct option long_options[] = {
+        { "pretty-print", no_argument, NULL, 'p' },
+        { "c", required_argument, NULL, 'c' },
+        { NULL, 0, NULL, 0 }
     };
     int c;
     while ((c = getopt_long(argc, argv, "p:c:", long_options, NULL)) != -1)
@@ -75,7 +74,7 @@ static struct cstream *parse_args(int argc, char *argv[], struct opts **opts)
  * \return An error code
  */
 enum error read_print_loop(struct cstream *cs, struct vec *line,
-        struct parser *parser, struct opts *opts)
+                           struct parser *parser, struct opts *opts)
 {
     enum error err;
     struct vec *final = NULL;

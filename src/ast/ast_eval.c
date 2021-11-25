@@ -1,5 +1,4 @@
-#include "ast.h"
-
+#include <builtins/builtin.h>
 #include <err.h>
 #include <errno.h>
 #include <stdio.h>
@@ -9,6 +8,8 @@
 #include <utils/alloc.h>
 #include <utils/utils.h>
 #include <utils/vec.h>
+
+#include "ast.h"
 
 /**
  * \brief The number of builtins commands
@@ -50,10 +51,10 @@ static char **split_in_array(char *cmd, int *size)
 }
 
 /**
-* \brief Execute a command in a sub-process
+ * \brief Execute a command in a sub-process
  * @param cmd: The command to execute
  * @return: return if the command fail or succeed
-*/
+ */
 static bool fork_exec(char *cmd)
 {
     int size = 0;
@@ -81,22 +82,14 @@ static bool fork_exec(char *cmd)
         errx(1, "Failed waiting for child\n%s", strerror(errno));
 
     return WEXITSTATUS(wstatus) == 0;
-
-}
-
-static bool echo(char *args)
-{
-    args[0] = 0;
-    printf("hello from echo !\n");
-    return true;
 }
 
 /**
-* \brief Choose to execute builtin commands or
+ * \brief Choose to execute builtin commands or
  * not builtins.
  * @param cmd: the command to execute
  * @return: return if the command fail or succeed
-*/
+ */
 static bool cmd_exec(char *cmd)
 {
     char *builtins[] = { "echo" };
