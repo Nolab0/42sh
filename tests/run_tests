@@ -6,8 +6,7 @@ if [ $name = "42sh" ]; then
     cd builddir
 fi
 
-pwd
-echo Lexer tests
+echo "Lexer tests"
 ./tests
 
 cd ../tests
