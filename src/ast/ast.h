@@ -1,6 +1,11 @@
 #ifndef AST_H
 #define AST_H
 
+#include <stdbool.h>
+
+/**
+ * \brief Possible nodes types for ast structure.
+ */
 enum ast_type
 {
     AST_ROOT,
@@ -8,12 +13,13 @@ enum ast_type
     AST_THEN,
     AST_ELIF,
     AST_ELSE,
-    AST_SEMIC,
-    AST_NEWL,
-    AST_SQUOTE,
     AST_CMD
 };
 
+/**
+ * \brief Structure for ast.
+ * @details: cond use for ifs conditions
+ */
 struct ast
 {
     enum ast_type type;
@@ -22,6 +28,16 @@ struct ast
     struct ast *left;
     struct ast *right;
 };
+
+/**
+ * \brief Array of pointers to builtins commands.
+ */
+typedef bool (*commands)(char *args);
+
+/**
+ * \brief Evaluate the ast and execute commands.
+ */
+bool ast_eval(struct ast *ast);
 
 struct ast *create_ast(enum ast_type type);
 

@@ -1,6 +1,3 @@
-if echo test; then
-echo 'chewfhwe'
-ls test
-else
-echo falde
+if false; then
+echo test
 fi
