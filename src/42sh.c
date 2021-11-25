@@ -30,7 +30,8 @@ static struct opts *parse_opts(int argc, char **argv)
             opts->input = optarg;
             break;
         case '?':
-            fprintf(stderr, "Usage: %s [OPTIONS] [SCRIPTS] [ARGUMENTS ...]\n", argv[0]);
+            fprintf(stderr, "Usage: %s [OPTIONS] [SCRIPTS] [ARGUMENTS ...]\n",
+                    argv[0]);
             free(opts);
             return NULL;
         default:
