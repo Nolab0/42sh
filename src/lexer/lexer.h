@@ -11,7 +11,6 @@
 struct lexer
 {
     char *input;
-    enum state state;
     size_t pos;
     struct token *current_tok;
 };
