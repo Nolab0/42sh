@@ -11,8 +11,6 @@
 
 #define SIZE 8
 
-enum state state = DEFAULT; // Save the current state of the Lexer
-
 static int match_token(char *str, int quote)
 {
     char *names[SIZE] = {

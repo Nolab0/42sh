@@ -6,15 +6,6 @@
 #include "token.h"
 
 /**
- * \brief Possible states of the lexer.
- */
-enum state
-{
-    DEFAULT,
-    SQUOTES
-};
-
-/**
  * \brief Stucture for lexer.
  */
 struct lexer
