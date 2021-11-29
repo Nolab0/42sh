@@ -18,6 +18,8 @@ enum token_type
     TOKEN_NEWL,
     TOKEN_WORD,
     TOKEN_EOF,
+    TOKEN_NEG,
+    TOKEN_PIPE,
     TOKEN_ECHO,
     TOKEN_ERROR
 };

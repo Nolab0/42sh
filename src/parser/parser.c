@@ -254,6 +254,39 @@ static enum parser_state parse_command(struct parser *parser, struct ast **ast)
     return state;
 }
 
+/**
+static enum parser_state parse_pipe(struct parser *parser, struct ast **ast)
+{
+    enum parser_state state = parse_command(parser, ast);
+    if (state != PARSER_OK)
+        return state;
+    while (1)
+    {
+        struct token *tok = lexer_peek(parser->lexer);
+        if (tok->type == TOKEN_ERROR)
+            return PARSER_PANIC;
+        if (tok->type != TOKEN_PIPE)
+            break;
+        lexer_pop(parser->lexer);
+        token_free(tok);
+        while (1)
+        {
+            struct token *newl_tok = lexer_peek(parser->lexer);
+            if (tok->type == TOKEN_ERROR)
+                return PARSER_PANIC;
+            if (tok->type != TOKEN_NEWL)
+                break;
+            lexer_pop(parser->lexer);
+            token_free(tok);
+        }
+        state = parse_command(parser, ast);
+        if (state != PARSER_OK)
+            return state;
+    }
+    return state;
+}
+*/
+
 static enum parser_state parse_list(struct parser *parser, struct ast **ast)
 {
     enum parser_state state = parse_command(parser, ast);

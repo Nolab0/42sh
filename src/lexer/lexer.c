@@ -9,15 +9,15 @@
 #include <utils/utils.h>
 #include <utils/vec.h>
 
-#define SIZE 8
+#define SIZE 10
 
 static int match_token(char *str, int quote)
 {
     char *names[SIZE] = {
-        "if", "then", "else", "elif", "fi", ";", "\n", "echo"
+        "if", "then", "else", "elif", "fi", ";", "\n", "!", "|", "echo"
     };
     int types[SIZE] = { TOKEN_IF, TOKEN_THEN,  TOKEN_ELSE, TOKEN_ELIF,
-                        TOKEN_FI, TOKEN_SEMIC, TOKEN_NEWL, TOKEN_ECHO };
+        TOKEN_FI, TOKEN_SEMIC, TOKEN_NEWL, TOKEN_NEG, TOKEN_PIPE, TOKEN_ECHO };
     for (size_t i = 0; i < SIZE; i++)
     {
         if (strcmp(str, names[i]) == 0)
