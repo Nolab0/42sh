@@ -1,4 +1,3 @@
---IF THEN CMD--
 if true; then
 echo hello
 fi

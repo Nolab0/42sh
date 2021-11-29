@@ -1,4 +1,3 @@
-IF THEN ELIF THEN ELSE
 if true; then
 echo true
 elif true; then
