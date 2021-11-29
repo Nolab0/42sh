@@ -18,6 +18,7 @@ enum token_type
     TOKEN_NEWL,
     TOKEN_WORD,
     TOKEN_EOF,
+    TOKEN_REDIR,
     TOKEN_ECHO,
     TOKEN_ERROR
 };

@@ -11,8 +11,49 @@
 
 #define SIZE 8
 
+static int isvalidredir(char *str)
+{
+    int i = 0;
+    while (str[i] != 0 && str[i] != ' ')
+        i++;
+    if (str[i] == 0)
+        return 1;
+    if (str[i + 1] != 0 && str[i + 1] == '&')
+        return 0;
+    return 1;
+}
+
+static int is_redir(char *str)
+{
+    size_t i = 0;
+    int quotes = 0;
+    while (str[i] != '\0')
+    {
+        if (str[i] == '\'')
+            quotes++;
+        if (str[i] == '<' || str[i] == '>')
+        {
+            if (quotes == 1)
+                return 0;
+            if (!isvalidredir(str + i))
+                return -1;
+            return 1;
+        }
+        i++;
+    }
+    return 0;
+}
+
 static int match_token(char *str, int quote)
 {
+    int res = is_redir(str);
+    if (res == 1)
+        return TOKEN_REDIR;
+    if (res == -1)
+    {
+        fprintf(stderr, "Syntax error: '&' unexpected\n");
+        return TOKEN_ERROR;
+    }
     char *names[SIZE] = {
         "if", "then", "else", "elif", "fi", ";", "\n", "echo"
     };
@@ -38,7 +79,8 @@ static int match_token(char *str, int quote)
  */
 static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
 {
-    lexer->pos++; // skip opening quote
+    //vec_push(vec, lexer->input[lexer->pos++]); // Skip opening quote
+    lexer->pos++;
     while (lexer->pos < len && lexer->input[lexer->pos] != '\'')
         vec_push(vec, lexer->input[lexer->pos++]);
     if (lexer->pos == len)
@@ -46,8 +88,32 @@ static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
         fprintf(stderr, "Syntax error: Unterminated quoted string\n");
         return -1;
     }
-    lexer->pos++; // skip closing quote
+
+    //vec_push(vec, lexer->input[lexer->pos++]); // Skip closing quote
+    lexer->pos++;
     return 0;
+}
+
+static size_t get_redir_idx(struct lexer *lexer, size_t len)
+{
+    size_t i = 0;
+    int quote = 0;
+    while (i < len && lexer->input[i] != '>' && lexer->input[i] != '<')
+    {
+        if (lexer->input[i] == '\'')
+            quote++;
+        i++;
+    }
+    if (quote == 1 && i != len) // Quoted '<' '>'
+        return len;
+    if (i == len)
+        return len;
+    if (i == 0)
+        return 0;
+
+    if (isdigit(lexer->input[i - 1]) && (i - 2 < 0 || lexer->input[i - 2] == ' '))
+        return i - 1;
+    return i;
 }
 
 /**
@@ -61,7 +127,10 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
 {
     size_t before = lexer->pos;
     int quote = 0;
-    while (lexer->pos < len && !is_separator(lexer->input[lexer->pos]))
+    size_t redir_index = get_redir_idx(lexer, len);
+    if (redir_index == lexer->pos)
+        redir_index = len;
+    while (lexer->pos < len && !is_separator(lexer->input[lexer->pos]) && lexer->pos < redir_index)
     {
         char current = lexer->input[lexer->pos];
         if (current == '\'')
@@ -74,12 +143,20 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
         else
         {
             vec_push(vec, current);
+            if ((current == '<' || current == '>') && lexer->input[lexer->pos + 1] == ' ')
+            {
+                vec_push(vec, lexer->input[lexer->pos + 1]);
+                lexer->pos++;
+            }
             lexer->pos++;
         }
     }
     // check if the first character was a separator and different of space
     if (lexer->pos == before && lexer->input[before] != ' ')
-        vec_push(vec, lexer->input[lexer->pos++]);
+    {
+        if (lexer->input[lexer->pos] != '<' && lexer->input[lexer->pos] != '>')
+            vec_push(vec, lexer->input[lexer->pos++]);
+    }
     return quote;
 }
 
