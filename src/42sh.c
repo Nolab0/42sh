@@ -131,9 +131,11 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
     }
     if (opts->p)
         pretty_print(parser->ast);
-    ast_eval(parser->ast);
+    int eval = ast_eval(parser->ast);
     vec_destroy(final);
     free(final);
+    if (eval != 1)
+        return eval;
     return NO_ERROR;
 }
 
@@ -157,7 +159,7 @@ int main(int argc, char *argv[])
     // Run the test loop
     if (read_print_loop(cs, line, parser, opts) != NO_ERROR)
     {
-        rc = 1;
+        rc = 2;
         vec_destroy(line);
     }
 

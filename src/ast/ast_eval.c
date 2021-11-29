@@ -55,7 +55,7 @@ static char **split_in_array(char *cmd, int *size)
  * @param cmd: The command to execute
  * @return: return if the command fail or succeed
  */
-static bool fork_exec(char *cmd)
+static int fork_exec(char *cmd)
 {
     int size = 0;
     char **args = split_in_array(cmd, &size);
@@ -67,8 +67,11 @@ static bool fork_exec(char *cmd)
     {
         if (execvp(args[0], args) == -1)
         {
-            printf("%s\n", strerror(errno));
-            exit(-42);
+            fprintf(stderr, "Command not found: '%s'\n", args[0]);
+            for (int i = 0; i < size; i++)
+                free(args[i]);
+            free(args);
+            return 127;
         }
     }
 
@@ -81,7 +84,7 @@ static bool fork_exec(char *cmd)
     if (cpid == -1)
         errx(1, "Failed waiting for child\n%s", strerror(errno));
 
-    return WEXITSTATUS(wstatus) == 0;
+    return WEXITSTATUS(wstatus);
 }
 
 /**
@@ -90,7 +93,7 @@ static bool fork_exec(char *cmd)
  * @param cmd: the command to execute
  * @return: return if the command fail or succeed
  */
-static bool cmd_exec(char *cmd)
+static int cmd_exec(char *cmd)
 {
     char *builtins[] = { "echo" };
     commands cmds[BLT_NB] = { &echo };
@@ -113,10 +116,10 @@ static bool cmd_exec(char *cmd)
     return fork_exec(cmd);
 }
 
-bool ast_eval(struct ast *ast)
+int ast_eval(struct ast *ast)
 {
     if (!ast)
-        return true;
+        return 1;
     if (ast->type == AST_ROOT)
         return ast_eval(ast->left) && ast_eval(ast->right);
     else if (ast->type == AST_IF)
@@ -133,6 +136,6 @@ bool ast_eval(struct ast *ast)
     else
     {
         fprintf(stderr, "ast_eval: node type not known\n");
-        return false;
+        return 2;
     }
 }

@@ -37,7 +37,7 @@ typedef bool (*commands)(char *args);
 /**
  * \brief Evaluate the ast and execute commands.
  */
-bool ast_eval(struct ast *ast);
+int ast_eval(struct ast *ast);
 
 struct ast *create_ast(enum ast_type type);
 
