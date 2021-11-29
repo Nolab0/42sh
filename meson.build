@@ -87,3 +87,5 @@ custom_target(
 if get_option('doc')
     subdir('doc')
 endif
+
+test('lexer', lexer_tests)
