@@ -1,6 +1,6 @@
-Build started at 2021-11-30T19:39:29.844000
+Build started at 2021-11-30T19:48:38.405046
 Main binary: /nix/store/32q6ryrb860sksdi1al5djg3pgcpq92l-python3-3.8.11/bin/python3.8
-Build Options: -Ddoc=true -Dbackend=ninja
+Build Options: 
 Python system: Linux
 The Meson build system
 Version: 0.57.1
@@ -40,8 +40,8 @@ Host machine cpu: x86_64
 Target machine cpu family: x86_64
 Target machine cpu: x86_64
 Running compile:
-Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpj1xhqm0b
-Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpj1xhqm0b/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpj1xhqm0b/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lreadline -Wl,--end-group -Wl,--allow-shlib-undefined 
+Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp_q6h3880
+Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp_q6h3880/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp_q6h3880/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lreadline -Wl,--end-group -Wl,--allow-shlib-undefined 
 
 Code:
  int main(void) { return 0; }
@@ -52,8 +52,8 @@ Compiler stderr:
  
 Library readline found: YES
 Running compile:
-Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp1oz_6eyc
-Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp1oz_6eyc/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp1oz_6eyc/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lcriterion -Wl,--end-group -Wl,--allow-shlib-undefined 
+Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpax3wjr6e
+Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpax3wjr6e/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpax3wjr6e/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lcriterion -Wl,--end-group -Wl,--allow-shlib-undefined 
 
 Code:
  int main(void) { return 0; }
@@ -63,17 +63,8 @@ Compiler stdout:
 Compiler stderr:
  
 Library criterion found: YES
-Program doxygen found: YES (/run/current-system/sw/bin/doxygen)
-Running command: /run/current-system/sw/bin/doxygen --version
---- stdout ---
-1.8.20
-
---- stderr ---
-
-
-Configuring Doxyfile using configuration
 Adding test "lexer"
-Build targets in project: 5
+Build targets in project: 4
 meson.build:91: WARNING: Trying to use address sanitizer on Clang with b_lundef.
 This will probably not work.
 Try setting b_lundef to false instead.
@@ -89,8 +80,8 @@ Try setting b_lundef to false instead.
 Option werror is: true [default: true]
 Found ninja-1.10.2 at /run/current-system/sw/bin/ninja
 Running compile:
-Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpkyi_p5dh
-Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpkyi_p5dh/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpkyi_p5dh/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -Werror=unknown-warning-option -Werror=unused-command-line-argument -Werror=ignored-optimization-argument --print-search-dirs 
+Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpb_qpamt7
+Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpb_qpamt7/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpb_qpamt7/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -Werror=unknown-warning-option -Werror=unused-command-line-argument -Werror=ignored-optimization-argument --print-search-dirs 
 
 Code:
  

@@ -91,33 +91,33 @@
   },
   {
     "directory": "/afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir",
-    "command": "cc -Ilexer_tests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -MD -MQ lexer_tests.p/src_utils_utils.c.o -MF lexer_tests.p/src_utils_utils.c.o.d -o lexer_tests.p/src_utils_utils.c.o -c ../src/utils/utils.c",
+    "command": "cc -Itests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -MD -MQ tests.p/src_utils_utils.c.o -MF tests.p/src_utils_utils.c.o.d -o tests.p/src_utils_utils.c.o -c ../src/utils/utils.c",
     "file": "../src/utils/utils.c",
-    "output": "lexer_tests.p/src_utils_utils.c.o"
+    "output": "tests.p/src_utils_utils.c.o"
   },
   {
     "directory": "/afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir",
-    "command": "cc -Ilexer_tests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -MD -MQ lexer_tests.p/src_utils_vec.c.o -MF lexer_tests.p/src_utils_vec.c.o.d -o lexer_tests.p/src_utils_vec.c.o -c ../src/utils/vec.c",
+    "command": "cc -Itests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -MD -MQ tests.p/src_utils_vec.c.o -MF tests.p/src_utils_vec.c.o.d -o tests.p/src_utils_vec.c.o -c ../src/utils/vec.c",
     "file": "../src/utils/vec.c",
-    "output": "lexer_tests.p/src_utils_vec.c.o"
+    "output": "tests.p/src_utils_vec.c.o"
   },
   {
     "directory": "/afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir",
-    "command": "cc -Ilexer_tests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -MD -MQ lexer_tests.p/src_lexer_lexer.c.o -MF lexer_tests.p/src_lexer_lexer.c.o.d -o lexer_tests.p/src_lexer_lexer.c.o -c ../src/lexer/lexer.c",
+    "command": "cc -Itests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -MD -MQ tests.p/src_lexer_lexer.c.o -MF tests.p/src_lexer_lexer.c.o.d -o tests.p/src_lexer_lexer.c.o -c ../src/lexer/lexer.c",
     "file": "../src/lexer/lexer.c",
-    "output": "lexer_tests.p/src_lexer_lexer.c.o"
+    "output": "tests.p/src_lexer_lexer.c.o"
   },
   {
     "directory": "/afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir",
-    "command": "cc -Ilexer_tests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -MD -MQ lexer_tests.p/src_lexer_token.c.o -MF lexer_tests.p/src_lexer_token.c.o.d -o lexer_tests.p/src_lexer_token.c.o -c ../src/lexer/token.c",
+    "command": "cc -Itests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -MD -MQ tests.p/src_lexer_token.c.o -MF tests.p/src_lexer_token.c.o.d -o tests.p/src_lexer_token.c.o -c ../src/lexer/token.c",
     "file": "../src/lexer/token.c",
-    "output": "lexer_tests.p/src_lexer_token.c.o"
+    "output": "tests.p/src_lexer_token.c.o"
   },
   {
     "directory": "/afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir",
-    "command": "cc -Ilexer_tests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -MD -MQ lexer_tests.p/tests_lexer_tests.c.o -MF lexer_tests.p/tests_lexer_tests.c.o.d -o lexer_tests.p/tests_lexer_tests.c.o -c ../tests/lexer_tests.c",
+    "command": "cc -Itests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -MD -MQ tests.p/tests_lexer_tests.c.o -MF tests.p/tests_lexer_tests.c.o.d -o tests.p/tests_lexer_tests.c.o -c ../tests/lexer_tests.c",
     "file": "../tests/lexer_tests.c",
-    "output": "lexer_tests.p/tests_lexer_tests.c.o"
+    "output": "tests.p/tests_lexer_tests.c.o"
   },
   {
     "directory": "/afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir",
