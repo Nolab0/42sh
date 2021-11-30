@@ -93,7 +93,7 @@ static enum parser_state parse_simple_command(struct parser *parser,
 
 static enum parser_state parse_and_or(struct parser *parser, struct ast **ast)
 {
-    return parse_pipe(parser, ast);
+    return parse_simple_command(parser, ast);
 }
 
 static enum parser_state parse_compound_list(struct parser *parser,
@@ -254,7 +254,9 @@ static enum parser_state parse_command(struct parser *parser, struct ast **ast)
     enum parser_state state = parse_shell_command(parser, ast);
     if (state != PARSER_OK)
     {
+        printf("HEURE %d\n", state);
         enum parser_state state2 = parse_simple_command(parser, ast);
+        printf("HEUREheha %d\n", state);
         return state2;
     }
     return state;
@@ -262,11 +264,17 @@ static enum parser_state parse_command(struct parser *parser, struct ast **ast)
 
 enum parser_state parse_pipe(struct parser *parser, struct ast **ast)
 {
+    // parsing command
     enum parser_state state = parse_command(parser, ast);
     if (state != PARSER_OK)
-        return state;
+    {
+        printf("RETURNED O5K\n");
+            return PARSER_PANIC;
+    }
+    // parsing ( '|' ( /n )* command )*
     while (1)
     {
+        // parsing '|'
         struct token *tok = lexer_peek(parser->lexer);
         if (tok->type == TOKEN_ERROR)
             return PARSER_PANIC;
@@ -287,21 +295,27 @@ enum parser_state parse_pipe(struct parser *parser, struct ast **ast)
         parser->ast = *ast;
         lexer_pop(parser->lexer);
         token_free(tok);
-        while (1)
+
+        // parsing (/n)*
+        while ((tok = lexer_peek(parser->lexer))->type == TOKEN_NEWL)
         {
-            struct token *newl_tok = lexer_peek(parser->lexer);
-            if (newl_tok->type == TOKEN_ERROR)
-                return PARSER_PANIC;
-            if (newl_tok->type != TOKEN_NEWL)
-                break;
             lexer_pop(parser->lexer);
-            token_free(newl_tok);
+            token_free(tok);
         }
+
+        if (tok->type == TOKEN_ERROR)
+        {
+            printf("RETURNED OK1\n");
+            return PARSER_PANIC;
+        }
+
+        // parsing command
         state = parse_command(parser, ast);
         if (state != PARSER_OK)
             return state;
     }
-    return state;
+    printf("RETURNED OK\n");
+    return PARSER_OK;
 }
 
 static enum parser_state parse_list(struct parser *parser, struct ast **ast)
