@@ -81,6 +81,7 @@ static void pretty_rec(struct ast *ast)
     {
         pretty_rec(ast->left);
         printf("| ");
+        pretty_rec(ast->right);
     }
     else
         printf("pretty-print : Unknown node type\n");

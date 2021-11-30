@@ -28,7 +28,7 @@ rule CUSTOM_COMMAND
  restat = 1
 
 rule REGENERATE_BUILD
- command = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal regenerate /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh/builddir --backend ninja
+ command = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal regenerate /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir --backend ninja
  description = Regenerating build files.
  generator = 1
 
@@ -164,7 +164,7 @@ build echo_tests: c_LINKER echo_tests.p/src_utils_vec.c.o echo_tests.p/src_built
 
 build check: CUSTOM_COMMAND  | PHONY
  pool = console
- COMMAND = /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh/tests/run_tests
+ COMMAND = /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/tests/run_tests
  description = Generating$ check$ with$ a$ custom$ command
 
 # Test rules
@@ -202,19 +202,19 @@ build dist: phony meson-dist
 # Suffix
 
 build meson-clang-format: CUSTOM_COMMAND PHONY
- COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal clangformat /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh/builddir
+ COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal clangformat /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir
  pool = console
 
 build clang-format: phony meson-clang-format
 
 build meson-TAGS: CUSTOM_COMMAND PHONY
- COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal tags etags /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh
+ COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal tags etags /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh
  pool = console
 
 build TAGS: phony meson-TAGS
 
 build meson-ctags: CUSTOM_COMMAND PHONY
- COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal tags ctags /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh
+ COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal tags ctags /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh
  pool = console
 
 build ctags: phony meson-ctags
@@ -230,7 +230,7 @@ build all: phony 42sh lexer_test echo_tests
 build clean: phony meson-clean
 
 build meson-clean-ctlist: CUSTOM_COMMAND PHONY
- COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal cleantrees /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh/builddir/meson-private/cleantrees.dat
+ COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal cleantrees /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/cleantrees.dat
  description = Cleaning$ custom$ target$ directories
 
 build clean-ctlist: phony meson-clean-ctlist

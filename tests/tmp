@@ -1,3 +1,4 @@
-echo test
-echo t
-echo 22
+if true; then
+echo test | tr
+ls | head
+fi
