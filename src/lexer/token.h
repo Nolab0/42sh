@@ -19,6 +19,8 @@ enum token_type
     TOKEN_WORD,
     TOKEN_EOF,
     TOKEN_REDIR,
+    TOKEN_NEG,
+    TOKEN_PIPE,
     TOKEN_ECHO,
     TOKEN_ERROR
 };

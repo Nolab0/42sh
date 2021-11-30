@@ -51,9 +51,9 @@ bin = executable(
 )
 
 lexer_tests = executable(
-    'tests',
+    'lexer_test',
     #add all files needed for unit test here
-    files('src/utils/utils.c', 'src/utils/vec.c', 'src/lexer/lexer.c', 'src/lexer/token.c', 'tests/lexer_tests.c'),
+    files('src/utils/utils.c', 'src/utils/vec.c', 'src/lexer/lexer.c', 'src/lexer/token.c', 'tests/lexer_main.c'),
     include_directories: 'src',
     install: true,
     dependencies: [criterion_dep],
