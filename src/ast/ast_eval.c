@@ -1,4 +1,5 @@
 #include <builtins/builtin.h>
+#include <ctype.h>
 #include <err.h>
 #include <errno.h>
 #include <stdio.h>
@@ -10,11 +11,17 @@
 #include <utils/vec.h>
 
 #include "ast.h"
+#include "redirection.h"
 
 /**
  * \brief The number of builtins commands
  */
 #define BLT_NB 1
+
+/**
+ * \brief The number of redirection operators
+ */
+#define REDIR_NB 1
 
 /**
  * \brief Get the command name from a string.
@@ -27,6 +34,18 @@ static char *getcmdname(char *cmd, int *i)
     while (cmd[*i] != 0 && !is_separator(cmd[*i]))
         (*i)++;
     return strndup(cmd, *i);
+}
+
+// Return wether the char is a redir mode
+static int is_redirchar(char c)
+{
+    char redir_char[4] = "<>|&";
+    for (size_t i = 0; i < 4; i++)
+    {
+        if (c == redir_char[i])
+            return 1;
+    }
+    return 0;
 }
 
 /**
@@ -86,13 +105,7 @@ static int fork_exec(char *cmd)
     return WEXITSTATUS(wstatus);
 }
 
-/**
- * \brief Choose to execute builtin commands or
- * not builtins.
- * @param cmd: the command to execute
- * @return: return if the command fail or succeed
- */
-static int cmd_exec(char *cmd)
+int cmd_exec(char *cmd)
 {
     char *builtins[] = { "echo" };
     commands cmds[BLT_NB] = { &echo };
@@ -113,6 +126,37 @@ static int cmd_exec(char *cmd)
     }
     free(cmd_name);
     return fork_exec(cmd);
+}
+
+int exec_redir(struct ast *ast)
+{
+    char *redirs_name[] = { ">" };
+    redirs_funcs redirs[REDIR_NB] = { &redir_simple_left };
+
+    size_t i = 0;
+    int fd = 1; // Default case: 1 = STDOUT
+    if (!is_redirchar(ast->val->data[i]))
+        fd = '0' + ast->val->data[i++];
+    while (is_redirchar(ast->val->data[i]))
+        i++;
+    if (i > 2)
+        return 0; // Not valid
+    char *redir_mode = strndup(ast->val->data, i);
+    while (isspace(ast->val->data[i])) // Skip spaces before WORD
+        i++;
+    char *right = strdup(ast->val->data + i); // Skip redir operator
+    int return_code = -1;
+    for (size_t index = 0; index < REDIR_NB; index++)
+    {
+        if (strcmp(redirs_name[index], redir_mode) == 0)
+        {
+            return_code = redirs[index](ast->left->val->data, fd, right);
+            break;
+        }
+    }
+    free(redir_mode);
+    free(right);
+    return return_code; // Redir not found
 }
 
 int ast_eval(struct ast *ast)
@@ -138,7 +182,7 @@ int ast_eval(struct ast *ast)
     else if (ast->type == AST_CMD)
         return cmd_exec(vec_cstring(ast->val));
     else if (ast->type == AST_REDIR)
-        return 0; //TODO
+        return exec_redir(ast);
     else if (ast->type == AST_PIPE)
         return 0; //TODO
     else

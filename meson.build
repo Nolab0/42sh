@@ -28,7 +28,7 @@ summary({
 
 
 # add some project-wide flags
-cflags = ['-D_GNU_SOURCE', '-D_POSIX_C_SOURCE=200809L']
+cflags = ['-D_POSIX_C_SOURCE=200809L']
 add_project_arguments(cflags, language: 'c')
 
 
@@ -53,7 +53,7 @@ bin = executable(
 lexer_tests = executable(
     'lexer_test',
     #add all files needed for unit test here
-    files('src/utils/utils.c', 'src/utils/vec.c', 'src/lexer/lexer.c', 'src/lexer/token.c', 'tests/lexer_main.c'),
+    files('src/utils/utils.c', 'src/utils/vec.c', 'src/lexer/lexer.c', 'src/lexer/token.c', 'tests/lexer_tests.c'),
     include_directories: 'src',
     install: true,
     dependencies: [criterion_dep],
