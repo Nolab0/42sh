@@ -13,6 +13,7 @@ enum ast_type
     AST_THEN,
     AST_ELIF,
     AST_ELSE,
+    AST_PIPE,
     AST_CMD
 };
 

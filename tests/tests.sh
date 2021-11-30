@@ -24,4 +24,4 @@ function test
 echo "" && test "--IF THEN CMD--" "test_files/test1"
 echo "" && test "--IF THEN ELSE--" "test_files/test2"
 echo "" && test "--IF THEN ELIF THEN ELSE--" "test_files/test3"
-
+echo "" && test "--CMD CMD CMD--" "test_files/test4"

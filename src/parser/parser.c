@@ -9,8 +9,11 @@
 #include <string.h>
 #include <utils/vec.h>
 
+struct ast *parent = NULL;
+
 enum parser_state parse_else_clause(struct parser *parser, struct ast **ast);
 enum parser_state parse_elif(struct parser *parser, struct ast **ast);
+enum parser_state parse_pipe(struct parser *parser, struct ast **ast);
 
 static enum parser_state handle_parse_error(enum parser_state state,
                                             struct parser *parser)
@@ -90,7 +93,7 @@ static enum parser_state parse_simple_command(struct parser *parser,
 
 static enum parser_state parse_and_or(struct parser *parser, struct ast **ast)
 {
-    return parse_simple_command(parser, ast);
+    return parse_pipe(parser, ast);
 }
 
 static enum parser_state parse_compound_list(struct parser *parser,
@@ -154,6 +157,7 @@ enum parser_state parse_else_clause(struct parser *parser, struct ast **ast)
     tok = lexer_pop(parser->lexer);
     token_free(tok);
     struct ast *new = create_ast(AST_ELSE);
+    parent = new;
     *ast = new;
 
     // getting commands for else
@@ -179,6 +183,7 @@ enum parser_state parse_elif(struct parser *parser, struct ast **ast)
     tok = lexer_pop(parser->lexer);
     token_free(tok);
     new = create_ast(AST_THEN);
+    parent = new;
     (*ast)->left = new;
 
     // getting commands for then
@@ -217,6 +222,7 @@ static enum parser_state parse_rule_if(struct parser *parser, struct ast **ast)
     token_free(tok);
 
     new = create_ast(AST_THEN);
+    parent = new;
     (*ast)->left = new;
 
     // getting commands for then
@@ -254,8 +260,7 @@ static enum parser_state parse_command(struct parser *parser, struct ast **ast)
     return state;
 }
 
-/**
-static enum parser_state parse_pipe(struct parser *parser, struct ast **ast)
+enum parser_state parse_pipe(struct parser *parser, struct ast **ast)
 {
     enum parser_state state = parse_command(parser, ast);
     if (state != PARSER_OK)
@@ -267,17 +272,30 @@ static enum parser_state parse_pipe(struct parser *parser, struct ast **ast)
             return PARSER_PANIC;
         if (tok->type != TOKEN_PIPE)
             break;
+        struct ast *pipe_node = create_ast(AST_PIPE);
+        if (!parent)
+            pipe_node->left = *ast;
+        else
+        {
+            if (parent->type == TOKEN_THEN || parent->type == TOKEN_ELSE)
+                pipe_node->left = parent->left;
+            else
+                pipe_node->left = parent->right;
+        }
+        parent = pipe_node;
+        *ast = pipe_node;
+        parser->ast = *ast;
         lexer_pop(parser->lexer);
         token_free(tok);
         while (1)
         {
             struct token *newl_tok = lexer_peek(parser->lexer);
-            if (tok->type == TOKEN_ERROR)
+            if (newl_tok->type == TOKEN_ERROR)
                 return PARSER_PANIC;
-            if (tok->type != TOKEN_NEWL)
+            if (newl_tok->type != TOKEN_NEWL)
                 break;
             lexer_pop(parser->lexer);
-            token_free(tok);
+            token_free(newl_tok);
         }
         state = parse_command(parser, ast);
         if (state != PARSER_OK)
@@ -285,7 +303,6 @@ static enum parser_state parse_pipe(struct parser *parser, struct ast **ast)
     }
     return state;
 }
-*/
 
 static enum parser_state parse_list(struct parser *parser, struct ast **ast)
 {
@@ -350,6 +367,7 @@ static enum parser_state parse_input(struct parser *parser, struct ast **ast)
     {
         struct ast *placeholder = create_ast(AST_ROOT);
         placeholder->left = *ast;
+        parent = placeholder;
         ast = &placeholder;
         parser->ast = (*ast);
         lexer_pop(parser->lexer);
