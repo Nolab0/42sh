@@ -6,8 +6,11 @@ if [ $name = "42sh" ]; then
     cd builddir
 fi
 
+echo "Echo tests"
+./echo_tests
+
 echo "Lexer tests"
-./tests
+./lexer_tests
 
 cd ../tests
 ./tests.sh

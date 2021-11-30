@@ -9,20 +9,22 @@
  */
 enum token_type
 {
-    TOKEN_IF,
-    TOKEN_THEN,
-    TOKEN_ELIF,
-    TOKEN_ELSE,
-    TOKEN_FI,
-    TOKEN_SEMIC,
-    TOKEN_NEWL,
-    TOKEN_WORD,
-    TOKEN_EOF,
-    TOKEN_REDIR,
-    TOKEN_NEG,
-    TOKEN_PIPE,
-    TOKEN_ECHO,
-    TOKEN_ERROR
+    TOKEN_IF = 0,
+    TOKEN_THEN = 1,
+    TOKEN_ELIF = 2,
+    TOKEN_ELSE = 3,
+    TOKEN_FI = 4,
+    TOKEN_SEMIC = 5,
+    TOKEN_NEWL = 6,
+    TOKEN_WORD = 7,
+    TOKEN_EOF = 8,
+    TOKEN_REDIR = 9,
+    TOKEN_NEG = 10,
+    TOKEN_OR = 11,
+    TOKEN_AND = 12,
+    TOKEN_PIPE = 13,
+    TOKEN_ECHO = 14,
+    TOKEN_ERROR = 15
 };
 
 /**

@@ -9,12 +9,12 @@
 #include <utils/utils.h>
 #include <utils/vec.h>
 
-#define SIZE 10
+#define SIZE 12
 
 static int isvalidampersand(char *str)
 {
     int i = 0;
-    while(str[i] != '<' && str[i] != '>')
+    while (str[i] != '<' && str[i] != '>')
         i++;
     if (str[i + 1] != 0 && str[i + 2] != 0 && str[i + 3] != 0)
     {
@@ -67,11 +67,11 @@ static int match_token(char *str, int quote)
         fprintf(stderr, "Syntax error: '&' unexpected\n");
         return TOKEN_ERROR;
     }
-    char *names[SIZE] = {
-        "if", "then", "else", "elif", "fi", ";", "\n", "!", "|", "echo"
-    };
+    char *names[SIZE] = { "if", "then", "else", "elif", "fi", ";",
+                          "\n", "!",    "||",   "&&",   "|",  "echo" };
     int types[SIZE] = { TOKEN_IF, TOKEN_THEN,  TOKEN_ELSE, TOKEN_ELIF,
-        TOKEN_FI, TOKEN_SEMIC, TOKEN_NEWL, TOKEN_NEG, TOKEN_PIPE, TOKEN_ECHO };
+                        TOKEN_FI, TOKEN_SEMIC, TOKEN_NEWL, TOKEN_NEG,
+                        TOKEN_OR, TOKEN_AND,   TOKEN_PIPE, TOKEN_ECHO };
     for (size_t i = 0; i < SIZE; i++)
     {
         if (strcmp(str, names[i]) == 0)
@@ -92,7 +92,7 @@ static int match_token(char *str, int quote)
  */
 static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
 {
-    //vec_push(vec, lexer->input[lexer->pos++]); // Skip opening quote
+    // vec_push(vec, lexer->input[lexer->pos++]); // Skip opening quote
     lexer->pos++;
     while (lexer->pos < len && lexer->input[lexer->pos] != '\'')
         vec_push(vec, lexer->input[lexer->pos++]);
@@ -102,7 +102,7 @@ static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
         return -1;
     }
 
-    //vec_push(vec, lexer->input[lexer->pos++]); // Skip closing quote
+    // vec_push(vec, lexer->input[lexer->pos++]); // Skip closing quote
     lexer->pos++;
     return 0;
 }
@@ -124,7 +124,8 @@ static size_t get_redir_idx(struct lexer *lexer, size_t len)
     if (i == 0)
         return 0;
 
-    if (isdigit(lexer->input[i - 1]) && (i - 2 < 0 || lexer->input[i - 2] == ' '))
+    if (isdigit(lexer->input[i - 1])
+        && (i - 2 < 0 || lexer->input[i - 2] == ' '))
         return i - 1;
     return i;
 }
@@ -143,7 +144,8 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
     size_t redir_index = get_redir_idx(lexer, len);
     if (redir_index == lexer->pos)
         redir_index = len;
-    while (lexer->pos < len && !is_separator(lexer->input[lexer->pos]) && lexer->pos < redir_index)
+    while (lexer->pos < len && !is_separator(lexer->input[lexer->pos])
+           && lexer->pos < redir_index)
     {
         char current = lexer->input[lexer->pos];
         if (current == '\'')
@@ -156,7 +158,8 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
         else
         {
             vec_push(vec, current);
-            if ((current == '<' || current == '>') && lexer->input[lexer->pos + 1] == ' ')
+            if ((current == '<' || current == '>')
+                && lexer->input[lexer->pos + 1] == ' ')
             {
                 vec_push(vec, lexer->input[lexer->pos + 1]);
                 lexer->pos++;
@@ -168,7 +171,12 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
     if (lexer->pos == before && lexer->input[before] != ' ')
     {
         if (lexer->input[lexer->pos] != '<' && lexer->input[lexer->pos] != '>')
-            vec_push(vec, lexer->input[lexer->pos++]);
+        {
+            char c = lexer->input[lexer->pos++];
+            vec_push(vec, c);
+            if (lexer->pos < len && lexer->input[lexer->pos] == c)
+                vec_push(vec, lexer->input[lexer->pos++]);
+        }
     }
     return quote;
 }

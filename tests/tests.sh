@@ -28,7 +28,6 @@ function test
 
         tput sgr0
     fi
-    echo ""
 }
 
 echo "" && test "--IF THEN CMD--" "test_files/test1"
@@ -39,3 +38,15 @@ echo "" && test "--REDIR DEV NULL APPENDED--" "test_files/test5"
 echo "" && test "--REDIR 2 INTO DEV NULL--" "test_files/test6"
 echo "" && test "--REDIR IF ECHO IN &2--" "test_files/test7"
 echo "" && test "--SIMPLE ECHO TR PIPE--" "test_files/test8"
+echo "" && test "--SIMPLE &&--" "test_files/test9"
+echo "" && test "--SIMPLE ||--" "test_files/test10"
+echo "" && test "--IF TRUE || FALSE--" "test_files/test11"
+echo "" && test "--IF FALSE || TRUE--" "test_files/test12"
+echo "" && test "--IF TRUE && FALSE--" "test_files/test13"
+echo "" && test "--IF FALSE && TRUE--" "test_files/test14"
+echo "" && test "--IF TRUE && TRUE && FALSE--" "test_files/test15"
+echo "" && test "--IF FALSE || FALSE || FALSE--" "test_files/test16"
+echo "" && test "--IF FALSE || FALSE || TRUE--" "test_files/test17"
+echo "" && test "--IF FALSE ||| TRUE --" "test_files/test18"
+echo "" && test "--IF LS && ECHO TRUE --" "test_files/test19"
+echo "" && test "--IF FALSE || ECHO YES THEN LS || FALSE && ECHO OUI --" "test_files/test20"

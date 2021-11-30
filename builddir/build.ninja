@@ -116,32 +116,32 @@ build 42sh.p/src_42sh.c.o: c_COMPILER ../src/42sh.c
 build 42sh: c_LINKER 42sh.p/src_utils_vec.c.o 42sh.p/src_utils_error.c.o 42sh.p/src_utils_utils.c.o 42sh.p/src_io_cstream.c.o 42sh.p/src_io_cstream_string.c.o 42sh.p/src_io_cstream_file.c.o 42sh.p/src_io_cstream_readline.c.o 42sh.p/src_io_interruptible_readline.c.o 42sh.p/src_lexer_lexer.c.o 42sh.p/src_lexer_token.c.o 42sh.p/src_parser_parser.c.o 42sh.p/src_ast_ast.c.o 42sh.p/src_ast_ast_eval.c.o 42sh.p/src_builtins_echo.c.o 42sh.p/src_42sh.c.o
  LINK_ARGS = -fsanitize=address -Wl,--as-needed -Wl,--no-undefined -Wl,--start-group -lreadline -Wl,--end-group
 
-build lexer_test.p/src_utils_utils.c.o: c_COMPILER ../src/utils/utils.c
- DEPFILE = lexer_test.p/src_utils_utils.c.o.d
- DEPFILE_UNQUOTED = lexer_test.p/src_utils_utils.c.o.d
- ARGS = -Ilexer_test.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+build lexer_tests.p/src_utils_utils.c.o: c_COMPILER ../src/utils/utils.c
+ DEPFILE = lexer_tests.p/src_utils_utils.c.o.d
+ DEPFILE_UNQUOTED = lexer_tests.p/src_utils_utils.c.o.d
+ ARGS = -Ilexer_tests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
 
-build lexer_test.p/src_utils_vec.c.o: c_COMPILER ../src/utils/vec.c
- DEPFILE = lexer_test.p/src_utils_vec.c.o.d
- DEPFILE_UNQUOTED = lexer_test.p/src_utils_vec.c.o.d
- ARGS = -Ilexer_test.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+build lexer_tests.p/src_utils_vec.c.o: c_COMPILER ../src/utils/vec.c
+ DEPFILE = lexer_tests.p/src_utils_vec.c.o.d
+ DEPFILE_UNQUOTED = lexer_tests.p/src_utils_vec.c.o.d
+ ARGS = -Ilexer_tests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
 
-build lexer_test.p/src_lexer_lexer.c.o: c_COMPILER ../src/lexer/lexer.c
- DEPFILE = lexer_test.p/src_lexer_lexer.c.o.d
- DEPFILE_UNQUOTED = lexer_test.p/src_lexer_lexer.c.o.d
- ARGS = -Ilexer_test.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+build lexer_tests.p/src_lexer_lexer.c.o: c_COMPILER ../src/lexer/lexer.c
+ DEPFILE = lexer_tests.p/src_lexer_lexer.c.o.d
+ DEPFILE_UNQUOTED = lexer_tests.p/src_lexer_lexer.c.o.d
+ ARGS = -Ilexer_tests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
 
-build lexer_test.p/src_lexer_token.c.o: c_COMPILER ../src/lexer/token.c
- DEPFILE = lexer_test.p/src_lexer_token.c.o.d
- DEPFILE_UNQUOTED = lexer_test.p/src_lexer_token.c.o.d
- ARGS = -Ilexer_test.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+build lexer_tests.p/src_lexer_token.c.o: c_COMPILER ../src/lexer/token.c
+ DEPFILE = lexer_tests.p/src_lexer_token.c.o.d
+ DEPFILE_UNQUOTED = lexer_tests.p/src_lexer_token.c.o.d
+ ARGS = -Ilexer_tests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
 
-build lexer_test.p/tests_lexer_main.c.o: c_COMPILER ../tests/lexer_main.c
- DEPFILE = lexer_test.p/tests_lexer_main.c.o.d
- DEPFILE_UNQUOTED = lexer_test.p/tests_lexer_main.c.o.d
- ARGS = -Ilexer_test.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+build lexer_tests.p/tests_lexer_tests.c.o: c_COMPILER ../tests/lexer_tests.c
+ DEPFILE = lexer_tests.p/tests_lexer_tests.c.o.d
+ DEPFILE_UNQUOTED = lexer_tests.p/tests_lexer_tests.c.o.d
+ ARGS = -Ilexer_tests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
 
-build lexer_test: c_LINKER lexer_test.p/src_utils_utils.c.o lexer_test.p/src_utils_vec.c.o lexer_test.p/src_lexer_lexer.c.o lexer_test.p/src_lexer_token.c.o lexer_test.p/tests_lexer_main.c.o
+build lexer_tests: c_LINKER lexer_tests.p/src_utils_utils.c.o lexer_tests.p/src_utils_vec.c.o lexer_tests.p/src_lexer_lexer.c.o lexer_tests.p/src_lexer_token.c.o lexer_tests.p/tests_lexer_tests.c.o
  LINK_ARGS = -fsanitize=address -Wl,--as-needed -Wl,--no-undefined -Wl,--start-group -lcriterion -Wl,--end-group
 
 build echo_tests.p/src_utils_vec.c.o: c_COMPILER ../src/utils/vec.c
@@ -225,7 +225,7 @@ build meson-uninstall: CUSTOM_COMMAND PHONY
 
 build uninstall: phony meson-uninstall
 
-build all: phony 42sh lexer_test echo_tests
+build all: phony 42sh lexer_tests echo_tests
 
 build clean: phony meson-clean
 

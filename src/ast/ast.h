@@ -15,7 +15,9 @@ enum ast_type
     AST_ELSE,
     AST_CMD,
     AST_REDIR,
-    AST_PIPE
+    AST_PIPE,
+    AST_AND,
+    AST_OR
 };
 
 /**

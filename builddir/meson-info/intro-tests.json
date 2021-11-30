@@ -1,1 +1,1 @@
-[{"cmd": ["/afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/lexer_test"], "env": {}, "name": "lexer", "workdir": null, "timeout": 30, "suite": ["42sh"], "is_parallel": true, "priority": 0, "protocol": "exitcode", "depends": ["lexer_test@exe"]}]
+[{"cmd": ["/afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/lexer_tests"], "env": {}, "name": "lexer", "workdir": null, "timeout": 30, "suite": ["42sh"], "is_parallel": true, "priority": 0, "protocol": "exitcode", "depends": ["lexer_tests@exe"]}]

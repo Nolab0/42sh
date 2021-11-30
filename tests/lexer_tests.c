@@ -58,7 +58,7 @@ Test(LexerSuite, incompleteIf)
 {
     redirect_stdout();
     char input[] = "if echo;";
-    char expected[] = "01058";
+    char expected[] = "01458";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -68,7 +68,7 @@ Test(LexerSuite, hardIf)
 {
     redirect_stdout();
     char input[] = "if echo test; then \n fi";
-    char expected[] = "010751648";
+    char expected[] = "014751648";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -88,7 +88,7 @@ Test(LexerSuite, SquoteHard)
 {
     redirect_stdout();
     char input[] = "'echo'";
-    char expected[] = "108";
+    char expected[] = "148";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -107,7 +107,7 @@ Test(LexerSuite, echoNonAlphanum)
 {
     redirect_stdout();
     char input[] = "echo !!";
-    char expected[] = "1078";
+    char expected[] = "1478";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -127,7 +127,7 @@ Test(LexerSuite, contextTest)
 {
     redirect_stdout();
     char input[] = "echo lol 'ife'";
-    char expected[] = "10778";
+    char expected[] = "14778";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -147,7 +147,7 @@ Test(LexerSuite, lolQuotes)
 {
     redirect_stdout();
     char input[] = "echo 'lo;l'";
-    char expected[] = "1078";
+    char expected[] = "1478";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -157,7 +157,7 @@ Test(LexerSuite, echolol)
 {
     redirect_stdout();
     char input[] = "echo lo;l";
-    char expected[] = "107578";
+    char expected[] = "147578";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -187,7 +187,7 @@ Test(LexerSuite, echoCmdQuoted)
 {
     redirect_stdout();
     char input[] = "'echo' popo";
-    char expected[] = "1078";
+    char expected[] = "1478";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -197,7 +197,7 @@ Test(LexerSuite, errorToken)
 {
     redirect_stdout();
     char input[] = "echo 'not finished quotes";
-    char expected[] = "10118";
+    char expected[] = "14158";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -207,7 +207,7 @@ Test(LexerSuite, basicRedir)
 {
     redirect_stdout();
     char input[] = "echo test > /dev/null";
-    char expected[] = "10798";
+    char expected[] = "14798";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -217,7 +217,7 @@ Test(LexerSuite, basicRedirNoSpaces)
 {
     redirect_stdout();
     char input[] = "echo test>/dev/null";
-    char expected[] = "10798";
+    char expected[] = "14798";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);
@@ -227,7 +227,7 @@ Test(LexerSuite, basicRedirInvalidSpace)
 {
     redirect_stdout();
     char input[] = "echo test> &2";
-    char expected[] = "107118";
+    char expected[] = "147158";
     print_tokens(input);
     fflush(NULL);
     cr_assert_stdout_eq_str(expected);

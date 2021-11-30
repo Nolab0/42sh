@@ -119,10 +119,10 @@ int ast_eval(struct ast *ast)
 {
     if (!ast)
         return 0;
-    if (ast->type == AST_ROOT)
+    if (ast->type == AST_ROOT || ast->type == AST_OR)
     {
         int left = ast_eval(ast->left);
-        if (left == 0)
+        if (left == 0 || !ast->right)
             return left;
         return ast_eval(ast->right);
     }
@@ -138,9 +138,16 @@ int ast_eval(struct ast *ast)
     else if (ast->type == AST_CMD)
         return cmd_exec(vec_cstring(ast->val));
     else if (ast->type == AST_REDIR)
-        return 0; //TODO
+        return 0; // TODO
     else if (ast->type == AST_PIPE)
-        return 0; //TODO
+        return 0; // TODO
+    else if (ast->type == AST_AND)
+    {
+        int left = ast_eval(ast->left);
+        if (left != 0)
+            return left;
+        return ast_eval(ast->right);
+    }
     else
     {
         fprintf(stderr, "ast_eval: node type not known\n");

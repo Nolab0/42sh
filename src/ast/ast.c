@@ -83,6 +83,15 @@ static void pretty_rec(struct ast *ast)
         printf("| ");
         pretty_rec(ast->right);
     }
+    else if (ast->type == AST_OR || ast->type == AST_AND)
+    {
+        pretty_rec(ast->left);
+        if (ast->type == AST_OR)
+            printf("|| ");
+        else
+            printf("&& ");
+        pretty_rec(ast->right);
+    }
     else
         printf("pretty-print : Unknown node type\n");
 }
