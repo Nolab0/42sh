@@ -11,16 +11,29 @@
 
 #define SIZE 8
 
+static int isvalidampersand(char *str)
+{
+    int i = 0;
+    while(str[i] != '<' && str[i] != '>')
+        i++;
+    if (str[i + 1] != 0 && str[i + 2] != 0 && str[i + 3] != 0)
+    {
+        if (str[i + 1] == '&' && isdigit(str[i + 2]) && str[i + 3] != ' ')
+            return 0;
+    }
+    return 1;
+}
+
 static int isvalidredir(char *str)
 {
     int i = 0;
     while (str[i] != 0 && str[i] != ' ')
         i++;
     if (str[i] == 0)
-        return 1;
+        return isvalidampersand(str);
     if (str[i + 1] != 0 && str[i + 1] == '&')
         return 0;
-    return 1;
+    return isvalidampersand(str);
 }
 
 static int is_redir(char *str)
@@ -58,7 +71,7 @@ static int match_token(char *str, int quote)
         "if", "then", "else", "elif", "fi", ";", "\n", "echo"
     };
     int types[SIZE] = { TOKEN_IF, TOKEN_THEN,  TOKEN_ELSE, TOKEN_ELIF,
-                        TOKEN_FI, TOKEN_SEMIC, TOKEN_NEWL, TOKEN_ECHO };
+        TOKEN_FI, TOKEN_SEMIC, TOKEN_NEWL, TOKEN_ECHO };
     for (size_t i = 0; i < SIZE; i++)
     {
         if (strcmp(str, names[i]) == 0)
@@ -96,7 +109,7 @@ static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
 
 static size_t get_redir_idx(struct lexer *lexer, size_t len)
 {
-    size_t i = 0;
+    size_t i = lexer->pos;
     int quote = 0;
     while (i < len && lexer->input[i] != '>' && lexer->input[i] != '<')
     {

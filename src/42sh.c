@@ -127,16 +127,14 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
     {
         vec_destroy(final);
         free(final);
-        return PARSER_ERROR;
+        return 2;
     }
     if (opts->p)
         pretty_print(parser->ast);
     int eval = ast_eval(parser->ast);
     vec_destroy(final);
     free(final);
-    if (eval != 1)
-        return eval;
-    return NO_ERROR;
+    return eval;
 }
 
 int main(int argc, char *argv[])
@@ -157,11 +155,7 @@ int main(int argc, char *argv[])
 
     struct parser *parser = create_parser();
     // Run the test loop
-    if (read_print_loop(cs, line, parser, opts) != NO_ERROR)
-    {
-        rc = 2;
-        vec_destroy(line);
-    }
+    rc = read_print_loop(cs, line, parser, opts);
 
     free(opts);
     free(line);

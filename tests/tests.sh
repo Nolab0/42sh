@@ -4,17 +4,27 @@ function test
 {
     echo "$1"
     expected=$(cat $2 | dash)
+    retexp=$?
     tmp2=$(cat $2 | ../builddir/42sh)
-    if [ "$expected" = "$tmp2" ]; then
+    ret=$?
+    if [ "$expected" = "$tmp2" ] && [ $retexp -eq $ret ]; then
         echo "$(tput setaf 2)OK"
         tput sgr0
     else
         echo "$(tput setaf 1)FAILED"
-        echo "expected : "
-        echo "$(tput setaf 3)$expected"
-        echo "$(tput setaf 1)but got :"
-        echo "$(tput setaf 3)$tmp2"
-        tput sgr0
+        if [ $retexp -eq $ret ]; then
+            echo "expected : "
+            echo "$(tput setaf 3)$expected"
+            echo "$(tput setaf 1)but got :"
+            echo "$(tput setaf 3)$tmp2"
+            tput sgr0
+        else
+            echo "expected : "
+            echo "$(tput setaf 3)$retexp"
+            echo "$(tput setaf 1)but got :"
+            echo "$(tput setaf 3)$ret"
+            tput sgr0
+        fi
 
         tput sgr0
     fi

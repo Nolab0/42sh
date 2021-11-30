@@ -13,7 +13,8 @@ enum ast_type
     AST_THEN,
     AST_ELIF,
     AST_ELSE,
-    AST_CMD
+    AST_CMD,
+    AST_REDIR
 };
 
 /**
@@ -32,7 +33,7 @@ struct ast
 /**
  * \brief Array of pointers to builtins commands.
  */
-typedef bool (*commands)(char *args);
+typedef int (*commands)(char *args);
 
 /**
  * \brief Evaluate the ast and execute commands.

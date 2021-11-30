@@ -3,6 +3,6 @@
 
 #include <stdbool.h>
 
-bool echo(char *args);
+int echo(char *args);
 
 #endif /* !BUILTIN_H */

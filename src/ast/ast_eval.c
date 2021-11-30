@@ -71,7 +71,7 @@ static int fork_exec(char *cmd)
             for (int i = 0; i < size; i++)
                 free(args[i]);
             free(args);
-            return 127;
+            exit(127);
         }
     }
 
@@ -83,7 +83,6 @@ static int fork_exec(char *cmd)
 
     if (cpid == -1)
         errx(1, "Failed waiting for child\n%s", strerror(errno));
-
     return WEXITSTATUS(wstatus);
 }
 
@@ -119,12 +118,17 @@ static int cmd_exec(char *cmd)
 int ast_eval(struct ast *ast)
 {
     if (!ast)
-        return 1;
+        return 0;
     if (ast->type == AST_ROOT)
-        return ast_eval(ast->left) && ast_eval(ast->right);
+    {
+        int left = ast_eval(ast->left);
+        if (left == 0)
+            return left;
+        return ast_eval(ast->right);
+    }
     else if (ast->type == AST_IF)
     {
-        if (ast_eval(ast->cond))
+        if (!ast_eval(ast->cond)) // true
             return ast_eval(ast->left);
         else
             return ast_eval(ast->right);
@@ -133,6 +137,8 @@ int ast_eval(struct ast *ast)
         return ast_eval(ast->left);
     else if (ast->type == AST_CMD)
         return cmd_exec(vec_cstring(ast->val));
+    else if (ast->type == AST_REDIR)
+        return 0; //TODO
     else
     {
         fprintf(stderr, "ast_eval: node type not known\n");

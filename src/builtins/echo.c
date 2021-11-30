@@ -44,7 +44,7 @@ static size_t parse_options(char *args, int *opt, size_t len)
     return i;
 }
 
-bool echo(char *args)
+int echo(char *args)
 {
     size_t len = strlen(args);
 
@@ -80,5 +80,5 @@ bool echo(char *args)
     free(options);
     vec_destroy(vector);
     free(vector);
-    return true;
+    return 0;
 }

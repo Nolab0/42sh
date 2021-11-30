@@ -1,6 +1,6 @@
-Build started at 2021-11-29T21:04:56.023896
+Build started at 2021-11-30T11:44:39.117371
 Main binary: /nix/store/32q6ryrb860sksdi1al5djg3pgcpq92l-python3-3.8.11/bin/python3.8
-Build Options: -Dbackend=ninja
+Build Options: 
 Python system: Linux
 The Meson build system
 Version: 0.57.1
@@ -9,8 +9,28 @@ Build dir: /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir
 Build type: native build
 Project name: 42sh
 Project version: 0.1
+Sanity testing C compiler: cc
+Is cross compiler: False.
+Sanity check compiler command line: cc /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/sanitycheckc.c -o /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/sanitycheckc.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/sanitycheckc.exe
 C compiler for the host machine: cc (clang 12.0.1 "clang version 12.0.1")
 C linker for the host machine: cc ld.bfd 2.35.1
+Sanity testing C compiler: cc
+Is cross compiler: False.
+Sanity check compiler command line: cc /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/sanitycheckc.c -o /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/sanitycheckc.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/sanitycheckc.exe
 C compiler for the build machine: cc (clang 12.0.1 "clang version 12.0.1")
 C linker for the build machine: cc ld.bfd 2.35.1
 Build machine cpu family: x86_64
@@ -20,8 +40,8 @@ Host machine cpu: x86_64
 Target machine cpu family: x86_64
 Target machine cpu: x86_64
 Running compile:
-Working directory:  /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp20bcgxac
-Command line:  cc /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp20bcgxac/testfile.c -o /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp20bcgxac/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lreadline -Wl,--end-group -Wl,--allow-shlib-undefined 
+Working directory:  /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp4n57i2ck
+Command line:  cc /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp4n57i2ck/testfile.c -o /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp4n57i2ck/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lreadline -Wl,--end-group -Wl,--allow-shlib-undefined 
 
 Code:
  int main(void) { return 0; }
@@ -32,8 +52,8 @@ Compiler stderr:
  
 Library readline found: YES
 Running compile:
-Working directory:  /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpgp4l9z26
-Command line:  cc /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpgp4l9z26/testfile.c -o /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpgp4l9z26/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lcriterion -Wl,--end-group -Wl,--allow-shlib-undefined 
+Working directory:  /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpgedikwtr
+Command line:  cc /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpgedikwtr/testfile.c -o /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpgedikwtr/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lcriterion -Wl,--end-group -Wl,--allow-shlib-undefined 
 
 Code:
  int main(void) { return 0; }
@@ -45,7 +65,7 @@ Compiler stderr:
 Library criterion found: YES
 Adding test "lexer"
 Build targets in project: 4
-../meson.build:91: WARNING: Trying to use address sanitizer on Clang with b_lundef.
+meson.build:91: WARNING: Trying to use address sanitizer on Clang with b_lundef.
 This will probably not work.
 Try setting b_lundef to false instead.
 
@@ -60,8 +80,8 @@ Try setting b_lundef to false instead.
 Option werror is: true [default: true]
 Found ninja-1.10.2 at /run/current-system/sw/bin/ninja
 Running compile:
-Working directory:  /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpr319t145
-Command line:  cc /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpr319t145/testfile.c -o /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpr319t145/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -Werror=unknown-warning-option -Werror=unused-command-line-argument -Werror=ignored-optimization-argument --print-search-dirs 
+Working directory:  /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp_g254d5a
+Command line:  cc /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp_g254d5a/testfile.c -o /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp_g254d5a/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -Werror=unknown-warning-option -Werror=unused-command-line-argument -Werror=ignored-optimization-argument --print-search-dirs 
 
 Code:
  
