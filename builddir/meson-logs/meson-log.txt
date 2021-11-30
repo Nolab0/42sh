@@ -1,0 +1,73 @@
+Build started at 2021-11-30T21:23:35.719059
+Main binary: /nix/store/32q6ryrb860sksdi1al5djg3pgcpq92l-python3-3.8.11/bin/python3.8
+Build Options: -Dbackend=ninja
+Python system: Linux
+The Meson build system
+Version: 0.57.1
+Source dir: /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh
+Build dir: /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir
+Build type: native build
+Project name: 42sh
+Project version: 0.1
+C compiler for the host machine: cc (clang 12.0.1 "clang version 12.0.1")
+C linker for the host machine: cc ld.bfd 2.35.1
+C compiler for the build machine: cc (clang 12.0.1 "clang version 12.0.1")
+C linker for the build machine: cc ld.bfd 2.35.1
+Build machine cpu family: x86_64
+Build machine cpu: x86_64
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Target machine cpu family: x86_64
+Target machine cpu: x86_64
+Running compile:
+Working directory:  /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpao8mwv9y
+Command line:  cc /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpao8mwv9y/testfile.c -o /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpao8mwv9y/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lreadline -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library readline found: YES
+Running compile:
+Working directory:  /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpa6zz7nzc
+Command line:  cc /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpa6zz7nzc/testfile.c -o /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmpa6zz7nzc/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lcriterion -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library criterion found: YES
+Adding test "lexer"
+Build targets in project: 4
+../meson.build:91: WARNING: Trying to use address sanitizer on Clang with b_lundef.
+This will probably not work.
+Try setting b_lundef to false instead.
+
+42sh 0.1
+
+    optimization : 0
+    debug        : True
+    b_sanitize   : address
+    warning_level: 3
+    werror       : True
+
+Option werror is: true [default: true]
+Found ninja-1.10.2 at /run/current-system/sw/bin/ninja
+Running compile:
+Working directory:  /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp3k6vbkcd
+Command line:  cc /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp3k6vbkcd/testfile.c -o /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/tmp3k6vbkcd/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -Werror=unknown-warning-option -Werror=unused-command-line-argument -Werror=ignored-optimization-argument --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ programs: =/nix/store/sjhz1j2d1ssn59f66kqp92xj9mpsww2d-gcc-10.3.0/lib/gcc/x86_64-unknown-linux-gnu/10.3.0:/nix/store/ydgmg92kvyhjs0swm7x3r21dqfdhcxf2-clang-12.0.1-lib/lib:/nix/store/jsp3h3wpzc842j0rz61m5ly71ak6qgdn-glibc-2.32-54/lib/:/nix/store/bwa5qgvyk898w7n47j2chmgc3gsjg207-clang-wrapper-12.0.1/bin/:/nix/store/21vaq58glknlbhjlibsqmybd1cjcp7pb-clang-12.0.1/bin:/nix/store/sjhz1j2d1ssn59f66kqp92xj9mpsww2d-gcc-10.3.0/lib64/gcc/x86_64-unknown-linux-gnu/10.3.0/../../../../x86_64-unknown-linux-gnu/bin
+libraries: =/nix/store/bwa5qgvyk898w7n47j2chmgc3gsjg207-clang-wrapper-12.0.1/resource-root:/nix/store/sjhz1j2d1ssn59f66kqp92xj9mpsww2d-gcc-10.3.0/lib64/gcc/x86_64-unknown-linux-gnu/10.3.0:/nix/store/sjhz1j2d1ssn59f66kqp92xj9mpsww2d-gcc-10.3.0/lib64/gcc/x86_64-unknown-linux-gnu/10.3.0/../../../../lib64:/nix/store/sjhz1j2d1ssn59f66kqp92xj9mpsww2d-gcc-10.3.0/lib64/gcc/x86_64-unknown-linux-gnu/10.3.0/../../..
+
+Compiler stderr:
+ 

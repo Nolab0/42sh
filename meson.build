@@ -28,7 +28,7 @@ summary({
 
 
 # add some project-wide flags
-cflags = ['-D_GNU_SOURCE', '-D_POSIX_C_SOURCE=200809L']
+cflags = ['-D_POSIX_C_SOURCE=200809L']
 add_project_arguments(cflags, language: 'c')
 
 

@@ -1,0 +1,1 @@
+[{"cmd": ["/afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/lexer_test"], "env": {}, "name": "lexer", "workdir": null, "timeout": 30, "suite": ["42sh"], "is_parallel": true, "priority": 0, "protocol": "exitcode", "depends": ["lexer_test@exe"]}]
