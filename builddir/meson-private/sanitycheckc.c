@@ -1,5 +1,1 @@
-int main(void)
-{
-    int class = 0;
-    return class;
-}
+int main(void) { int class=0; return class; }

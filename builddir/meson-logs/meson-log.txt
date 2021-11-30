@@ -1,4 +1,4 @@
-Build started at 2021-11-30T19:13:12.583782
+Build started at 2021-11-30T19:21:24.166221
 Main binary: /nix/store/32q6ryrb860sksdi1al5djg3pgcpq92l-python3-3.8.11/bin/python3.8
 Build Options: 
 Python system: Linux
@@ -40,8 +40,8 @@ Host machine cpu: x86_64
 Target machine cpu family: x86_64
 Target machine cpu: x86_64
 Running compile:
-Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpk1yhyul3
-Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpk1yhyul3/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpk1yhyul3/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lreadline -Wl,--end-group -Wl,--allow-shlib-undefined 
+Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp3x03zrsv
+Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp3x03zrsv/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp3x03zrsv/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lreadline -Wl,--end-group -Wl,--allow-shlib-undefined 
 
 Code:
  int main(void) { return 0; }
@@ -52,8 +52,8 @@ Compiler stderr:
  
 Library readline found: YES
 Running compile:
-Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpxdx4an5m
-Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpxdx4an5m/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpxdx4an5m/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lcriterion -Wl,--end-group -Wl,--allow-shlib-undefined 
+Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpws4e0134
+Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpws4e0134/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpws4e0134/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lcriterion -Wl,--end-group -Wl,--allow-shlib-undefined 
 
 Code:
  int main(void) { return 0; }
@@ -80,8 +80,8 @@ Try setting b_lundef to false instead.
 Option werror is: true [default: true]
 Found ninja-1.10.2 at /run/current-system/sw/bin/ninja
 Running compile:
-Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp_99ddbjr
-Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp_99ddbjr/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmp_99ddbjr/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -Werror=unknown-warning-option -Werror=unused-command-line-argument -Werror=ignored-optimization-argument --print-search-dirs 
+Working directory:  /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpl_d5n35z
+Command line:  cc /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpl_d5n35z/testfile.c -o /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/builddir/meson-private/tmpl_d5n35z/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -Werror=unknown-warning-option -Werror=unused-command-line-argument -Werror=ignored-optimization-argument --print-search-dirs 
 
 Code:
  
