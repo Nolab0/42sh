@@ -167,6 +167,10 @@ build check: CUSTOM_COMMAND  | PHONY
  COMMAND = /afs/cri.epita.fr/user/j/je/jean.fechter/u/s5/42folder/42sh/tests/run_tests
  description = Generating$ check$ with$ a$ custom$ command
 
+build doc/doxygen_doc: CUSTOM_COMMAND  | /run/current-system/sw/bin/doxygen PHONY doc/Doxyfile
+ COMMAND = /run/current-system/sw/bin/doxygen doc/Doxyfile
+ description = Generating$ doxygen_doc$ with$ a$ custom$ command
+
 # Test rules
 
 build meson-test: CUSTOM_COMMAND all PHONY
@@ -239,13 +243,13 @@ build meson-clean: CUSTOM_COMMAND PHONY | clean-ctlist
  COMMAND = /run/current-system/sw/bin/ninja -t clean
  description = Cleaning
 
-build build.ninja: REGENERATE_BUILD ../meson.build ../meson_options.txt ../src/meson.build ../src/utils/meson.build ../src/io/meson.build ../src/lexer/meson.build ../src/parser/meson.build ../src/ast/meson.build ../src/builtins/meson.build meson-private/coredata.dat
+build build.ninja: REGENERATE_BUILD ../meson.build ../meson_options.txt ../src/meson.build ../src/utils/meson.build ../src/io/meson.build ../src/lexer/meson.build ../src/parser/meson.build ../src/ast/meson.build ../src/builtins/meson.build ../doc/meson.build /nix/store/4gi0smyv78wrrpyi3l4vcv3z0h89b8bp-doxygen-1.8.20/bin/doxygen ../doc/Doxyfile.in meson-private/coredata.dat
  pool = console
 
 build reconfigure: REGENERATE_BUILD PHONY
  pool = console
 
-build ../meson.build ../meson_options.txt ../src/meson.build ../src/utils/meson.build ../src/io/meson.build ../src/lexer/meson.build ../src/parser/meson.build ../src/ast/meson.build ../src/builtins/meson.build meson-private/coredata.dat: phony 
+build ../meson.build ../meson_options.txt ../src/meson.build ../src/utils/meson.build ../src/io/meson.build ../src/lexer/meson.build ../src/parser/meson.build ../src/ast/meson.build ../src/builtins/meson.build ../doc/meson.build /nix/store/4gi0smyv78wrrpyi3l4vcv3z0h89b8bp-doxygen-1.8.20/bin/doxygen ../doc/Doxyfile.in meson-private/coredata.dat: phony 
 
 default all
 

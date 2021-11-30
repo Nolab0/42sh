@@ -1,4 +1,6 @@
 [options]
+doc = true
+backend = ninja
 
 [properties]
 
