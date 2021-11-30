@@ -1,4 +1,2 @@
-if true; then
-echo test | tr
-ls | head
-fi
+echo hello >&2
+echo why

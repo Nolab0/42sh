@@ -96,7 +96,13 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
 
             // If the end of file was reached, stop right there
             if (c == EOF)
+            {
+                final = vec_concat(final, line);
+                final->size--;
+                vec_push(final, '\0');
+                vec_reset(line);
                 break;
+            }
 
             // If a newline was met, print the line
             if (c == '\n')

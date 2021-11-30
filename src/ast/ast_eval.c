@@ -36,17 +36,23 @@ static char *getcmdname(char *cmd, int *i)
  * @param size: the size of the returned array
  * @return: the splited array
  */
+
 static char **split_in_array(char *cmd, int *size)
 {
-    *size = 2;
-    char **args = xmalloc(sizeof(char *) * 3);
+    char **args = xmalloc(sizeof(char *) * strlen(cmd));
+    int index = 0;
     int i = 0;
-    args[0] = getcmdname(cmd, &i);
-    if (cmd[i] == 0)
-        args[1] = NULL;
-    else
-        args[1] = strdup(cmd + i + 1);
-    args[2] = NULL;
+    while(cmd[i] != 0)
+    {
+        while (cmd[i] != 0 && cmd[i] == ' ')
+            i++;
+        index = i;
+        while (cmd[i] != 0 && cmd[i] != ' ')
+            i++;
+        if (i != index)
+            args[(*size)++] = strndup(cmd + index, i - index);
+    }
+    args[*size] = NULL;
     return args;
 }
 
@@ -115,16 +121,57 @@ static int cmd_exec(char *cmd)
     return fork_exec(cmd);
 }
 
+static int eval_pipe(struct ast *ast)
+{
+    int fds[2];
+
+    if (pipe(fds) == -1)
+        errx(1, "Failed to create pipe file descriptors.");
+
+    int out = dup(STDOUT_FILENO);
+
+    if (dup2(fds[1], STDOUT_FILENO) == -1)
+        errx(1, "dup2 failed");
+    ast_eval(ast->left);
+
+    dup2(out, STDOUT_FILENO);
+    close(out);
+
+    int in = dup(STDIN_FILENO);
+
+    if (dup2(fds[0], STDIN_FILENO) == -1)
+        errx(1, "dup2 failed");
+    close(fds[1]);
+    int res = ast_eval(ast->right);
+
+    dup2(in, STDIN_FILENO);
+    close(in);
+    close(fds[0]);
+    close(fds[1]);
+
+    return res;
+}
+
 int ast_eval(struct ast *ast)
 {
     if (!ast)
         return 0;
-    if (ast->type == AST_ROOT || ast->type == AST_OR)
+    if (ast->type == AST_OR)
     {
         int left = ast_eval(ast->left);
         if (left == 0 || !ast->right)
             return left;
         return ast_eval(ast->right);
+    }
+    if (ast->type == AST_ROOT)
+    {
+        int left = ast_eval(ast->left);
+        if (!ast->right)
+            return left;
+        int right = ast_eval(ast->right);
+        if (right == 0)
+            return right;
+        return left;
     }
     else if (ast->type == AST_IF)
     {
@@ -136,11 +183,16 @@ int ast_eval(struct ast *ast)
     else if (ast->type == AST_THEN || ast->type == AST_ELSE)
         return ast_eval(ast->left);
     else if (ast->type == AST_CMD)
-        return cmd_exec(vec_cstring(ast->val));
+    {
+        int res = cmd_exec(vec_cstring(ast->val));
+        if (!ast->left)
+            return res;
+        return ast_eval(ast->left);
+    }
     else if (ast->type == AST_REDIR)
         return 0; // TODO
     else if (ast->type == AST_PIPE)
-        return 0; // TODO
+        return eval_pipe(ast);
     else if (ast->type == AST_AND)
     {
         int left = ast_eval(ast->left);

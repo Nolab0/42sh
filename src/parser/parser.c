@@ -409,23 +409,35 @@ static enum parser_state parse_list(struct parser *parser, struct ast **ast)
     if (state != PARSER_OK)
         return state;
 
-    struct ast *cur = *ast;
     while (1)
     {
-        struct ast **tmp = &(cur->left);
+        struct ast *root = create_ast(AST_ROOT);
+        root->left = *ast;
         struct token *tok = lexer_peek(parser->lexer);
         if (tok->type == TOKEN_ERROR)
+        {
+            ast_free(root);
             return PARSER_PANIC;
+        }
         if (tok->type != TOKEN_SEMIC)
+        {
+            *ast = root;
             break;
+        }
         lexer_pop(parser->lexer);
         token_free(tok);
-        state = parse_command(parser, tmp);
+        state = parse_command(parser, &(root->right));
         if (state == PARSER_ABSENT)
+        {
+            *ast = root;
             break;
+        }
         else if (state == PARSER_PANIC)
+        {
+            ast_free(root);
             return state;
-        cur = cur->left;
+        }
+        *ast = root;
     }
     return state;
 }
@@ -448,8 +460,8 @@ static enum parser_state parse_input(struct parser *parser, struct ast **ast)
 
     enum parser_state state = PARSER_PANIC;
     if (*ast
-        && ((*ast)->type == AST_ROOT || (*ast)->type == AST_PIPE
-            || (*ast)->type == AST_AND || (*ast)->type == AST_OR))
+            && ((*ast)->type == AST_ROOT || (*ast)->type == AST_PIPE
+                || (*ast)->type == AST_AND || (*ast)->type == AST_OR || (*ast)->type == AST_REDIR))
         state = parse_list(parser, &((*ast)->right));
     else
         state = parse_list(parser, ast);
@@ -465,10 +477,10 @@ static enum parser_state parse_input(struct parser *parser, struct ast **ast)
         return PARSER_OK;
 
     if (tok->type == TOKEN_NEWL || tok->type == TOKEN_PIPE
-        || tok->type == TOKEN_AND || tok->type == TOKEN_OR)
+            || tok->type == TOKEN_AND || tok->type == TOKEN_OR || tok->type == TOKEN_REDIR)
     {
         struct ast *placeholder;
-        if (tok->type == TOKEN_NEWL)
+        if (tok->type == TOKEN_NEWL || tok->type == TOKEN_REDIR)
             placeholder = create_ast(AST_ROOT);
         else if (tok->type == TOKEN_PIPE)
             placeholder = create_ast(AST_PIPE);
