@@ -139,6 +139,8 @@ int ast_eval(struct ast *ast)
         return cmd_exec(vec_cstring(ast->val));
     else if (ast->type == AST_REDIR)
         return 0; //TODO
+    else if (ast->type == AST_PIPE)
+        return 0; //TODO
     else
     {
         fprintf(stderr, "ast_eval: node type not known\n");

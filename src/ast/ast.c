@@ -77,6 +77,11 @@ static void pretty_rec(struct ast *ast)
         pretty_rec(ast->left);
         printf("redir %s ", ast->val->data);
     }
+    else if (ast->type == AST_PIPE)
+    {
+        pretty_rec(ast->left);
+        printf("| ");
+    }
     else
         printf("pretty-print : Unknown node type\n");
 }

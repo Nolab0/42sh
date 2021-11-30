@@ -28,7 +28,7 @@ rule CUSTOM_COMMAND
  restat = 1
 
 rule REGENERATE_BUILD
- command = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal regenerate /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir --backend ninja
+ command = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal regenerate /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh/builddir --backend ninja
  description = Regenerating build files.
  generator = 1
 
@@ -116,32 +116,32 @@ build 42sh.p/src_42sh.c.o: c_COMPILER ../src/42sh.c
 build 42sh: c_LINKER 42sh.p/src_utils_vec.c.o 42sh.p/src_utils_error.c.o 42sh.p/src_utils_utils.c.o 42sh.p/src_io_cstream.c.o 42sh.p/src_io_cstream_string.c.o 42sh.p/src_io_cstream_file.c.o 42sh.p/src_io_cstream_readline.c.o 42sh.p/src_io_interruptible_readline.c.o 42sh.p/src_lexer_lexer.c.o 42sh.p/src_lexer_token.c.o 42sh.p/src_parser_parser.c.o 42sh.p/src_ast_ast.c.o 42sh.p/src_ast_ast_eval.c.o 42sh.p/src_builtins_echo.c.o 42sh.p/src_42sh.c.o
  LINK_ARGS = -fsanitize=address -Wl,--as-needed -Wl,--no-undefined -Wl,--start-group -lreadline -Wl,--end-group
 
-build tests.p/src_utils_utils.c.o: c_COMPILER ../src/utils/utils.c
- DEPFILE = tests.p/src_utils_utils.c.o.d
- DEPFILE_UNQUOTED = tests.p/src_utils_utils.c.o.d
- ARGS = -Itests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+build lexer_test.p/src_utils_utils.c.o: c_COMPILER ../src/utils/utils.c
+ DEPFILE = lexer_test.p/src_utils_utils.c.o.d
+ DEPFILE_UNQUOTED = lexer_test.p/src_utils_utils.c.o.d
+ ARGS = -Ilexer_test.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
 
-build tests.p/src_utils_vec.c.o: c_COMPILER ../src/utils/vec.c
- DEPFILE = tests.p/src_utils_vec.c.o.d
- DEPFILE_UNQUOTED = tests.p/src_utils_vec.c.o.d
- ARGS = -Itests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+build lexer_test.p/src_utils_vec.c.o: c_COMPILER ../src/utils/vec.c
+ DEPFILE = lexer_test.p/src_utils_vec.c.o.d
+ DEPFILE_UNQUOTED = lexer_test.p/src_utils_vec.c.o.d
+ ARGS = -Ilexer_test.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
 
-build tests.p/src_lexer_lexer.c.o: c_COMPILER ../src/lexer/lexer.c
- DEPFILE = tests.p/src_lexer_lexer.c.o.d
- DEPFILE_UNQUOTED = tests.p/src_lexer_lexer.c.o.d
- ARGS = -Itests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+build lexer_test.p/src_lexer_lexer.c.o: c_COMPILER ../src/lexer/lexer.c
+ DEPFILE = lexer_test.p/src_lexer_lexer.c.o.d
+ DEPFILE_UNQUOTED = lexer_test.p/src_lexer_lexer.c.o.d
+ ARGS = -Ilexer_test.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
 
-build tests.p/src_lexer_token.c.o: c_COMPILER ../src/lexer/token.c
- DEPFILE = tests.p/src_lexer_token.c.o.d
- DEPFILE_UNQUOTED = tests.p/src_lexer_token.c.o.d
- ARGS = -Itests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+build lexer_test.p/src_lexer_token.c.o: c_COMPILER ../src/lexer/token.c
+ DEPFILE = lexer_test.p/src_lexer_token.c.o.d
+ DEPFILE_UNQUOTED = lexer_test.p/src_lexer_token.c.o.d
+ ARGS = -Ilexer_test.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
 
-build tests.p/tests_lexer_tests.c.o: c_COMPILER ../tests/lexer_tests.c
- DEPFILE = tests.p/tests_lexer_tests.c.o.d
- DEPFILE_UNQUOTED = tests.p/tests_lexer_tests.c.o.d
- ARGS = -Itests.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+build lexer_test.p/tests_lexer_main.c.o: c_COMPILER ../tests/lexer_main.c
+ DEPFILE = lexer_test.p/tests_lexer_main.c.o.d
+ DEPFILE_UNQUOTED = lexer_test.p/tests_lexer_main.c.o.d
+ ARGS = -Ilexer_test.p -I. -I.. -Isrc -I../src -Xclang -fcolor-diagnostics -fsanitize=address -fno-omit-frame-pointer -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c99 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
 
-build tests: c_LINKER tests.p/src_utils_utils.c.o tests.p/src_utils_vec.c.o tests.p/src_lexer_lexer.c.o tests.p/src_lexer_token.c.o tests.p/tests_lexer_tests.c.o
+build lexer_test: c_LINKER lexer_test.p/src_utils_utils.c.o lexer_test.p/src_utils_vec.c.o lexer_test.p/src_lexer_lexer.c.o lexer_test.p/src_lexer_token.c.o lexer_test.p/tests_lexer_main.c.o
  LINK_ARGS = -fsanitize=address -Wl,--as-needed -Wl,--no-undefined -Wl,--start-group -lcriterion -Wl,--end-group
 
 build echo_tests.p/src_utils_vec.c.o: c_COMPILER ../src/utils/vec.c
@@ -164,7 +164,7 @@ build echo_tests: c_LINKER echo_tests.p/src_utils_vec.c.o echo_tests.p/src_built
 
 build check: CUSTOM_COMMAND  | PHONY
  pool = console
- COMMAND = /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/tests/run_tests
+ COMMAND = /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh/tests/run_tests
  description = Generating$ check$ with$ a$ custom$ command
 
 # Test rules
@@ -202,19 +202,19 @@ build dist: phony meson-dist
 # Suffix
 
 build meson-clang-format: CUSTOM_COMMAND PHONY
- COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal clangformat /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir
+ COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal clangformat /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh/builddir
  pool = console
 
 build clang-format: phony meson-clang-format
 
 build meson-TAGS: CUSTOM_COMMAND PHONY
- COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal tags etags /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh
+ COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal tags etags /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh
  pool = console
 
 build TAGS: phony meson-TAGS
 
 build meson-ctags: CUSTOM_COMMAND PHONY
- COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal tags ctags /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh
+ COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal tags ctags /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh
  pool = console
 
 build ctags: phony meson-ctags
@@ -225,12 +225,12 @@ build meson-uninstall: CUSTOM_COMMAND PHONY
 
 build uninstall: phony meson-uninstall
 
-build all: phony 42sh tests echo_tests
+build all: phony 42sh lexer_test echo_tests
 
 build clean: phony meson-clean
 
 build meson-clean-ctlist: CUSTOM_COMMAND PHONY
- COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal cleantrees /afs/cri.epita.fr/user/t/th/thibault.boutet/u/ING1/42sh/42sh/builddir/meson-private/cleantrees.dat
+ COMMAND = /nix/store/4j7x4cszf79yz8iw4sfdq0a1qy7ajhsa-meson-0.57.1/bin/meson --internal cleantrees /afs/cri.epita.fr/user/t/th/theo.crepin/u/42repo/42sh/builddir/meson-private/cleantrees.dat
  description = Cleaning$ custom$ target$ directories
 
 build clean-ctlist: phony meson-clean-ctlist
