@@ -21,7 +21,7 @@
 /**
  * \brief The number of redirection operators
  */
-#define REDIR_NB 1
+#define REDIR_NB 5
 
 /**
  * \brief Get the command name from a string.
@@ -167,18 +167,26 @@ static int eval_pipe(struct ast *ast)
 
 int exec_redir(struct ast *ast)
 {
-    char *redirs_name[] = { ">" };
-    redirs_funcs redirs[REDIR_NB] = { &redir_simple_left };
+    char *redirs_name[] = { ">", "<", ">>", ">&", ">|" };
+    redirs_funcs redirs[REDIR_NB] = { 
+        &redir_simple_left, &redir_simple_right,
+        &redir_double_left, &redir_ampersand_left,
+        &redir_simple_left
+    };
 
     size_t i = 0;
-    int fd = 1; // Default case: 1 = STDOUT
+    int fd = -1;
     if (!is_redirchar(ast->val->data[i]))
-        fd = '0' + ast->val->data[i++];
+        fd = ast->val->data[i++] - '0';
     while (is_redirchar(ast->val->data[i]))
         i++;
-    if (i > 2)
+    if (fd == -1 && i > 2)
         return 0; // Not valid
-    char *redir_mode = strndup(ast->val->data, i);
+    char *redir_mode = NULL;
+    if (fd != -1)
+        redir_mode = strndup(ast->val->data + 1, i - 1);
+    else
+        redir_mode = strndup(ast->val->data, i);
     while (isspace(ast->val->data[i])) // Skip spaces before WORD
         i++;
     char *right = strdup(ast->val->data + i); // Skip redir operator
@@ -187,7 +195,7 @@ int exec_redir(struct ast *ast)
     {
         if (strcmp(redirs_name[index], redir_mode) == 0)
         {
-            return_code = redirs[index](ast->left->val->data, fd, right);
+            return_code = redirs[index](ast->left, fd, right);
             break;
         }
     }

@@ -44,8 +44,9 @@ typedef int (*commands)(char *args);
  * @param left: the left part of the redirection
  * @param fd: the file descriptor (STDOUT by default)
  * @param right: the right part of the redirection
+ * @return value: return code of exec, -1 on failure
  */
-typedef int (*redirs_funcs)(char *left, int fd, char *right);
+typedef int (*redirs_funcs)(struct ast *left, int fd, char *right);
 
 /**
  * \brief Evaluate the ast and execute commands.
