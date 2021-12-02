@@ -19,7 +19,7 @@ static int redir_left(struct ast *left, int fd, char *right, int append)
     if (append == 1)
         file_fd = open(right, O_CREAT | O_APPEND | O_WRONLY, 0644);
     else
-        file_fd = open(right, O_CREAT | O_TRUNC  | O_WRONLY, 0644);
+        file_fd = open(right, O_CREAT | O_TRUNC | O_WRONLY, 0644);
     if (file_fd == -1)
         return -1;
     if (dup2(file_fd, fd) == -1)

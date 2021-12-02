@@ -61,7 +61,7 @@ static char **split_in_array(char *cmd, int *size)
     char **args = xmalloc(sizeof(char *) * strlen(cmd));
     int index = 0;
     int i = 0;
-    while(cmd[i] != 0)
+    while (cmd[i] != 0)
     {
         while (cmd[i] != 0 && cmd[i] == ' ')
             i++;
@@ -168,11 +168,9 @@ static int eval_pipe(struct ast *ast)
 int exec_redir(struct ast *ast)
 {
     char *redirs_name[] = { ">", "<", ">>", ">&", ">|" };
-    redirs_funcs redirs[REDIR_NB] = { 
-        &redir_simple_left, &redir_simple_right,
-        &redir_double_left, &redir_ampersand_left,
-        &redir_simple_left
-    };
+    redirs_funcs redirs[REDIR_NB] = { &redir_simple_left, &redir_simple_right,
+                                      &redir_double_left, &redir_ampersand_left,
+                                      &redir_simple_left };
 
     size_t i = 0;
     int fd = -1;
