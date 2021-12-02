@@ -5,7 +5,7 @@ default:
   before_script:
     - mkdir -p /tmp /var/tmp
     - cd tests
-    - pip install -r requirements
+    - pip install -r requirements.txt
     - cd ..
     - meson setup -Ddoc=true builddir
 
