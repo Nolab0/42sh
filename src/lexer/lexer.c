@@ -144,7 +144,7 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
     size_t redir_index = get_redir_idx(lexer, len);
     if (redir_index == lexer->pos)
         redir_index = len;
-    while (lexer->pos < len && !is_separator(lexer->input[lexer->pos])
+    while (lexer->pos < len && (!is_separator(lexer->input[lexer->pos]) || (lexer->input[lexer->pos] == '|' && lexer->input[lexer->pos - 1] == '>'))
            && lexer->pos < redir_index)
     {
         char current = lexer->input[lexer->pos];
