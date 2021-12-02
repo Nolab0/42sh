@@ -155,6 +155,22 @@
     -   exitcode
     -   has_stderr
 
+-   name: PIPE MISSING RIGHT
+    input: |
+        echo test |
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: PIPE MISSING LEFT
+    input: |
+        | tr a e
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
 -   name: IF LS && ECHO TRUE
     input: |
         if ls && echo true; then
@@ -177,8 +193,54 @@
     input: |
         touch coucou
         while rm coucou; do
-          echo test
+        echo test
         done
     checks:
     -   stdout
     -   exitcode
+
+-   name: SIMPLE UNTIL
+    input: |
+        until rm coucou; do
+        touch coucou
+        done
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: IF IN WHILE
+    input: |
+        touch coucou
+        while rm coucou; do
+        if true; then
+        echo oui
+        fi
+        done
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: WHILE MISSING DO
+    input: |
+        touch coucou
+        while rm coucou;
+        if true; then
+        echo oui
+        fi
+        done
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: WHILE MISSING DONE
+    input: |
+        touch coucou
+        while rm coucou; do
+        if true; then
+        echo oui
+        fi
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr

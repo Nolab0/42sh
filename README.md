@@ -19,7 +19,7 @@ cd
 python -m venv env/
 source env/bin/activate
 go to 42sh folder
-pip install -r requirements.txt
+pip install -r tests/requirements.txt
 ```
 
 # Building documentation

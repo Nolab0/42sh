@@ -252,7 +252,7 @@ int ast_eval(struct ast *ast)
     else if (ast->type == AST_WHILE)
     {
         int a = 0;
-        while(ast_eval(ast->cond))
+        while(ast_eval(ast->cond) == 0)
         {
             a = ast_eval(ast->left);
         }
@@ -261,7 +261,7 @@ int ast_eval(struct ast *ast)
     else if (ast->type == AST_UNTIL)
     {
         int a = 0;
-        while(!ast_eval(ast->cond))
+        while(ast_eval(ast->cond) != 0)
         {
             a = ast_eval(ast->left);
         }

@@ -1,2 +1,1 @@
-echo hello >&2
-echo why
+| echo test

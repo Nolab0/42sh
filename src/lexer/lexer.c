@@ -68,8 +68,8 @@ static int match_token(char *str, int quote)
         return TOKEN_ERROR;
     }
     char *names[SIZE] = { "if", "then", "else", "elif", "fi", ";",
-                          "\n", "!",    "||",   "&&",   "|", "While",
-                          "For", "Until", "Do", "Done", "In", "echo" };
+                          "\n", "!",    "||",   "&&",   "|", "while",
+                          "for", "until", "do", "done", "in", "echo" };
     int types[SIZE] = { TOKEN_IF, TOKEN_THEN,  TOKEN_ELSE, TOKEN_ELIF,
                         TOKEN_FI, TOKEN_SEMIC, TOKEN_NEWL, TOKEN_NEG,
                         TOKEN_OR, TOKEN_AND,   TOKEN_PIPE, TOKEN_WHILE,
@@ -148,7 +148,7 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
         redir_index = len;
     while (lexer->pos < len
            && (!is_separator(lexer->input[lexer->pos])
-               || (lexer->input[lexer->pos] == '|'
+               || (lexer->input[lexer->pos] == '|' && lexer->pos != 0
                    && lexer->input[lexer->pos - 1] == '>'))
            && lexer->pos < redir_index)
     {

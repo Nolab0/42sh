@@ -312,12 +312,6 @@ enum parser_state parse_elif(struct parser *parser, struct ast **ast)
 
 static enum parser_state parse_rule_if(struct parser *parser, struct ast **ast)
 {
-    // checking for if token
-    if (lexer_peek(parser->lexer)->type != TOKEN_IF)
-        return PARSER_PANIC;
-    struct token *tok = lexer_pop(parser->lexer);
-    token_free(tok);
-
     struct ast *new = create_ast(AST_IF);
     *ast = new;
 
@@ -330,7 +324,7 @@ static enum parser_state parse_rule_if(struct parser *parser, struct ast **ast)
     if (lexer_peek(parser->lexer)->type != TOKEN_THEN)
         return PARSER_PANIC;
 
-    tok = lexer_pop(parser->lexer);
+    struct token *tok = lexer_pop(parser->lexer);
     token_free(tok);
 
     new = create_ast(AST_THEN);
@@ -495,7 +489,7 @@ enum parser_state parse_pipe(struct parser *parser, struct ast **ast)
         // parsing command
         state = parse_command(parser, &((*ast)->right));
         if (state != PARSER_OK)
-            break;
+            return PARSER_PANIC;
     }
     if (neg)
     {
@@ -543,6 +537,11 @@ static enum parser_state parse_list(struct parser *parser, struct ast **ast)
         *ast = root;
     }
     return state;
+}
+
+int should_have_next(enum token_type type)
+{
+    return type == TOKEN_PIPE || type == TOKEN_AND || type == TOKEN_OR;
 }
 
 static enum parser_state parse_input(struct parser *parser, struct ast **ast)
@@ -599,8 +598,19 @@ static enum parser_state parse_input(struct parser *parser, struct ast **ast)
         placeholder->left = *ast;
         ast = &placeholder;
         parser->ast = (*ast);
+        enum token_type last_tok = tok->type;
         lexer_pop(parser->lexer);
         token_free(tok);
+        if (should_have_next(last_tok))
+        {
+            while ((tok = lexer_peek(parser->lexer))->type == TOKEN_NEWL)
+            {
+                lexer_pop(parser->lexer);
+                token_free(tok);
+            }
+            if (tok->type == TOKEN_ERROR || tok->type == TOKEN_EOF)
+                return PARSER_PANIC;
+        }
         return parse_input(parser, ast);
     }
 
