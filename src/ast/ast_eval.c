@@ -269,6 +269,10 @@ int ast_eval(struct ast *ast)
         }
         return a;
     }
+    else if (ast->type == AST_FOR)
+    {
+        return 0; 
+    }
     else
     {
         fprintf(stderr, "ast_eval: node type not known\n");

@@ -1,1 +1,4 @@
-| echo test
+for i in salut tmp ouai
+do
+echo coucou
+done
