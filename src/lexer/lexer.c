@@ -92,9 +92,9 @@ static int match_token(char *str, int quote)
  */
 static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
 {
-    // vec_push(vec, lexer->input[lexer->pos++]); // Skip opening quote
-    lexer->pos++;
-    while (lexer->pos < len && lexer->input[lexer->pos] != '\'')
+    char quote_type = lexer->input[lexer->pos];
+    lexer->pos++; // Skip opening quote
+    while (lexer->pos < len && lexer->input[lexer->pos] != quote_type)
         vec_push(vec, lexer->input[lexer->pos++]);
     if (lexer->pos == len)
     {
@@ -102,8 +102,7 @@ static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
         return -1;
     }
 
-    // vec_push(vec, lexer->input[lexer->pos++]); // Skip closing quote
-    lexer->pos++;
+    lexer->pos++; // Closing quote
     return 0;
 }
 
@@ -151,7 +150,7 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
            && lexer->pos < redir_index)
     {
         char current = lexer->input[lexer->pos];
-        if (current == '\'')
+        if (current == '\'' || current == '\"')
         {
             quote = 1;
             int error = handle_quotes(lexer, vec, len);
