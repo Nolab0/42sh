@@ -33,4 +33,10 @@ int redir_ampersand_left(struct ast *left, int fd, char *right);
  */
 int redir_ampersand_right(struct ast *left, int fd, char *right);
 
+/**
+ * \brief left and right redirection
+ * @details redirection '<>'
+ */
+int redir_left_right(struct ast *left, int fd, char *right);
+
 #endif /* ! REDIRECTION_H  */
