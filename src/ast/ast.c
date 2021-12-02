@@ -92,6 +92,11 @@ static void pretty_rec(struct ast *ast)
             printf("&& ");
         pretty_rec(ast->right);
     }
+    else if (ast->type == AST_NEG)
+    {
+        printf("! ");
+        pretty_rec(ast->left);
+    }
     else
         printf("pretty-print : Unknown node type\n");
 }

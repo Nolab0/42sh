@@ -17,7 +17,8 @@ enum ast_type
     AST_REDIR,
     AST_PIPE,
     AST_AND,
-    AST_OR
+    AST_OR,
+    AST_NEG
 };
 
 /**
