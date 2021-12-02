@@ -348,8 +348,7 @@ static enum parser_state parse_rule_if(struct parser *parser, struct ast **ast)
     return PARSER_OK;
 }
 
-static enum parser_state parse_do_group(struct parser *parser,
-                                             struct ast **ast)
+static enum parser_state parse_do_group(struct parser *parser, struct ast **ast)
 {
     struct token *tok = lexer_peek(parser->lexer);
     if (tok->type != TOKEN_DO)
@@ -367,9 +366,8 @@ static enum parser_state parse_do_group(struct parser *parser,
     return PARSER_OK;
 }
 
-
 static enum parser_state parse_rule_while(struct parser *parser,
-                                             struct ast **ast)
+                                          struct ast **ast)
 {
     struct ast *while_node = create_ast(AST_WHILE);
     enum parser_state state = parse_compound_list(parser, &(while_node->cond));
@@ -383,7 +381,7 @@ static enum parser_state parse_rule_while(struct parser *parser,
 }
 
 static enum parser_state parse_rule_until(struct parser *parser,
-                                             struct ast **ast)
+                                          struct ast **ast)
 {
     struct ast *until_node = create_ast(AST_UNTIL);
     enum parser_state state = parse_compound_list(parser, &(until_node->cond));

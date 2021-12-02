@@ -93,7 +93,7 @@ int redir_ampersand_right(struct ast *left, int fd, char *right)
         return -1;
     if (dup2(fd, file_fd) == -1)
         return -1;
-    //fcntl(fd, F_SETFD, FD_CLOEXEC);
+    // fcntl(fd, F_SETFD, FD_CLOEXEC);
     int r_code = ast_eval(left);
     fflush(NULL);
     if (dup2(save_fd, fd) == -1)
@@ -114,7 +114,7 @@ int redir_left_right(struct ast *left, int fd, char *right)
         return -1;
     if (dup2(fd, file_fd) == -1)
         return -1;
-    //fcntl(file_fd, F_SETFD, FD_CLOEXEC);
+    // fcntl(file_fd, F_SETFD, FD_CLOEXEC);
     int r_code = ast_eval(left);
     fflush(NULL);
     if (dup2(save_fd, fd) == -1)

@@ -168,10 +168,11 @@ static int eval_pipe(struct ast *ast)
 int exec_redir(struct ast *ast)
 {
     char *redirs_name[] = { ">", "<", ">>", ">&", ">|", "<&", "<>" };
-    redirs_funcs redirs[REDIR_NB] = { &redir_simple_left, &redir_simple_right,
-                                      &redir_double_left, &redir_ampersand_left,
-                                      &redir_simple_left, &redir_ampersand_right,
-                                      &redir_left_right };
+    redirs_funcs redirs[REDIR_NB] = {
+        &redir_simple_left,    &redir_simple_right, &redir_double_left,
+        &redir_ampersand_left, &redir_simple_left,  &redir_ampersand_right,
+        &redir_left_right
+    };
 
     size_t i = 0;
     int fd = -1;
@@ -253,7 +254,7 @@ int ast_eval(struct ast *ast)
     else if (ast->type == AST_WHILE)
     {
         int a = 0;
-        while(ast_eval(ast->cond) == 0)
+        while (ast_eval(ast->cond) == 0)
         {
             a = ast_eval(ast->left);
         }
@@ -262,7 +263,7 @@ int ast_eval(struct ast *ast)
     else if (ast->type == AST_UNTIL)
     {
         int a = 0;
-        while(ast_eval(ast->cond) != 0)
+        while (ast_eval(ast->cond) != 0)
         {
             a = ast_eval(ast->left);
         }
