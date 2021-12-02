@@ -27,7 +27,7 @@ def run_shell(shell: str, stdin: str) -> sp.CompletedProcess:
 
 def perform_checks(expected: sp.CompletedProcess, actual: sp.CompletedProcess, checks):
     assert "has_stderr" not in checks or actual.stderr != "", \
-            "Something was expeted on stderr"
+            "Something was expected on stderr"
 
     assert "exitcode" not in checks or expected.returncode == actual.returncode, \
             f"Exited with {actual.returncode} expected {expected.returncode}"

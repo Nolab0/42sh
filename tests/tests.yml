@@ -1,58 +1,174 @@
--   name: Simple ls
-    input: ls
+-   name: IF THEN CMD
+    input: |
+        if true; then
+        echo hello
+        fi
+    checks:
+    -   stdout
+    -   exitcode
 
--   name: Pipe missing right
-    input: echo foo |
+-   name: IF THEN ELSE
+    input: |
+        if true; then
+        echo true
+        else
+        echo false
+        fi
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: IF THEN ELIF THEN ELSE
+    input: |
+        if true; then
+        echo true
+        elif true; then
+        echo coucou
+        else
+        echo false
+        fi
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: REDIR DEV NULL
+    input: |
+        echo test >/dev/null
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: REDIR DEV NULL APPENDED
+    input: |
+        echo test2>/dev/null
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: REDIR 2 INTO DEV NULL
+    input: |
+        echo test 2>/dev/null
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: REDIR IF ECHO IN &2
+    input: |
+        if true; then
+        echo test
+        fi >&2
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: SIMPLE ECHO TR PIPE
+    input: |
+        echo hello | tr e a
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: SIMPLE &&
+    input: |
+        echo test && echo coucou
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: SIMPLE ||
+    input: |
+        echo test || echo coucou
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: IF TRUE || FALSE
+    input: |
+        if true || false; then
+        echo test
+        fi
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: IF FALSE || TRUE
+    input: |
+        if false || true; then
+        echo test
+        fi
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: IF TRUE && FALSE
+    input: |
+        if true && false; then
+        echo test
+        fi
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: IF FALSE && TRUE
+    input: |
+        if false && true; then
+        echo test
+        fi
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: IF TRUE && TRUE && FALSE
+    input: |
+        if true && true && false; then
+        echo test
+        fi
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: IF FALSE || FALSE || FALSE
+    input: |
+        if false || false || false; then
+        echo test
+        fi
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: IF FALSE || FALSE || TRUE
+    input: |
+        if false || false || true; then
+        echo test
+        fi
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: IF FALSE ||| TRUE
+    input: |
+        if false ||| true; then
+        echo test
+        fi
     checks:
     -   stdout
     -   exitcode
     -   has_stderr
 
--   name: Pipe complete
-    input: echo should | echo be working
+-   name: IF LS && ECHO TRUE
+    input: |
+        if ls && echo true; then
+        echo test
+        fi
     checks:
     -   stdout
     -   exitcode
-    -   has_stderr
 
--   name: Test1 file
-    input: /test_files/test1
+-   name: IF FALSE || ECHO YES THEN PWD || FALSE && ECHO OUI
+    input: |
+        if false || echo yes; then
+        pwd || false && echo OUI
+        fi
     checks:
     -   stdout
     -   exitcode
-    -   has_stderr
-
--   name: Test2 file
-    input: /test_files/test2
-    checks:
-    -   stdout
-    -   exitcode
-    -   has_stderr
-
--   name: Test3 file
-    input: /test_files/test3
-    checks:
-    -   stdout
-    -   exitcode
-    -   has_stderr
-
--   name: Test4 file
-    input: /test_files/test4
-    checks:
-    -   stdout
-    -   exitcode
-    -   has_stderr
-
--   name: Test5 file
-    input: /test_files/test5
-    checks:
-    -   stdout
-    -   exitcode
-    -   has_stderr
-
--   name: Test5 file
-    input: /test_files/test5
-    checks:
-    -   stdout
-    -   exitcode
-    -   has_stderr
