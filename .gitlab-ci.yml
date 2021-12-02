@@ -4,6 +4,9 @@ default:
   image: registry.cri.epita.fr/cri/infrastructure/nixpie/nixos-pie
   before_script:
     - mkdir -p /tmp /var/tmp
+    - cd tests
+    - pip install -r requirements
+    - cd ..
     - meson setup -Ddoc=true builddir
 
 stages:

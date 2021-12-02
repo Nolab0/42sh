@@ -1,4 +1,4 @@
-#!/bin/sh
+!/bin/sh
 
 name=$(basename $(pwd))
 
@@ -6,8 +6,5 @@ if [ $name = "42sh" ]; then
     cd builddir
 fi
 
-echo "Lexer tests"
-./tests
-
 cd ../tests
-./tests.sh
+python test_suite.py --binary ../builddir/42sh

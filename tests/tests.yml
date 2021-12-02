@@ -1,6 +1,3 @@
--   name: Echo with quotes
-    input: echo "Cut, Copy and Paste!"
-
 -   name: Simple ls
     input: ls
 
