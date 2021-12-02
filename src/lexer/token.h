@@ -23,8 +23,14 @@ enum token_type
     TOKEN_OR = 11,
     TOKEN_AND = 12,
     TOKEN_PIPE = 13,
-    TOKEN_ECHO = 14,
-    TOKEN_ERROR = 15
+    TOKEN_WHILE = 14,
+    TOKEN_FOR = 15,
+    TOKEN_UNTIL = 16,
+    TOKEN_DO = 17,
+    TOKEN_DONE = 18,
+    TOKEN_IN = 19,
+    TOKEN_ECHO = 20,
+    TOKEN_ERROR = 21
 };
 
 /**

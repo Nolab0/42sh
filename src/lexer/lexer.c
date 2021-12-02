@@ -9,7 +9,7 @@
 #include <utils/utils.h>
 #include <utils/vec.h>
 
-#define SIZE 12
+#define SIZE 18
 
 static int isvalidampersand(char *str)
 {
@@ -68,10 +68,13 @@ static int match_token(char *str, int quote)
         return TOKEN_ERROR;
     }
     char *names[SIZE] = { "if", "then", "else", "elif", "fi", ";",
-                          "\n", "!",    "||",   "&&",   "|",  "echo" };
+                          "\n", "!",    "||",   "&&",   "|", "While",
+                          "For", "Until", "Do", "Done", "In", "echo" };
     int types[SIZE] = { TOKEN_IF, TOKEN_THEN,  TOKEN_ELSE, TOKEN_ELIF,
                         TOKEN_FI, TOKEN_SEMIC, TOKEN_NEWL, TOKEN_NEG,
-                        TOKEN_OR, TOKEN_AND,   TOKEN_PIPE, TOKEN_ECHO };
+                        TOKEN_OR, TOKEN_AND,   TOKEN_PIPE, TOKEN_WHILE,
+                        TOKEN_FOR, TOKEN_UNTIL, TOKEN_DO, TOKEN_DONE,
+                        TOKEN_IN, TOKEN_ECHO };
     for (size_t i = 0; i < SIZE; i++)
     {
         if (strcmp(str, names[i]) == 0)

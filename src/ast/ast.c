@@ -97,6 +97,18 @@ static void pretty_rec(struct ast *ast)
         printf("! ");
         pretty_rec(ast->left);
     }
+    else if (ast->type == AST_WHILE || ast->type == AST_UNTIL)
+    {
+        if (ast->type == AST_WHILE)
+            printf("while { ");
+        else
+            printf("until { ");
+        pretty_rec(ast->cond);
+        printf("}; do {");
+        pretty_rec(ast->left);
+        pretty_rec(ast->right);
+        printf("}; done ");
+    }
     else
         printf("pretty-print : Unknown node type\n");
 }

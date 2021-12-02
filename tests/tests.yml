@@ -172,3 +172,13 @@
     checks:
     -   stdout
     -   exitcode
+
+-   name: SIMPLE WHILE
+    input: |
+        touch coucou
+        while rm coucou; do
+          echo test
+        done
+    checks:
+    -   stdout
+    -   exitcode

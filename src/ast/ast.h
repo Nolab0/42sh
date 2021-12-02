@@ -18,7 +18,10 @@ enum ast_type
     AST_PIPE,
     AST_AND,
     AST_OR,
-    AST_NEG
+    AST_NEG,
+    AST_WHILE,
+    AST_UNTIL,
+    AST_FOR
 };
 
 /**

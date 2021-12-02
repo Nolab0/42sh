@@ -354,10 +354,77 @@ static enum parser_state parse_rule_if(struct parser *parser, struct ast **ast)
     return PARSER_OK;
 }
 
+static enum parser_state parse_do_group(struct parser *parser,
+                                             struct ast **ast)
+{
+    struct token *tok = lexer_peek(parser->lexer);
+    if (tok->type != TOKEN_DO)
+        return PARSER_PANIC;
+    tok = lexer_pop(parser->lexer);
+    token_free(tok);
+    enum parser_state state = parse_compound_list(parser, ast);
+    if (state != PARSER_OK)
+        return state;
+    tok = lexer_peek(parser->lexer);
+    if (tok->type != TOKEN_DONE)
+        return PARSER_PANIC;
+    tok = lexer_pop(parser->lexer);
+    token_free(tok);
+    return PARSER_OK;
+}
+
+
+static enum parser_state parse_rule_while(struct parser *parser,
+                                             struct ast **ast)
+{
+    struct ast *while_node = create_ast(AST_WHILE);
+    enum parser_state state = parse_compound_list(parser, &(while_node->cond));
+    if (state == PARSER_PANIC)
+    {
+        ast_free(while_node);
+        return state;
+    }
+    *ast = while_node;
+    return parse_do_group(parser, &((*ast)->left));
+}
+
+static enum parser_state parse_rule_until(struct parser *parser,
+                                             struct ast **ast)
+{
+    struct ast *until_node = create_ast(AST_UNTIL);
+    enum parser_state state = parse_compound_list(parser, &(until_node->cond));
+    if (state == PARSER_PANIC)
+    {
+        ast_free(until_node);
+        return state;
+    }
+    *ast = until_node;
+    return parse_do_group(parser, &((*ast)->left));
+}
+
 static enum parser_state parse_shell_command(struct parser *parser,
                                              struct ast **ast)
 {
-    return parse_rule_if(parser, ast);
+    struct token *tok = lexer_peek(parser->lexer);
+    if (tok->type == TOKEN_WHILE)
+    {
+        tok = lexer_pop(parser->lexer);
+        token_free(tok);
+        return parse_rule_while(parser, ast);
+    }
+    if (tok->type == TOKEN_UNTIL)
+    {
+        tok = lexer_pop(parser->lexer);
+        token_free(tok);
+        return parse_rule_until(parser, ast);
+    }
+    if (tok->type == TOKEN_IF)
+    {
+        tok = lexer_pop(parser->lexer);
+        token_free(tok);
+        return parse_rule_if(parser, ast);
+    }
+    return PARSER_PANIC;
 }
 
 static enum parser_state parse_command(struct parser *parser, struct ast **ast)

@@ -249,6 +249,24 @@ int ast_eval(struct ast *ast)
     }
     else if (ast->type == AST_NEG)
         return !ast_eval(ast->left);
+    else if (ast->type == AST_WHILE)
+    {
+        int a = 0;
+        while(ast_eval(ast->cond))
+        {
+            a = ast_eval(ast->left);
+        }
+        return a;
+    }
+    else if (ast->type == AST_UNTIL)
+    {
+        int a = 0;
+        while(!ast_eval(ast->cond))
+        {
+            a = ast_eval(ast->left);
+        }
+        return a;
+    }
     else
     {
         fprintf(stderr, "ast_eval: node type not known\n");
