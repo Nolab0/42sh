@@ -133,7 +133,7 @@ static void pretty_rec(struct ast *ast)
             printf("in ");
             for (size_t i = 0; i < ast->size; ++i)
                 printf("%s ", ast->list[i]);
-            
+
             printf("} ");
         }
         printf("do ");

@@ -271,7 +271,7 @@ int ast_eval(struct ast *ast)
     }
     else if (ast->type == AST_FOR)
     {
-        return 0; 
+        return 0;
     }
     else
     {
