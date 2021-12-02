@@ -21,7 +21,7 @@
 /**
  * \brief The number of redirection operators
  */
-#define REDIR_NB 5
+#define REDIR_NB 7
 
 /**
  * \brief Get the command name from a string.
@@ -167,10 +167,11 @@ static int eval_pipe(struct ast *ast)
 
 int exec_redir(struct ast *ast)
 {
-    char *redirs_name[] = { ">", "<", ">>", ">&", ">|" };
+    char *redirs_name[] = { ">", "<", ">>", ">&", ">|", "<&", "<>" };
     redirs_funcs redirs[REDIR_NB] = { &redir_simple_left, &redir_simple_right,
                                       &redir_double_left, &redir_ampersand_left,
-                                      &redir_simple_left };
+                                      &redir_simple_left, &redir_ampersand_right,
+                                      &redir_left_right };
 
     size_t i = 0;
     int fd = -1;
