@@ -124,8 +124,7 @@ static size_t get_redir_idx(struct lexer *lexer, size_t len)
     if (i == 0)
         return 0;
 
-    if (isdigit(lexer->input[i - 1])
-        && (i < 2 || lexer->input[i - 2] == ' '))
+    if (isdigit(lexer->input[i - 1]) && (i < 2 || lexer->input[i - 2] == ' '))
         return i - 1;
     return i;
 }
