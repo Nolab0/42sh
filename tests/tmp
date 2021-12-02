@@ -1,2 +1,3 @@
-echo hello >&2
-echo why
+if false; true; false;then
+    echo hello
+fi

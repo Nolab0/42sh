@@ -1,0 +1,61 @@
+-   name: Echo with quotes
+    input: echo "Cut, Copy and Paste!"
+
+-   name: Simple ls
+    input: ls
+
+-   name: Pipe missing right
+    input: echo foo |
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: Pipe complete
+    input: echo should | echo be working
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: Test1 file
+    input: /test_files/test1
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: Test2 file
+    input: /test_files/test2
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: Test3 file
+    input: /test_files/test3
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: Test4 file
+    input: /test_files/test4
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: Test5 file
+    input: /test_files/test5
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: Test5 file
+    input: /test_files/test5
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr

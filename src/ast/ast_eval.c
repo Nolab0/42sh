@@ -212,10 +212,7 @@ int ast_eval(struct ast *ast)
         int left = ast_eval(ast->left);
         if (!ast->right)
             return left;
-        int right = ast_eval(ast->right);
-        if (right == 0)
-            return right;
-        return left;
+        return ast_eval(ast->right);
     }
     else if (ast->type == AST_IF)
     {
