@@ -2,6 +2,7 @@
 #define AST_H
 
 #include <stdbool.h>
+#include <stddef.h>
 
 /**
  * \brief Possible nodes types for ast structure.
@@ -31,6 +32,11 @@ enum ast_type
 struct ast
 {
     enum ast_type type;
+    char **list;
+    size_t size;
+    size_t capacity;
+    char *var;
+    char *replace;
     struct vec *val;
     struct ast *cond;
     struct ast *left;
@@ -59,6 +65,8 @@ int ast_eval(struct ast *ast);
 struct ast *create_ast(enum ast_type type);
 
 void ast_free(struct ast *ast);
+
+void add_to_list(struct ast *ast, char *str);
 
 void pretty_print(struct ast *ast);
 

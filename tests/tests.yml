@@ -245,6 +245,80 @@
     -   exitcode
     -   has_stderr
 
+-   name: FOR WITHOUT VAR EXP
+    input: |
+        for i in test coucou; do
+        echo oui
+        done
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: FOR WITH ONE VAR EXP
+    input: |
+        for i in test coucou; do
+        echo $i
+        done
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: FOR WITH TWO VAR EXP
+    input: |
+        for i in test coucou; do
+        echo $i hello $i cc
+        done
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: FOR WITH ONE {VAR} EXP
+    input: |
+        for i in test coucou; do
+        echo ${i}
+        done
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: FOR MISSING VAR
+    input: |
+        for in test coucou; do
+        echo $i hello $icc ${i} ${i}abc $iabc${i}def
+        done
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: FOR MISSING IN
+    input: |
+        for i test coucou; do
+        echo $i hello $icc ${i} ${i}abc $iabc${i}def
+        done
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: FOR MISSING DONE
+    input: |
+        for i test coucou; do
+        echo $i hello $icc ${i} ${i}abc $iabc${i}def
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+#
+#-   name: FOR HARD
+#    input: |
+#        for i in test coucou; do
+#        echo $i hello $icc ${i} ${i}abc $iabc${i}def
+#        done
+#    checks:
+#    -   stdout
+#    -   exitcode
+
 -   name: SIMPLE LEFT REDIR
     input: |
         echo Hello > file

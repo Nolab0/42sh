@@ -194,6 +194,76 @@ int exec_redir(struct ast *ast)
     return return_code;
 }
 
+static void set_var(char *var, struct ast *ast)
+{
+    if (ast == NULL)
+        return;
+    ast->var = strdup(var);
+    set_var(var, ast->left);
+    set_var(var, ast->right);
+}
+
+static void set_replace(char *value, struct ast *ast)
+{
+    if (ast == NULL)
+        return;
+    if (ast->replace)
+        free(ast->replace);
+    ast->replace = strdup(value);
+    set_replace(value, ast->left);
+    set_replace(value, ast->right);
+}
+
+static char *my_strstr(char *str, char *var)
+{
+    for (int i = 0; str[i] != 0; i++)
+    {
+        if (str[i] == var[0])
+        {
+            int j = 0;
+            for (; var[j] != 0 && str[i + j] != 0; j++)
+            {
+                if (var[j] != str[i + j])
+                    break;
+            }
+            if (var[j] == 0 && (str[i + j] == 0 || is_separator(str[i + j])))
+                return str + i;
+            else if (var[j] == 0)
+            {
+                if (str[i + j] == 0)
+                    return str + i;
+                if (str[i + j - 1] == '}')
+                    return str + i;
+            }
+        }
+    }
+    return NULL;
+}
+
+static char *replace_vars(char *str, char *var, char *replace)
+{
+    if (var == NULL)
+        return strdup(str);
+    char *substring = NULL;
+    size_t to_copy = 0;
+    char *cmd = strdup(str);
+    while ((substring = my_strstr(cmd, var)) != NULL)
+    {
+        to_copy = substring - cmd; // determine length before substring
+        char *before = strndup(cmd, to_copy);
+        char *after = strdup(substring + strlen(var));
+        char *tmp =
+            zalloc(sizeof(char)
+                   * (strlen(before) + strlen(replace) + strlen(after) + 1));
+        sprintf(tmp, "%s%s%s", before, replace, after);
+        free(cmd);
+        free(before);
+        free(after);
+        cmd = tmp;
+    }
+    return cmd;
+}
+
 int ast_eval(struct ast *ast)
 {
     if (!ast)
@@ -223,7 +293,22 @@ int ast_eval(struct ast *ast)
         return ast_eval(ast->left);
     else if (ast->type == AST_CMD)
     {
-        int res = cmd_exec(vec_cstring(ast->val));
+        int res;
+        if (ast->var != NULL)
+        {
+            char *cmd = replace_vars(ast->val->data, ast->var, ast->replace);
+            char *tmp = strdup(ast->var + 1);
+            char *newvar = zalloc(sizeof(char) * strlen(tmp) + 4);
+            sprintf(newvar, "${%s}", tmp);
+            char *cmd2 = replace_vars(cmd, newvar, ast->replace);
+            free(newvar);
+            free(cmd);
+            free(tmp);
+            res = cmd_exec(cmd2);
+            free(cmd2);
+        }
+        else
+            res = cmd_exec(ast->val->data);
         if (!ast->left)
             return res;
         return ast_eval(ast->left);
@@ -258,6 +343,17 @@ int ast_eval(struct ast *ast)
             a = ast_eval(ast->left);
         }
         return a;
+    }
+    else if (ast->type == AST_FOR)
+    {
+        set_var(ast->val->data, ast->left);
+        int ret_code = 0;
+        for (size_t i = 0; i < ast->size; ++i)
+        {
+            set_replace(ast->list[i], ast->left);
+            ret_code = ast_eval(ast->left);
+        }
+        return ret_code;
     }
     else
     {
