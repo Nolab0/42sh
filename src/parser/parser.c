@@ -374,9 +374,10 @@ static enum parser_state parse_rule_for(struct parser *parser, struct ast **ast)
     struct ast *for_node = create_ast(AST_FOR);
     tok = lexer_pop(parser->lexer);
     for_node->val = vec_init();
-    for_node->val->data = strdup(tok->value);
-    for_node->val->size = strlen(tok->value);
-    for_node->val->capacity = strlen(tok->value) + 1;
+    for_node->val->data = zalloc(sizeof(char) * strlen(tok->value) + 2);
+    sprintf(for_node->val->data, "$%s", tok->value);
+    for_node->val->size = strlen(tok->value) + 1;
+    for_node->val->capacity = strlen(tok->value) + 2;
     token_free(tok);
     tok = lexer_peek(parser->lexer);
     if (tok->type == TOKEN_ERROR)

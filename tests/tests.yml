@@ -244,3 +244,30 @@
     -   stdout
     -   exitcode
     -   has_stderr
+
+-   name: FOR WITHOUT VAR EXP 
+    input: |
+        for i in test coucou; do 
+        echo oui
+        done
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: FOR WITH ONE VAR EXP 
+    input: |
+        for i in test coucou; do 
+        echo $i
+        done
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: FOR WITH TWO VAR EXP 
+    input: |
+        for i in test coucou; do 
+        echo $i hello $i cc
+        done
+    checks:
+    -   stdout
+    -   exitcode

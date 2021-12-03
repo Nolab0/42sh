@@ -35,6 +35,8 @@ struct ast
     char **list;
     size_t size;
     size_t capacity;
+    char *var;
+    char *replace;
     struct vec *val;
     struct ast *cond;
     struct ast *left;

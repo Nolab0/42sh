@@ -13,6 +13,8 @@ struct ast *create_ast(enum ast_type type)
     new->size = 0;
     new->capacity = 5;
     new->list = zalloc(sizeof(char *) * new->capacity);
+    new->var = NULL;
+    new->replace = NULL;
     new->left = NULL;
     new->right = NULL;
     new->val = NULL;
@@ -33,6 +35,10 @@ void ast_free(struct ast *ast)
     for (size_t i = 0; i < ast->size; ++i)
         free(ast->list[i]);
     free(ast->list);
+    if (ast->var)
+        free(ast->var);
+    if (ast->replace)
+        free(ast->replace);
     ast_free(ast->cond);
     ast_free(ast->left);
     ast_free(ast->right);
