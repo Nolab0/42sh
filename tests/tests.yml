@@ -244,3 +244,144 @@
     -   stdout
     -   exitcode
     -   has_stderr
+
+-   name: SIMPLE LEFT REDIR
+    input: |
+        echo Hello > file
+        cat file
+        rm file
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: SIMPLE LEFT COMMAND STDERR REDIR
+    input: |
+        ls unknown 2>file
+        cat file
+        rm file
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: SIMPLE REDIRECTION WITH CANCEL
+    input: |
+        echo test > file; echo world
+        cat file
+        rm file
+    checks:
+        -   stdout
+        -   exitcode
+        -
+-   name: DOUBLE LEFT REDIR
+    input: |
+        echo Hello > file > file2
+        cat file2
+        rm file
+        rm file2
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: SIMPLE RIGHT REDIR
+    input: |
+        echo Hello > file
+        cat < file
+        rm file
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: SIMPLE RIGHT REDIR
+    input: |
+        echo Hello > file
+        cat < file
+        rm file
+    checks:
+    -   stdout
+    -   exitcode
+
+-   name: SIMPLE LEFT REDIR SPECIFIED FD
+    input: |
+        echo Hello 1> file
+        cat < file
+        rm file
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: REDIRECTION ERROR MISSING RIGHT
+    input: |
+        echo Hello >
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: REDIRECTION ERROR INVALID REDIR
+    input: |
+        echo Hello >>>file
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: REDIRECTION AMPERSAND LEFT
+    input: |
+        echo Hello >&2
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: REDIRECTION AMPERSAND LEFT INVALID FD
+    input: |
+        echo Hello >&42
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: REDIRECTION AMPERSAND INVALID FD
+    input: |
+        echo Hello >&42
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: APPEND LEFT REDIR
+    input: |
+        echo Hello > file
+        echo World >> file
+        cat file
+        rm file
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: PIPE REDIR
+    input: |
+        echo test >| file
+        cat file
+        rm file
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: PIPE REDIR STICKED
+    input: |
+        echo test>| file
+        cat file
+        rm file
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: REDIR <> TO STDOUT
+    input: |
+        echo test <>1
+    checks:
+        -   stdout
+        -   exitcode
+
+

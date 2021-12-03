@@ -7,6 +7,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <utils/utils.h>
 #include <utils/vec.h>
 
 enum parser_state parse_else_clause(struct parser *parser, struct ast **ast);
@@ -42,6 +43,11 @@ static enum parser_state parse_redir(struct parser *parser, struct ast **ast)
     struct token *tok = lexer_peek(parser->lexer);
     if (tok->type != TOKEN_REDIR)
         return PARSER_ABSENT;
+    size_t i = 0;
+    while (tok->value[i] != '\0' && is_redirchar(tok->value[i]))
+        i++;
+    if (i > 2 || tok->value[i] == '\0')
+        return PARSER_PANIC;
     struct ast *placeholder = create_ast(AST_REDIR);
     placeholder->val = vec_init();
     placeholder->val->data = strdup(tok->value);

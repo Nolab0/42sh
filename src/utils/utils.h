@@ -20,4 +20,6 @@ struct opts
  */
 int is_separator(char c);
 
+int is_redirchar(char c);
+
 #endif /* ! UTILS_H */

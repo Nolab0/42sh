@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <utils/vec.h>
 
 /**
  * \brief Generic function for left redirection
@@ -25,6 +26,7 @@ static int redir_left(struct ast *left, int fd, char *right, int append)
     if (dup2(file_fd, fd) == -1)
         return -1;
     int r_code = ast_eval(left);
+    close(fd);
     fflush(NULL);
     if (dup2(save_fd, fd) == -1) // Restore file descriptor
         return -1;
@@ -75,6 +77,7 @@ int redir_ampersand_left(struct ast *left, int fd, char *right)
         return -1;
     int r_code = ast_eval(left);
     fflush(stdout);
+    close(fd);
     if (dup2(save_fd, file_fd) == -1) // Restore file descriptor
         return -1;
 
@@ -88,7 +91,8 @@ int redir_ampersand_right(struct ast *left, int fd, char *right)
     if (fd == -1)
         fd = STDIN_FILENO;
     int save_fd = dup(fd);
-    int file_fd = strtol(right, NULL, 10);
+    int file_fd = open(right, O_CREAT | O_RDWR);
+
     if (file_fd == -1) // check the output strtol
         return -1;
     if (dup2(fd, file_fd) == -1)
@@ -96,6 +100,7 @@ int redir_ampersand_right(struct ast *left, int fd, char *right)
     // fcntl(fd, F_SETFD, FD_CLOEXEC);
     int r_code = ast_eval(left);
     fflush(NULL);
+    close(fd);
     if (dup2(save_fd, fd) == -1)
         return -1;
 
@@ -107,14 +112,13 @@ int redir_ampersand_right(struct ast *left, int fd, char *right)
 int redir_left_right(struct ast *left, int fd, char *right)
 {
     if (fd == -1)
-        fd = STDIN_FILENO;
+        fd = STDOUT_FILENO;
     int save_fd = dup(fd);
-    int file_fd = open(right, O_RDWR | O_CREAT, 0644);
+    int file_fd = strtol(right, NULL, 10);
     if (file_fd == -1)
         return -1;
-    if (dup2(fd, file_fd) == -1)
+    if (dup2(file_fd, fd) == -1)
         return -1;
-    // fcntl(file_fd, F_SETFD, FD_CLOEXEC);
     int r_code = ast_eval(left);
     fflush(NULL);
     if (dup2(save_fd, fd) == -1)

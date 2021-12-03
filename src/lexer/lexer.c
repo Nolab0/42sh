@@ -27,11 +27,11 @@ static int isvalidampersand(char *str)
 static int isvalidredir(char *str)
 {
     int i = 0;
-    while (str[i] != 0 && str[i] != ' ')
+    while (str[i] != '\0' && str[i] != ' ')
         i++;
-    if (str[i] == 0)
+    if (str[i] == '\0')
         return isvalidampersand(str);
-    if (str[i + 1] != 0 && str[i + 1] == '&')
+    if (str[i + 1] != '\0' && str[i + 1] == '&')
         return 0;
     return isvalidampersand(str);
 }
@@ -162,7 +162,7 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
         else
         {
             vec_push(vec, current);
-            if ((current == '<' || current == '>')
+            if ((current == '<' || current == '>' || current == '|')
                 && lexer->input[lexer->pos + 1] == ' ')
             {
                 vec_push(vec, lexer->input[lexer->pos + 1]);
