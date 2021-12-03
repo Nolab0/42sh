@@ -176,12 +176,12 @@ int exec_redir(struct ast *ast)
 
     size_t i = 0;
     int fd = -1;
-    if (!is_redirchar(ast->val->data[i]))
+    if (!is_redirchar(ast->val->data[i])) // TODO: handle not digit case
         fd = ast->val->data[i++] - '0';
     while (is_redirchar(ast->val->data[i]))
         i++;
     if (fd == -1 && i > 2)
-        return 0; // Not valid
+        return 2; // Not valid
     char *redir_mode = NULL;
     if (fd != -1)
         redir_mode = strndup(ast->val->data + 1, i - 1);
@@ -201,7 +201,9 @@ int exec_redir(struct ast *ast)
     }
     free(redir_mode);
     free(right);
-    return return_code; // Redir not found
+    if (ast->right)
+        return exec_redir(ast->right);
+    return return_code;
 }
 
 int ast_eval(struct ast *ast)

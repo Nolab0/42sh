@@ -24,7 +24,6 @@ static int redir_left(struct ast *left, int fd, char *right, int append)
         return -1;
     if (dup2(file_fd, fd) == -1)
         return -1;
-    fcntl(fd, F_SETFD, FD_CLOEXEC);
     int r_code = ast_eval(left);
     fflush(NULL);
     if (dup2(save_fd, fd) == -1) // Restore file descriptor
@@ -66,15 +65,16 @@ int redir_double_left(struct ast *left, int fd, char *right)
 
 int redir_ampersand_left(struct ast *left, int fd, char *right)
 {
+    if (fd == -1)
+        fd = STDOUT_FILENO;
     int save_fd = dup(fd);
     int file_fd = strtol(right, NULL, 10);
     if (file_fd == -1)
         return -1;
     if (dup2(file_fd, fd) == -1)
         return -1;
-    fcntl(fd, F_SETFD, FD_CLOEXEC);
     int r_code = ast_eval(left);
-    fflush(NULL);
+    fflush(stdout);
     if (dup2(save_fd, file_fd) == -1) // Restore file descriptor
         return -1;
 

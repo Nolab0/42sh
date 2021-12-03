@@ -39,6 +39,7 @@ static void pretty_rec(struct ast *ast)
         return;
     if (ast->type == AST_ROOT)
     {
+        printf("root ");
         pretty_rec(ast->left);
         pretty_rec(ast->right);
     }
@@ -75,6 +76,7 @@ static void pretty_rec(struct ast *ast)
     else if (ast->type == AST_REDIR)
     {
         pretty_rec(ast->left);
+        pretty_rec(ast->right);
         printf("redir %s ", ast->val->data);
     }
     else if (ast->type == AST_PIPE)
