@@ -238,6 +238,13 @@ static char *my_strstr(char *str, char *var)
             }
             if (var[j] == 0 && (str[i + j] == 0 || is_separator(str[i + j])))
                 return str + i;
+            else if (var[j] == 0)
+            {
+                if (str[i + j] == 0)
+                    return str + i;
+                if (str[i + j - 1] == '}')
+                    return str + i;
+            }
         }
     }
     return NULL;
@@ -296,9 +303,22 @@ int ast_eval(struct ast *ast)
         return ast_eval(ast->left);
     else if (ast->type == AST_CMD)
     {
-        char *cmd = replace_vars(ast->val->data, ast->var, ast->replace);
-        int res = cmd_exec(cmd);
-        free(cmd);
+        int res;
+        if (ast->var != NULL)
+        {
+            char *cmd = replace_vars(ast->val->data, ast->var, ast->replace);
+            char *tmp = strdup(ast->var + 1);
+            char *newvar = zalloc(sizeof(char) * strlen(tmp) + 4);
+            sprintf(newvar, "${%s}", tmp);
+            char *cmd2 = replace_vars(cmd, newvar, ast->replace);
+            free(newvar);
+            free(cmd);
+            free(tmp);
+            res = cmd_exec(cmd2);
+            free(cmd2);
+        }
+        else
+            res = cmd_exec(ast->val->data);
         if (!ast->left)
             return res;
         return ast_eval(ast->left);
