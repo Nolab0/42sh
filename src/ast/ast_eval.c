@@ -255,7 +255,9 @@ static char *replace_vars(char *str, char *var, char *replace)
         to_copy = substring - cmd; // determine length before substring
         char *before = strndup(cmd, to_copy);
         char *after = strdup(substring + strlen(var));
-        char *tmp = zalloc(sizeof(char) * (strlen(before) + strlen(replace) + strlen(after) + 1));
+        char *tmp =
+            zalloc(sizeof(char)
+                   * (strlen(before) + strlen(replace) + strlen(after) + 1));
         sprintf(tmp, "%s%s%s", before, replace, after);
         free(cmd);
         free(before);
