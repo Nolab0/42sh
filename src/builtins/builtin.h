@@ -5,4 +5,6 @@
 
 int echo(char *args);
 
+int builtin_exit(char *args);
+
 #endif /* !BUILTIN_H */

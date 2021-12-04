@@ -26,6 +26,21 @@ enum ast_type
 };
 
 /**
+ * \brief Possible modes for ast evaluation
+ */
+enum cmd_mode
+{
+    EXIT = 1,
+    BREAK = 2,
+    CONTINUE = 3
+};
+
+/**
+ * \brief Global variable holding mode of evaluation
+ */
+extern enum cmd_mode current_mode;
+
+/**
  * \brief Structure for ast.
  * @details: cond use for ifs conditions
  */

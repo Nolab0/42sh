@@ -16,12 +16,14 @@
 /**
  * \brief The number of builtins commands
  */
-#define BLT_NB 1
+#define BLT_NB 2
 
 /**
  * \brief The number of redirection operators
  */
 #define REDIR_NB 7
+
+enum cmd_mode current_mode = 0;
 
 /**
  * \brief Get the command name from a string.
@@ -101,8 +103,8 @@ static int fork_exec(char *cmd)
 
 int cmd_exec(char *cmd)
 {
-    char *builtins[] = { "echo" };
-    commands cmds[BLT_NB] = { &echo };
+    char *builtins[] = { "echo", "exit" };
+    commands cmds[BLT_NB] = { &echo, &builtin_exit};
 
     int arg_index = 0;
     char *cmd_name = getcmdname(cmd, &arg_index);
