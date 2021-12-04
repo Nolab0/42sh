@@ -1,0 +1,2 @@
+if echo lol; then exit 12
+fi

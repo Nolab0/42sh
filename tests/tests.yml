@@ -458,4 +458,83 @@
         -   stdout
         -   exitcode
 
+-   name: SIMPLE EXIT
+    input: |
+        exit 42
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: SIMPLE EXIT INVALID
+    input: |
+        exit lol
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: EXIT WITH ECHO AT END
+    input: |
+        exit 42; echo test
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: EXIT WITH ECHO AT BEGINING
+    input: |
+        echo test; exit 42
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: EXIT WITH IF 1
+    input: |
+        if true; then echo true
+        else exit 42
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: EXIT WITH IF 2
+    input: |
+        if exit 12; then
+        echo never
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: EXIT WITH IF ERROR
+    input: |
+        if exit abc; then echo here
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: EXIT IN THEN
+    input: |
+        if echo lol; then exit 42
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: EXIT IN ELSE
+    input: |
+        if echo lol; then echo here
+        else exit 42
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: EXIT NOTHING
+    input: |
+        exit
+    checks:
+        -   stdout
+        -   exitcode
 

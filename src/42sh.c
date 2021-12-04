@@ -137,7 +137,8 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
     }
     if (opts->p)
         pretty_print(parser->ast);
-    int eval = ast_eval(parser->ast);
+    int return_code = 0;
+    int eval = ast_eval(parser->ast, &return_code);
     vec_destroy(final);
     free(final);
     return eval;

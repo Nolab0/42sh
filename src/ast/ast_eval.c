@@ -104,7 +104,7 @@ static int fork_exec(char *cmd)
 int cmd_exec(char *cmd)
 {
     char *builtins[] = { "echo", "exit" };
-    commands cmds[BLT_NB] = { &echo, &builtin_exit};
+    commands cmds[BLT_NB] = { &echo, &builtin_exit };
 
     int arg_index = 0;
     char *cmd_name = getcmdname(cmd, &arg_index);
@@ -116,7 +116,10 @@ int cmd_exec(char *cmd)
         if (strcmp(cmd_name, builtins[i]) == 0)
         {
             free(cmd_name);
-            return cmds[i](cmd + arg_index + 1);
+            int return_code = cmds[i](cmd + arg_index + 1);
+            if (i == 1)
+                current_mode = EXIT;
+            return return_code;
         }
         i++;
     }
@@ -135,7 +138,8 @@ static int eval_pipe(struct ast *ast)
 
     if (dup2(fds[1], STDOUT_FILENO) == -1)
         errx(1, "dup2 failed");
-    ast_eval(ast->left);
+    int return_code = 0;
+    ast_eval(ast->left, &return_code);
 
     dup2(out, STDOUT_FILENO);
     close(out);
@@ -145,7 +149,7 @@ static int eval_pipe(struct ast *ast)
     if (dup2(fds[0], STDIN_FILENO) == -1)
         errx(1, "dup2 failed");
     close(fds[1]);
-    int res = ast_eval(ast->right);
+    int res = ast_eval(ast->right, &return_code);
 
     dup2(in, STDIN_FILENO);
     close(in);
@@ -228,7 +232,9 @@ static char *my_strstr(char *str, char *var)
                 if (var[j] != str[i + j])
                     break;
             }
-            if (var[j] == 0 && (str[i + j] == 0 || is_separator(str[i + j]) || str[i + j] == '\"'))
+            if (var[j] == 0
+                && (str[i + j] == 0 || is_separator(str[i + j])
+                    || str[i + j] == '\"'))
                 return str + i;
             else if (var[j] == 0)
             {
@@ -266,33 +272,41 @@ static char *replace_vars(char *str, char *var, char *replace)
     return cmd;
 }
 
-int ast_eval(struct ast *ast)
+int ast_eval(struct ast *ast, int *return_code)
 {
     if (!ast)
         return 0;
+    if (current_mode == EXIT)
+        return *return_code;
     if (ast->type == AST_OR)
     {
-        int left = ast_eval(ast->left);
+        int left = ast_eval(ast->left, return_code);
         if (left == 0 || !ast->right)
             return left;
-        return ast_eval(ast->right);
+        return ast_eval(ast->right, return_code);
     }
     if (ast->type == AST_ROOT)
     {
-        int left = ast_eval(ast->left);
+        int left = ast_eval(ast->left, return_code);
         if (!ast->right)
             return left;
-        return ast_eval(ast->right);
+        return ast_eval(ast->right, return_code);
     }
     else if (ast->type == AST_IF)
     {
-        if (!ast_eval(ast->cond)) // true
-            return ast_eval(ast->left);
+        int test_cond = ast_eval(ast->cond, return_code);
+        if (current_mode == EXIT)
+        {
+            *return_code = test_cond;
+            return test_cond;
+        }
+        if (!test_cond) // true
+            return ast_eval(ast->left, return_code);
         else
-            return ast_eval(ast->right);
+            return ast_eval(ast->right, return_code);
     }
     else if (ast->type == AST_THEN || ast->type == AST_ELSE)
-        return ast_eval(ast->left);
+        return ast_eval(ast->left, return_code);
     else if (ast->type == AST_CMD)
     {
         int res;
@@ -311,9 +325,10 @@ int ast_eval(struct ast *ast)
         }
         else
             res = cmd_exec(ast->val->data);
+        *return_code = res;
         if (!ast->left)
             return res;
-        return ast_eval(ast->left);
+        return ast_eval(ast->left, return_code);
     }
     else if (ast->type == AST_REDIR)
         return exec_redir(ast);
@@ -321,28 +336,28 @@ int ast_eval(struct ast *ast)
         return eval_pipe(ast);
     else if (ast->type == AST_AND)
     {
-        int left = ast_eval(ast->left);
+        int left = ast_eval(ast->left, return_code);
         if (left != 0)
             return left;
-        return ast_eval(ast->right);
+        return ast_eval(ast->right, return_code);
     }
     else if (ast->type == AST_NEG)
-        return !ast_eval(ast->left);
+        return !ast_eval(ast->left, return_code);
     else if (ast->type == AST_WHILE)
     {
         int a = 0;
-        while (ast_eval(ast->cond) == 0)
+        while (ast_eval(ast->cond, return_code) == 0)
         {
-            a = ast_eval(ast->left);
+            a = ast_eval(ast->left, return_code);
         }
         return a;
     }
     else if (ast->type == AST_UNTIL)
     {
         int a = 0;
-        while (ast_eval(ast->cond) != 0)
+        while (ast_eval(ast->cond, return_code) != 0)
         {
-            a = ast_eval(ast->left);
+            a = ast_eval(ast->left, return_code);
         }
         return a;
     }
@@ -353,7 +368,7 @@ int ast_eval(struct ast *ast)
         for (size_t i = 0; i < ast->size; ++i)
         {
             set_replace(ast->list[i], ast->left);
-            ret_code = ast_eval(ast->left);
+            ret_code = ast_eval(ast->left, return_code);
         }
         return ret_code;
     }

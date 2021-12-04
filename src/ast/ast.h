@@ -75,7 +75,7 @@ typedef int (*redirs_funcs)(struct ast *left, int fd, char *right);
 /**
  * \brief Evaluate the ast and execute commands.
  */
-int ast_eval(struct ast *ast);
+int ast_eval(struct ast *ast, int *return_code);
 
 struct ast *create_ast(enum ast_type type);
 
