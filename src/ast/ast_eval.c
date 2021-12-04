@@ -224,52 +224,6 @@ void free_var(struct list *var)
     free(var);
 }
 
-static void add_var(struct list *new)
-{
-    if (!vars)
-    {
-        vars = new;
-        return;
-    }
-    struct list *cur = vars;
-    struct list *prev = NULL;
-    while (cur && strcmp(cur->name, new->name) != 0)
-    {
-        prev = cur;
-        cur = cur->next;
-    }
-    if (!cur)
-    {
-        prev->next = new;
-        return;
-    }
-    new->next = cur->next;
-    free_var(cur);
-    prev->next = new;
-}
-
-static int is_var_assign(char *str)
-{
-    char *equal = strchr(str, '=');
-    char *space = strchr(str, ' ');
-    char *quote = strchr(str, '\"');
-    char *squote = strchr(str, '\'');
-    if (isdigit(str[0]) || !equal || (space && space < equal))
-        return 0;
-    if ((quote && quote < equal) || (squote && squote < equal)) 
-        return 0;
-    char *tmp = str;
-    while (tmp != equal && isalnum(tmp[0]))
-        tmp++;
-    if (tmp != equal)
-        return 0;
-    struct list *var = zalloc(sizeof(struct list));
-    var->name = strndup(str, equal - str);
-    var->value = strdup(equal + 1);
-    add_var(var);
-    return 1;
-}
-
 int ast_eval(struct ast *ast)
 {
     if (!ast)
@@ -300,36 +254,57 @@ int ast_eval(struct ast *ast)
     else if (ast->type == AST_CMD)
     {
         int res = 0;
-        if (!is_var_assign(ast->val->data))
-        {
             char *cmd2;
-            if (ast->var != NULL)
-            {
-                char *newvar = zalloc(sizeof(char) * strlen(ast->var) + 3);
-                sprintf(newvar, "\"%s\"", ast->var);
-                char *cmd = replace_vars(ast->val->data, newvar, ast->replace);
-                char *tmp = strdup(ast->var + 1);
-                free(newvar);
-                newvar = zalloc(sizeof(char) * strlen(tmp) + 6);
-                sprintf(newvar, "\"${%s}\"", tmp);
-                cmd2 = replace_vars(cmd, newvar, ast->replace);
-                free(newvar);
-                free(cmd);
-                free(tmp);
-            }
-            else
-                cmd2 = strdup(ast->val->data);
-            expand_vars(cmd2);
-            res = cmd_exec(cmd2);
-            free(cmd2);
+        if (ast->var != NULL)
+        {
+            char *newvar = zalloc(sizeof(char) * strlen(ast->var) + 3);
+            sprintf(newvar, "\"%s\"", ast->var);
+            char *cmd = replace_vars(ast->val->data, newvar, ast->replace);
+            char *tmp = strdup(ast->var + 1);
+            free(newvar);
+            newvar = zalloc(sizeof(char) * strlen(tmp) + 6);
+            sprintf(newvar, "\"${%s}\"", tmp);
+            cmd2 = replace_vars(cmd, newvar, ast->replace);
+            free(newvar);
+            free(cmd);
+            free(tmp);
         }
+        else
+            cmd2 = strdup(ast->val->data);
+
+        cmd2 = expand_vars(cmd2);
+        cmd2 = remove_vars(cmd2);
+        cmd2 = remove_quotes(cmd2);
+        cmd2 = escape_chars(cmd2);
+        if (!is_var_assign(cmd2))
+            res = cmd_exec(cmd2);
+        free(cmd2);
         if (!ast->left)
+        {
+            char *value = my_itoa(res);
+            char *var = build_var("?", value);
+            var_assign_special(var);
+            free(var);
+            free(value);
             return res;
-        return ast_eval(ast->left);
+        }
+        res = ast_eval(ast->left);
+        char *value = my_itoa(res);
+        char *var = build_var("?", value);
+        var_assign_special(var);
+        free(var);
+        free(value);
+        return res;
     }
     else if (ast->type == AST_REDIR)
     {
-        expand_vars(ast->val->data);
+        char *tmp = expand_vars(ast->val->data);
+        tmp = remove_vars(tmp);
+        tmp = remove_quotes(tmp);
+        tmp = escape_chars(tmp);
+        ast->val->data = tmp;
+        ast->val->size = strlen(tmp);
+        ast->val->capacity = strlen(tmp) + 1;
         return exec_redir(ast);
     }
     else if (ast->type == AST_PIPE)

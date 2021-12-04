@@ -11,7 +11,7 @@ struct list
     struct list *next;
 };
 
-extern struct list *vars; 
+extern struct list *vars;
 
 /**
  * \brief Possible nodes types for ast structure.
@@ -93,6 +93,24 @@ char *my_strstr(char *str, char *var);
 
 char *replace_vars(char *str, char *var, char *replace);
 
-void expand_vars(char *str);
+char *expand_vars(char *str);
+
+char *escape_chars(char *str);
+
+char *remove_quotes(char *str);
+
+void add_var(struct list *new);
+
+int is_var_assign(char *str);
+
+void set_special_vars(void);
+
+char *build_var(char *name, char *value);
+
+int var_assign_special(char *str);
+
+char *my_itoa(int n);
+
+char *remove_vars(char *str);
 
 #endif /* ! AST_H */

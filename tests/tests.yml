@@ -5,6 +5,7 @@
         fi
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: IF THEN ELSE
@@ -16,6 +17,7 @@
         fi
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: IF THEN ELIF THEN ELSE
@@ -29,6 +31,7 @@
         fi
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: REDIR DEV NULL
@@ -36,6 +39,7 @@
         echo test >/dev/null
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: REDIR DEV NULL APPENDED
@@ -43,6 +47,7 @@
         echo test2>/dev/null
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: REDIR 2 INTO DEV NULL
@@ -50,6 +55,7 @@
         echo test 2>/dev/null
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: REDIR IF ECHO IN &2
@@ -59,6 +65,7 @@
         fi >&2
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: SIMPLE ECHO TR PIPE
@@ -66,6 +73,7 @@
         echo hello | tr e a
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: SIMPLE &&
@@ -73,6 +81,7 @@
         echo test && echo coucou
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: SIMPLE ||
@@ -80,6 +89,7 @@
         echo test || echo coucou
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: IF TRUE || FALSE
@@ -89,6 +99,7 @@
         fi
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: IF FALSE || TRUE
@@ -98,6 +109,7 @@
         fi
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: IF TRUE && FALSE
@@ -107,6 +119,7 @@
         fi
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: IF FALSE && TRUE
@@ -116,6 +129,7 @@
         fi
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: IF TRUE && TRUE && FALSE
@@ -125,6 +139,7 @@
         fi
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: IF FALSE || FALSE || FALSE
@@ -134,6 +149,7 @@
         fi
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: IF FALSE || FALSE || TRUE
@@ -143,6 +159,7 @@
         fi
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: IF FALSE ||| TRUE
@@ -178,6 +195,7 @@
         fi
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: IF FALSE || ECHO YES THEN PWD || FALSE && ECHO OUI
@@ -187,37 +205,7 @@
         fi
     checks:
     -   stdout
-    -   exitcode
-
--   name: SIMPLE WHILE
-    input: |
-        touch coucou
-        while rm coucou; do
-        echo test
-        done
-    checks:
-    -   stdout
-    -   exitcode
-
--   name: SIMPLE UNTIL
-    input: |
-        until rm coucou; do
-        touch coucou
-        done
-    checks:
-    -   stdout
-    -   exitcode
-
--   name: IF IN WHILE
-    input: |
-        touch coucou
-        while rm coucou; do
-        if true; then
-        echo oui
-        fi
-        done
-    checks:
-    -   stdout
+    -   stderr
     -   exitcode
 
 -   name: WHILE MISSING DO
@@ -252,6 +240,7 @@
         done
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: FOR WITH ONE VAR EXP
@@ -261,6 +250,7 @@
         done
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: FOR WITH TWO VAR EXP
@@ -270,6 +260,7 @@
         done
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: FOR WITH ONE {VAR} EXP
@@ -279,6 +270,7 @@
         done
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: FOR MISSING VAR
@@ -317,6 +309,7 @@
 #        done
 #    checks:
 #    -   stdout
+#    -   stderr
 #    -   exitcode
 
 -   name: SIMPLE LEFT REDIR
@@ -326,6 +319,7 @@
         rm file
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: SIMPLE LEFT COMMAND STDERR REDIR
@@ -334,8 +328,9 @@
         cat file
         rm file
     checks:
-        -   stdout
-        -   exitcode
+    -   stdout
+    -   stderr
+    -   exitcode
 
 -   name: SIMPLE REDIRECTION WITH CANCEL
     input: |
@@ -343,9 +338,10 @@
         cat file
         rm file
     checks:
-        -   stdout
-        -   exitcode
-        -
+    -   stdout
+    -   stderr
+    -   exitcode
+
 -   name: DOUBLE LEFT REDIR
     input: |
         echo Hello > file > file2
@@ -354,6 +350,7 @@
         rm file2
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: SIMPLE RIGHT REDIR
@@ -363,6 +360,7 @@
         rm file
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: SIMPLE RIGHT REDIR
@@ -372,6 +370,7 @@
         rm file
     checks:
     -   stdout
+    -   stderr
     -   exitcode
 
 -   name: SIMPLE LEFT REDIR SPECIFIED FD
@@ -380,48 +379,49 @@
         cat < file
         rm file
     checks:
-        -   stdout
-        -   exitcode
+    -   stdout
+    -   stderr
+    -   exitcode
 
 -   name: REDIRECTION ERROR MISSING RIGHT
     input: |
         echo Hello >
     checks:
-        -   stdout
-        -   exitcode
-        -   has_stderr
+    -   stdout
+    -   exitcode
+    -   has_stderr
 
 -   name: REDIRECTION ERROR INVALID REDIR
     input: |
         echo Hello >>>file
     checks:
-        -   stdout
-        -   exitcode
-        -   has_stderr
+    -   stdout
+    -   exitcode
+    -   has_stderr
 
 -   name: REDIRECTION AMPERSAND LEFT
     input: |
         echo Hello >&2
     checks:
-        -   stdout
-        -   exitcode
-        -   has_stderr
+    -   stdout
+    -   exitcode
+    -   has_stderr
 
 -   name: REDIRECTION AMPERSAND LEFT INVALID FD
     input: |
         echo Hello >&42
     checks:
-        -   stdout
-        -   exitcode
-        -   has_stderr
+    -   stdout
+    -   exitcode
+    -   has_stderr
 
 -   name: REDIRECTION AMPERSAND INVALID FD
     input: |
         echo Hello >&42
     checks:
-        -   stdout
-        -   exitcode
-        -   has_stderr
+    -   stdout
+    -   exitcode
+    -   has_stderr
 
 -   name: APPEND LEFT REDIR
     input: |
@@ -430,8 +430,9 @@
         cat file
         rm file
     checks:
-        -   stdout
-        -   exitcode
+    -   stdout
+    -   stderr
+    -   exitcode
 
 -   name: PIPE REDIR
     input: |
@@ -439,8 +440,9 @@
         cat file
         rm file
     checks:
-        -   stdout
-        -   exitcode
+    -   stdout
+    -   stderr
+    -   exitcode
 
 -   name: PIPE REDIR STICKED
     input: |
@@ -448,12 +450,185 @@
         cat file
         rm file
     checks:
-        -   stdout
-        -   exitcode
+    -   stdout
+    -   stderr
+    -   exitcode
 
 -   name: REDIR <> TO STDOUT
     input: |
         echo test <>1
     checks:
-        -   stdout
-        -   exitcode
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: SIMPLE VAR
+    input: |
+        a=b
+        echo "$a"
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: SIMPLE REASSIGN VAR
+    input: |
+        a=b
+        a=c
+        echo "$a"
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: VAR IN FOR
+    input: |
+        a=b
+        for i in test coucou; do
+        echo "$i" "$a"
+        done
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: TWO VARS
+    input: |
+        abc=coucou
+        test=gg
+        echo "$abc""$test"
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: SIMPLE WHILE
+    input: |
+        a=b
+        while [ "$a" = b ]; do
+        echo test
+        a=c
+        done
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: SIMPLE UNTIL
+    input: |
+        a=c
+        until [ "$a" = b ]; do
+        a=b
+        echo test
+        done
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: IF IN WHILE
+    input: |
+        a=b
+        while [ "$a" = b ]; do
+        if true; then
+        a=c
+        echo test
+        fi
+        done
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: SIMPLE IN DOUBLE QUOTES
+    input: |
+        a=b
+        echo "'""$a""'"
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: DOUBLE IN SIMPLE QUOTES
+    input: |
+        a=b
+        echo '"$a"'
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: ESCAPE QUOTE
+    input: |
+        echo \"
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: ESCAPE QUOTE THEN ERROR
+    input: |
+        echo \""
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: ESCAPE \n
+    input: |
+        echo \n
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: ESCAPE \\
+    input: |
+        echo \\
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: WRONG ASSIGN
+    input: |
+        42=test
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: WRONG ASSIGN 2
+    input: |
+        2=test
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: WRONG ASSIGN 3
+    input: |
+        $=test
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
+-   name: EMPTY VAR
+    input: |
+        a=b
+        echo "$a" "$gg"
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: CHAIN SUB
+    input: |
+        b=c
+        a="$b"
+        echo "$a"
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
