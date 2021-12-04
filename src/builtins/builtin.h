@@ -7,4 +7,6 @@ int echo(char *args);
 
 int builtin_exit(char *args);
 
+int cd(char *args);
+
 #endif /* !BUILTIN_H */

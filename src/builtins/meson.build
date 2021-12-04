@@ -1,4 +1,5 @@
 all_sources += files(
     'echo.c',
-    'exit.c'
+    'exit.c',
+    'cd.c'
 )

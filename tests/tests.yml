@@ -565,3 +565,42 @@
     checks:
         -   stdout
         -   exitcode
+
+-   name: SIMPLE CD
+    input: |
+        cd
+        pwd
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CD ..
+    input: |
+        cd ..
+        pwd
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: INVALID CD
+    input: |
+        cd unkown
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: IF CD PWD ELSE ECHO
+    input: |
+        if true; then
+        cd src
+        pwd
+        else
+        echo didn t work
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr

@@ -1,5 +1,6 @@
 if true; then
-echo true
-else
-echo fale
-fi
+cd src
+        pwd
+        else
+        echo didn t work
+        fi
