@@ -95,17 +95,17 @@ static int match_token(char *str, int quote)
  */
 static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
 {
-    char quote_type = lexer->input[lexer->pos];
-    lexer->pos++; // Skip opening quote
+    char quote_type = lexer->input[lexer->pos]; // ' or "
+    vec_push(vec, lexer->input[lexer->pos++]);
     while (lexer->pos < len && lexer->input[lexer->pos] != quote_type)
         vec_push(vec, lexer->input[lexer->pos++]);
-    if (lexer->pos == len)
+    if (lexer->input[lexer->pos] == quote_type)
+        vec_push(vec, lexer->input[lexer->pos++]);
+    if (lexer->pos == len && lexer->input[lexer->pos - 1] != quote_type)
     {
         fprintf(stderr, "Syntax error: Unterminated quoted string\n");
         return -1;
     }
-
-    lexer->pos++; // Closing quote
     return 0;
 }
 
