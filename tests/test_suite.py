@@ -49,16 +49,22 @@ if __name__ == "__main__":
 
     with open("tests.yml", "r") as file:
         testsuite = [TestCase(**testcase) for testcase in yaml.safe_load(file)]
-
+    test_nb = 0
+    test_sucess = 0
     for testcase in testsuite:
         stdin = testcase.input
         name = testcase.name
         dash_proc = run_shell("dash", stdin)
         sh_proc = run_shell(binary_path, stdin)
-
+        test_nb += 1
         try:
             perform_checks(dash_proc, sh_proc, testcase.checks)
         except AssertionError as err:
             print(f"{KO_TAG} {name}\n{err}")
         else:
+            test_sucess += 1
             print(f"{OK_TAG} {name}")
+
+    print("Total: ")
+    print(f"{OK_TAG} {test_sucess}")
+    print(f"{KO_TAG} {test_nb - test_sucess}")
