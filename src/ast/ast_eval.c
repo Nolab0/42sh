@@ -226,7 +226,7 @@ static char *my_strstr(char *str, char *var)
                 if (var[j] != str[i + j])
                     break;
             }
-            if (var[j] == 0 && (str[i + j] == 0 || is_separator(str[i + j])))
+            if (var[j] == 0 && (str[i + j] == 0 || is_separator(str[i + j]) || str[i + j] == '\"'))
                 return str + i;
             else if (var[j] == 0)
             {
