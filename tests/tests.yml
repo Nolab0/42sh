@@ -592,3 +592,32 @@
         -   exitcode
         -   has_stderr
 
+-   name: BAD IF NO CONDITION
+    input: |
+        if ;then echo test
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: BAD IF NO BODY
+    input: |
+        if true; then
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+
+-   name: BAD IF ELIF WITHOUT THEN
+    input: |
+        if false; then echo then
+        elif true;
+        echo elif
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
