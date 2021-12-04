@@ -35,7 +35,9 @@ char *getcmdname(char *cmd, int *i)
 
 int stop_echo(enum token_type type)
 {
-    if (type != TOKEN_EOF && type != TOKEN_SEMIC && type != TOKEN_NEWL && type != TOKEN_PIPE && type != TOKEN_AND && type != TOKEN_OR && type != TOKEN_REDIR)
+    if (type != TOKEN_EOF && type != TOKEN_SEMIC && type != TOKEN_NEWL
+        && type != TOKEN_PIPE && type != TOKEN_AND && type != TOKEN_OR
+        && type != TOKEN_REDIR)
         return 1;
     return 0;
 }
