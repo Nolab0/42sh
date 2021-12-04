@@ -26,19 +26,6 @@
 enum cmd_mode current_mode = 0;
 
 /**
- * \brief Get the command name from a string.
- * @param cmd: the string containing the command
- * @param i: the index where the commands stops
- * @return: the command, allocated
- */
-static char *getcmdname(char *cmd, int *i)
-{
-    while (cmd[*i] != 0 && !is_separator(cmd[*i]))
-        (*i)++;
-    return strndup(cmd, *i);
-}
-
-/**
  * \brief Split a string into an array in which the
  * first element is the command.
  * @param cmd: the string to spilit

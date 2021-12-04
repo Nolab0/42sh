@@ -1,2 +1,5 @@
-if echo lol; then exit 12
+if true; then
+echo true
+else
+echo fale
 fi

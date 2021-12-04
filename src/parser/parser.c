@@ -85,8 +85,18 @@ static enum parser_state parse_element(struct parser *parser, struct ast **ast)
         free(*ast);
         return PARSER_PANIC;
     }
-    if (tok->type == TOKEN_WORD || tok->type == TOKEN_ECHO
-        || tok->type == TOKEN_EXIT)
+    int in_echo = 0;
+    if ((*ast)->val)
+    {
+        int index = 0;
+        char *cmd = getcmdname((*ast)->val->data, &index);
+
+        if (strcmp(cmd, "echo") == 0 && stop_echo(tok->type))
+            in_echo = 1;
+        free(cmd);
+    }
+    if ((tok->type == TOKEN_WORD || tok->type == TOKEN_ECHO
+        || tok->type == TOKEN_EXIT || in_echo) && tok->type != TOKEN_REDIR)
     {
         struct vec *tmp = vec_init();
         tmp->data = strdup(tok->value);
@@ -100,8 +110,7 @@ static enum parser_state parse_element(struct parser *parser, struct ast **ast)
         tok = lexer_peek(parser->lexer);
         if (tok->type == TOKEN_ERROR)
             return PARSER_PANIC;
-        if (tok->type == TOKEN_WORD || tok->type == TOKEN_ECHO
-            || tok->type == TOKEN_EXIT)
+        if (stop_echo(tok->type))
         {
             (*ast)->val->size--;
             vec_push((*ast)->val, ' ');

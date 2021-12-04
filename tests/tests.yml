@@ -538,3 +538,30 @@
         -   stdout
         -   exitcode
 
+-   name: ECHO EXIT
+    input: |
+        echo exit 42
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: ECHO IF
+    input: |
+        echo if
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: ECHO ELSE
+    input: |
+        echo else
+    checks:
+        -   stdout
+        -   exitcode
+
+-   name: ECHO KEYWORD
+    input: |
+        echo while
+    checks:
+        -   stdout
+        -   exitcode
