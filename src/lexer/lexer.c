@@ -97,7 +97,7 @@ static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
 {
     char quote_type = lexer->input[lexer->pos]; // ' or "
     vec_push(vec, lexer->input[lexer->pos++]);
-    while (lexer->pos < len && lexer->input[lexer->pos] != quote_type)
+    while (lexer->pos < len && (lexer->input[lexer->pos] != quote_type || (lexer->pos != 0 && lexer->input[lexer->pos - 1] == '\\')))
         vec_push(vec, lexer->input[lexer->pos++]);
     if (lexer->input[lexer->pos] == quote_type)
         vec_push(vec, lexer->input[lexer->pos++]);
@@ -152,7 +152,7 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
            && lexer->pos < redir_index)
     {
         char current = lexer->input[lexer->pos];
-        if (current == '\'' || current == '\"')
+        if ((current == '\'' || current == '\"') && (lexer->pos == 0 || lexer->input[lexer->pos - 1] != '\\'))
         {
             quote = 1;
             int error = handle_quotes(lexer, vec, len);

@@ -9,6 +9,8 @@
 #include <utils/utils.h>
 #include <utils/vec.h>
 
+struct list *vars;
+
 static struct opts *parse_opts(int argc, char **argv)
 {
     struct opts *opts = zalloc(sizeof(struct opts));
@@ -138,6 +140,14 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
     if (opts->p)
         pretty_print(parser->ast);
     int eval = ast_eval(parser->ast);
+    struct list *cur = vars;
+    while (cur)
+    {
+        struct list *tmp = cur->next;
+        printf("name = %s; val = %s\n", cur->name, cur->value);
+        free_var(cur);
+        cur = tmp;
+    }
     vec_destroy(final);
     free(final);
     return eval;

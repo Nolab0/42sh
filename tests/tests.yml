@@ -257,7 +257,7 @@
 -   name: FOR WITH ONE VAR EXP
     input: |
         for i in test coucou; do
-        echo $i
+        echo "$i"
         done
     checks:
     -   stdout
@@ -266,7 +266,7 @@
 -   name: FOR WITH TWO VAR EXP
     input: |
         for i in test coucou; do
-        echo $i hello $i cc
+        echo "$i" hello "$i" cc
         done
     checks:
     -   stdout
@@ -275,7 +275,7 @@
 -   name: FOR WITH ONE {VAR} EXP
     input: |
         for i in test coucou; do
-        echo ${i}
+        echo "${i}"
         done
     checks:
     -   stdout
@@ -284,7 +284,7 @@
 -   name: FOR MISSING VAR
     input: |
         for in test coucou; do
-        echo $i hello $icc ${i} ${i}abc $iabc${i}def
+        echo "$i" hello "$icc" "${i}" "${i}"abc "$iabc""${i}"def
         done
     checks:
     -   stdout
@@ -294,7 +294,7 @@
 -   name: FOR MISSING IN
     input: |
         for i test coucou; do
-        echo $i hello $icc ${i} ${i}abc $iabc${i}def
+        echo "$i" hello "$icc" "${i}" "${i}"abc "$iabc""${i}"def
         done
     checks:
     -   stdout
@@ -304,7 +304,7 @@
 -   name: FOR MISSING DONE
     input: |
         for i test coucou; do
-        echo $i hello $icc ${i} ${i}abc $iabc${i}def
+        echo "$i" hello "$icc" "${i}" "${i}"abc "$iabc""${i}"def
     checks:
     -   stdout
     -   exitcode
@@ -457,5 +457,3 @@
     checks:
         -   stdout
         -   exitcode
-
-
