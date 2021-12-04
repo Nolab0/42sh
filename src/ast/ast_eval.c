@@ -27,19 +27,6 @@ enum cmd_mode current_mode = 0;
 struct list *vars = NULL;
 
 /**
- * \brief Get the command name from a string.
- * @param cmd: the string containing the command
- * @param i: the index where the commands stops
- * @return: the command, allocated
- */
-static char *getcmdname(char *cmd, int *i)
-{
-    while (cmd[*i] != 0 && !is_separator(cmd[*i]))
-        (*i)++;
-    return strndup(cmd, *i);
-}
-
-/**
  * \brief Split a string into an array in which the
  * first element is the command.
  * @param cmd: the string to spilit
@@ -221,7 +208,6 @@ static void set_replace(char *value, struct ast *ast)
     set_replace(value, ast->right);
 }
 
-
 void free_var(struct list *var)
 {
     free(var->name);
@@ -267,7 +253,7 @@ int ast_eval(struct ast *ast, int *return_code)
     else if (ast->type == AST_CMD)
     {
         int res = 0;
-            char *cmd2;
+        char *cmd2;
         if (ast->var != NULL)
         {
             char *newvar = zalloc(sizeof(char) * strlen(ast->var) + 3);

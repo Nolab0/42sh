@@ -1,9 +1,9 @@
+#include <ctype.h>
+#include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <utils/alloc.h>
 #include <utils/utils.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <ctype.h>
 
 #include "ast.h"
 
@@ -21,8 +21,9 @@ char *my_strstr(char *str, char *var)
                 if (var[j] != str[i + j])
                     break;
             }
-            if (var[j] == 0 && (str[i + j] == 0 || is_separator(str[i + j]) || str[i + j] == '\"'
-                    || str[i + j] == '='))
+            if (var[j] == 0
+                && (str[i + j] == 0 || is_separator(str[i + j])
+                    || str[i + j] == '\"' || str[i + j] == '='))
                 return str + i;
             else if (var[j] == 0)
             {
@@ -88,63 +89,63 @@ char *expand_vars(char *str)
 
 char *remove_quotes(char *str)
 {
-   int i = 0;
-   int quote_type = 0;
-   int index = 0;
-   char *new = zalloc(sizeof(char) * (strlen(str) + 1));
-   while (str[i] != 0)
-   {
-       if (str[i] == '\'' && (i == 0 || str[i - 1] != '\\'))
-       {
-           if (quote_type == 0)
-           {
-               quote_type = 1;
-               i++;
-               continue;
-           }
-           if (quote_type == 1)
-           {
-               quote_type = 0;
-               i++;
-               continue;
-           }
-       }
-       if (str[i] == '\"' && (i == 0 || str[i - 1] != '\\'))
-       {
-           if (quote_type == 0)
-           {
-               quote_type = 2;
-               i++;
-               continue;
-           }
-           if (quote_type == 2)
-           {
-               quote_type = 0;
-               i++;
-               continue;
-           }
-       }
-       new[index++] = str[i];
-       i++;
-   }
-   free(str);
-   return new;
+    int i = 0;
+    int quote_type = 0;
+    int index = 0;
+    char *new = zalloc(sizeof(char) * (strlen(str) + 1));
+    while (str[i] != 0)
+    {
+        if (str[i] == '\'' && (i == 0 || str[i - 1] != '\\'))
+        {
+            if (quote_type == 0)
+            {
+                quote_type = 1;
+                i++;
+                continue;
+            }
+            if (quote_type == 1)
+            {
+                quote_type = 0;
+                i++;
+                continue;
+            }
+        }
+        if (str[i] == '\"' && (i == 0 || str[i - 1] != '\\'))
+        {
+            if (quote_type == 0)
+            {
+                quote_type = 2;
+                i++;
+                continue;
+            }
+            if (quote_type == 2)
+            {
+                quote_type = 0;
+                i++;
+                continue;
+            }
+        }
+        new[index++] = str[i];
+        i++;
+    }
+    free(str);
+    return new;
 }
 
 char *escape_chars(char *str)
 {
-   int i = 0;
-   int index = 0;
-   char *new = zalloc(sizeof(char) * (strlen(str) + 1));
-   while (str[i] != 0)
-   {
-       if (str[i] == '\\')
-           i++;
-       new[index++] = str[i];
-       i++;
-   }
-   free(str);
-   return new;
+    int i = 0;
+    int index = 0;
+    char *new = zalloc(sizeof(char) * (strlen(str) + 1));
+    while (str[i] != 0)
+    {
+        if (str[i] == '\\')
+            i++;
+        new[index++] = str[i];
+        i++;
+    }
+    free(str);
+    return new;
 }
 
 void add_var(struct list *new)
@@ -241,7 +242,6 @@ void set_special_vars(void)
     free(var);
 }
 
-
 char *remove_vars(char *str)
 {
     int i = 0;
@@ -264,7 +264,8 @@ char *remove_vars(char *str)
             if (str[i] == '}' && status == 2)
                 status = 0;
 
-            if (str[i] == '$' && str[i + 1] != '=' && (i == 0 || str[i - 1] != '\\'))
+            if (str[i] == '$' && str[i + 1] != '='
+                && (i == 0 || str[i - 1] != '\\'))
             {
                 if (str[i + 1] == '{')
                     status = 2;
