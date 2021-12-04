@@ -65,6 +65,7 @@ if __name__ == "__main__":
             test_sucess += 1
             print(f"{OK_TAG} {name}")
 
-    print("Total: ")
+    print("\nTotal: ")
     print(f"{OK_TAG} {test_sucess}")
     print(f"{KO_TAG} {test_nb - test_sucess}")
+    print(str(test_sucess*100/test_nb) + " % of success")
