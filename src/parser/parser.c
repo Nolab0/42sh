@@ -129,7 +129,7 @@ static enum parser_state parse_simple_command(struct parser *parser,
     enum token_type tok_type = lexer_peek(parser->lexer)->type;
     if (tok_type == TOKEN_ERROR)
     {
-        free(new);
+        ast_free(new);
         return PARSER_PANIC;
     }
 
@@ -441,7 +441,7 @@ static enum parser_state parse_rule_for(struct parser *parser, struct ast **ast)
         }
         lexer_pop(parser->lexer);
         token_free(tok);
-        while ((tok = lexer_peek(parser->lexer))->type == TOKEN_WORD)
+        while ((tok = lexer_peek(parser->lexer))->type == TOKEN_WORD || tok->type == TOKEN_ECHO)
         {
             add_to_list(for_node, tok->value);
             tok = lexer_pop(parser->lexer);

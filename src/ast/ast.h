@@ -4,6 +4,15 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+struct list
+{
+    char *name;
+    char *value;
+    struct list *next;
+};
+
+extern struct list *vars;
+
 /**
  * \brief Possible nodes types for ast structure.
  */
@@ -77,6 +86,8 @@ typedef int (*redirs_funcs)(struct ast *left, int fd, char *right);
  */
 int ast_eval(struct ast *ast, int *return_code);
 
+void free_var(struct list *var);
+
 struct ast *create_ast(enum ast_type type);
 
 void ast_free(struct ast *ast);
@@ -92,5 +103,29 @@ void pretty_print(struct ast *ast);
  * @return: return if the command fail or succeed
  */
 int cmd_exec(char *cmd);
+
+char *my_strstr(char *str, char *var);
+
+char *replace_vars(char *str, char *var, char *replace);
+
+char *expand_vars(char *str);
+
+char *escape_chars(char *str);
+
+char *remove_quotes(char *str);
+
+void add_var(struct list *new);
+
+int is_var_assign(char *str);
+
+void set_special_vars(void);
+
+char *build_var(char *name, char *value);
+
+int var_assign_special(char *str);
+
+char *my_itoa(int n);
+
+char *remove_vars(char *str);
 
 #endif /* ! AST_H */

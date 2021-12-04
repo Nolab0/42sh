@@ -24,6 +24,20 @@
 #define REDIR_NB 7
 
 enum cmd_mode current_mode = 0;
+struct list *vars = NULL;
+
+/**
+ * \brief Get the command name from a string.
+ * @param cmd: the string containing the command
+ * @param i: the index where the commands stops
+ * @return: the command, allocated
+ */
+static char *getcmdname(char *cmd, int *i)
+{
+    while (cmd[*i] != 0 && !is_separator(cmd[*i]))
+        (*i)++;
+    return strndup(cmd, *i);
+}
 
 /**
  * \brief Split a string into an array in which the
@@ -207,56 +221,12 @@ static void set_replace(char *value, struct ast *ast)
     set_replace(value, ast->right);
 }
 
-static char *my_strstr(char *str, char *var)
-{
-    for (int i = 0; str[i] != 0; i++)
-    {
-        if (str[i] == var[0])
-        {
-            int j = 0;
-            for (; var[j] != 0 && str[i + j] != 0; j++)
-            {
-                if (var[j] != str[i + j])
-                    break;
-            }
-            if (var[j] == 0
-                && (str[i + j] == 0 || is_separator(str[i + j])
-                    || str[i + j] == '\"'))
-                return str + i;
-            else if (var[j] == 0)
-            {
-                if (str[i + j] == 0)
-                    return str + i;
-                if (str[i + j - 1] == '}')
-                    return str + i;
-            }
-        }
-    }
-    return NULL;
-}
 
-static char *replace_vars(char *str, char *var, char *replace)
+void free_var(struct list *var)
 {
-    if (var == NULL)
-        return strdup(str);
-    char *substring = NULL;
-    size_t to_copy = 0;
-    char *cmd = strdup(str);
-    while ((substring = my_strstr(cmd, var)) != NULL)
-    {
-        to_copy = substring - cmd; // determine length before substring
-        char *before = strndup(cmd, to_copy);
-        char *after = strdup(substring + strlen(var));
-        char *tmp =
-            zalloc(sizeof(char)
-                   * (strlen(before) + strlen(replace) + strlen(after) + 1));
-        sprintf(tmp, "%s%s%s", before, replace, after);
-        free(cmd);
-        free(before);
-        free(after);
-        cmd = tmp;
-    }
-    return cmd;
+    free(var->name);
+    free(var->value);
+    free(var);
 }
 
 int ast_eval(struct ast *ast, int *return_code)
@@ -296,29 +266,61 @@ int ast_eval(struct ast *ast, int *return_code)
         return ast_eval(ast->left, return_code);
     else if (ast->type == AST_CMD)
     {
-        int res;
+        int res = 0;
+            char *cmd2;
         if (ast->var != NULL)
         {
-            char *cmd = replace_vars(ast->val->data, ast->var, ast->replace);
+            char *newvar = zalloc(sizeof(char) * strlen(ast->var) + 3);
+            sprintf(newvar, "\"%s\"", ast->var);
+            char *cmd = replace_vars(ast->val->data, newvar, ast->replace);
             char *tmp = strdup(ast->var + 1);
-            char *newvar = zalloc(sizeof(char) * strlen(tmp) + 4);
-            sprintf(newvar, "${%s}", tmp);
-            char *cmd2 = replace_vars(cmd, newvar, ast->replace);
+            free(newvar);
+            newvar = zalloc(sizeof(char) * strlen(tmp) + 6);
+            sprintf(newvar, "\"${%s}\"", tmp);
+            cmd2 = replace_vars(cmd, newvar, ast->replace);
             free(newvar);
             free(cmd);
             free(tmp);
-            res = cmd_exec(cmd2);
-            free(cmd2);
         }
         else
-            res = cmd_exec(ast->val->data);
+            cmd2 = strdup(ast->val->data);
+
+        cmd2 = expand_vars(cmd2);
+        cmd2 = remove_vars(cmd2);
+        cmd2 = remove_quotes(cmd2);
+        cmd2 = escape_chars(cmd2);
+        if (!is_var_assign(cmd2))
+            res = cmd_exec(cmd2);
+        free(cmd2);
         *return_code = res;
         if (!ast->left)
+        {
+            char *value = my_itoa(res);
+            char *var = build_var("?", value);
+            var_assign_special(var);
+            free(var);
+            free(value);
             return res;
-        return ast_eval(ast->left, return_code);
+        }
+        res = ast_eval(ast->left, return_code);
+        char *value = my_itoa(res);
+        char *var = build_var("?", value);
+        var_assign_special(var);
+        free(var);
+        free(value);
+        return res;
     }
     else if (ast->type == AST_REDIR)
+    {
+        char *tmp = expand_vars(ast->val->data);
+        tmp = remove_vars(tmp);
+        tmp = remove_quotes(tmp);
+        tmp = escape_chars(tmp);
+        ast->val->data = tmp;
+        ast->val->size = strlen(tmp);
+        ast->val->capacity = strlen(tmp) + 1;
         return exec_redir(ast);
+    }
     else if (ast->type == AST_PIPE)
         return eval_pipe(ast);
     else if (ast->type == AST_AND)
