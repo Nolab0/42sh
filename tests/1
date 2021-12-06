@@ -1,6 +1,2 @@
-if true; then
-cd src
-        pwd
-        else
-        echo didn t work
-        fi
+ls ogkjdfog
+echo "$?"

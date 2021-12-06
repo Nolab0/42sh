@@ -9,4 +9,6 @@ int builtin_exit(char *args);
 
 int cd(char *args);
 
+int export(char *args);
+
 #endif /* !BUILTIN_H */

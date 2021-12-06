@@ -95,6 +95,32 @@ static enum parser_state parse_element(struct parser *parser, struct ast **ast)
             in_echo = 1;
         free(cmd);
     }
+    if (tok->type == TOKEN_EXPORT)
+    {
+        while (tok->type == TOKEN_WORD || tok->type == TOKEN_SEMIC
+               || tok->type == TOKEN_EXPORT)
+        {
+            if (tok->type != TOKEN_SEMIC)
+            {
+                struct vec *tmp = vec_init();
+                tmp->data = strdup(tok->value);
+                tmp->size = strlen(tok->value);
+                tmp->capacity = tmp->size + 1;
+                vec_push(tmp, ' ');
+                (*ast)->val = vec_concat((*ast)->val, tmp);
+                vec_destroy(tmp);
+                free(tmp);
+            }
+
+            tok = lexer_pop(parser->lexer);
+            token_free(tok);
+            tok = lexer_peek(parser->lexer);
+
+            if (tok->type == TOKEN_ERROR)
+                return PARSER_PANIC;
+        }
+        return PARSER_OK;
+    }
     if ((tok->type == TOKEN_WORD || tok->type == TOKEN_ECHO
          || tok->type == TOKEN_EXIT || in_echo)
         && tok->type != TOKEN_REDIR)

@@ -1,1 +1,3 @@
-test
+export 4a=4 b=6
+echo "$a"
+echo "$b"

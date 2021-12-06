@@ -741,6 +741,13 @@
         -   stdout
         -   exitcode
 
+-   name: ECHO BAD OPTION
+    input: |
+        echo -t
+    checks:
+        -   stdout
+        -   exitcode
+
 -   name: SIMPLE CD
     input: |
         cd
@@ -792,6 +799,82 @@
         elif true;
         echo elif
         fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: SIMPLE EXPORT
+    input: |
+        export a=42
+        echo "$a"
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: MULTIPLE SEMICOLON EXPORT
+    input: |
+        export a=42; b=78; c=abc
+        echo "$a"
+        echo "$b"
+        echo "$c"
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: MULTIPLE SPACE EXPORT
+    input: |
+        export a=42 b=78 c=abc
+        echo "$a"
+        echo "$b"
+        echo "$c"
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: MULTIPLE SPACE AND SEMIC EXPORT
+    input: |
+        export a=42; b=78 c=abc
+        echo "$a"
+        echo "$b"
+        echo "$c"
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: EXPORT WITHOUT ASSIGN
+    input: |
+        export a
+        echo "$a"
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+
+-   name: BAD EXPORT INVALID NAME
+    input: |
+        export 4p
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: BAD EXPORT INVALID SPACE 1
+    input: |
+        export a= 78
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: BAD EXPORT INVALID SPACE 2
+    input: |
+        export a =8
     checks:
         -   stdout
         -   exitcode
