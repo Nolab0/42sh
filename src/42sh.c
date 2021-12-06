@@ -5,6 +5,7 @@
 #include <parser/parser.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <unistd.h>
 #include <utils/utils.h>
 #include <utils/vec.h>
@@ -158,6 +159,7 @@ int main(int argc, char *argv[])
 {
     int rc = 0;
 
+    srand(time(NULL));
     // Parse command line arguments and get an input stream
     struct opts *opts = NULL;
     struct cstream *cs = parse_args(argc, argv, &opts);

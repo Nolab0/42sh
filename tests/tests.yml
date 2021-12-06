@@ -301,16 +301,16 @@
     -   stdout
     -   exitcode
     -   has_stderr
-#
-#-   name: FOR HARD
-#    input: |
-#        for i in test coucou; do
-#        echo $i hello $icc ${i} ${i}abc $iabc${i}def
-#        done
-#    checks:
-#    -   stdout
-#    -   stderr
-#    -   exitcode
+
+-   name: FOR HARD
+    input: |
+        for i in test coucou; do
+        echo "$i" hello "$icc" "${i}" "${i}"abc "$iabc""${i}"def
+        done
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
 
 -   name: SIMPLE LEFT REDIR
     input: |

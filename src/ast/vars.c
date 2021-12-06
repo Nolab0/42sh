@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <utils/alloc.h>
@@ -7,12 +8,34 @@
 
 #include "ast.h"
 
+#define NONE 0
+#define SIMPLE 1
+#define DOUBLE 2
+
 struct list *vars;
 
 char *my_strstr(char *str, char *var)
 {
+    int context = NONE;
     for (int i = 0; str[i] != 0; i++)
     {
+        if (str[i] == '\"')
+        {
+            if (context == NONE)
+                context = DOUBLE;
+            else if (context == DOUBLE)
+                context = NONE;
+        }
+        if (str[i] == '\'')
+        {
+            if (context == NONE)
+                context = SIMPLE;
+            else if (context == SIMPLE)
+                context = NONE;
+            continue;
+        }
+        if (context == SIMPLE)
+            continue;
         if (str[i] == var[0])
         {
             int j = 0;
@@ -21,17 +44,8 @@ char *my_strstr(char *str, char *var)
                 if (var[j] != str[i + j])
                     break;
             }
-            if (var[j] == 0
-                && (str[i + j] == 0 || is_separator(str[i + j])
-                    || str[i + j] == '\"' || str[i + j] == '='))
+            if (var[j] == 0)
                 return str + i;
-            else if (var[j] == 0)
-            {
-                if (str[i + j] == 0)
-                    return str + i;
-                if (str[i + j - 1] == '}')
-                    return str + i;
-            }
         }
     }
     return NULL;
@@ -67,6 +81,12 @@ char *expand_vars(char *str)
     char *new = strdup(str);
     while (cur)
     {
+        if (strcmp("RANDOM", cur->name) == 0)
+        {
+            free(cur->value);
+            cur->value = zalloc(sizeof(char) * 6);
+            sprintf(cur->value, "%d", rand() % 32768);
+        }
         char *tmp = new;
         char *var = strdup(cur->name);
         char *newvar = zalloc(sizeof(char) * strlen(var) + 4);
@@ -240,6 +260,18 @@ void set_special_vars(void)
     var = build_var("?", "0");
     var_assign_special(var);
     free(var);
+
+    var = build_var("RANDOM", "");
+    var_assign_special(var);
+    free(var);
+
+    int uid = getuid();
+    value = my_itoa(uid);
+    var = build_var("UID", value);
+    var_assign_special(var);
+
+    free(var);
+    free(value);
 }
 
 char *remove_vars(char *str)

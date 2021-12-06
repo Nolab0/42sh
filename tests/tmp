@@ -1,3 +1,1 @@
-b=c
-a="$b"
-echo "$a"
+echo "$UID"
