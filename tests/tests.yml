@@ -878,3 +878,60 @@
         -   stdout
         -   exitcode
         -   has_stderr
+
+-   name: DOT SCL
+    input: |
+        . ./test_files/test_dot1
+        echo "$foo" "$bar"
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: DOT NOT FOUND GLOBAL
+    input: |
+        . fdsf
+        echo test
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: DOT NOT FOUND LOCAL
+    input: |
+        echo hello
+        . ./fdsf
+        echo world
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: DOT WITH CMD FAIL BEFORE
+    input: |
+        cd grijfguog
+        . ./fdsf
+        echo world
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: DOT WITH VARIABLE
+    input: |
+        . ./test_files/test_dot2
+        echo "$a"
+        echo "$b"
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: DOT WITH WRONG FILE
+    input: |
+        . ./test_files/test_dot3
+        echo "le monde"
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr

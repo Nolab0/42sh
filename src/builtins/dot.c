@@ -118,11 +118,11 @@ int dot(char *args)
     {
         file = f_open(args + i);
         if (!file)
-            return_code = 2;
+            return_code = 127;
     }
     if (return_code == 0)
     {
-        eval_file(file);
+        return eval_file(file);
     }
     return return_code;
 }

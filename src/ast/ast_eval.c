@@ -279,6 +279,11 @@ int ast_eval(struct ast *ast, int *return_code)
             res = cmd_exec(cmd2);
         free(cmd2);
         *return_code = res;
+        int i = 0;
+        char *command_name = getcmdname(ast->val->data, &i);
+        if (strcmp(command_name, ".") == 0 && res != 0)
+            current_mode = EXIT;
+        free(command_name);
         if (!ast->left)
         {
             char *value = my_itoa(res);
