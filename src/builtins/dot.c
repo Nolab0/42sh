@@ -81,7 +81,7 @@ static int eval_file(FILE *file)
     int return_code = 0;
     int eval = ast_eval(parser->ast, &return_code);
     parser_free(parser);
-    
+
     if (state != PARSER_OK)
     {
         vec_destroy(final);
@@ -105,7 +105,8 @@ int dot(char *args)
     if (!slashed)
     {
         char *base_path = strdup(getenv("PATH"));
-        char *path = zalloc((strlen(base_path) + strlen(args + i) + 2) * sizeof(char));
+        char *path =
+            zalloc((strlen(base_path) + strlen(args + i) + 2) * sizeof(char));
         sprintf(path, "%s/%s", base_path, args + i);
         file = f_open(path);
         if (!file)

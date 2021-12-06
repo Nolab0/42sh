@@ -11,14 +11,6 @@ struct list
     struct list *next;
 };
 
-/**
- * \brief Global variable holding mode of evaluation
- */
-extern enum cmd_mode current_mode;
-
-/**
- * \brief Global variable holding the variables in the context
- */
 extern struct list *vars;
 
 /**
