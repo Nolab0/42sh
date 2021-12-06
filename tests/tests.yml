@@ -935,3 +935,16 @@
         -   stdout
         -   exitcode
         -   has_stderr
+
+-   name: ASCII HOUSE
+    input: |
+        echo '  /\'
+        echo ' /  \'
+        echo '/____\  ''`'"'"'`'
+        echo '|    | ''`'"'''"'`'
+        echo '|    |  ''`''|''`'
+        echo '|_/\_|___|__'
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
