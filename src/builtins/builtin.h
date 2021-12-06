@@ -11,4 +11,6 @@ int cd(char *args);
 
 int export(char *args);
 
+int dot(char *args);
+
 #endif /* !BUILTIN_H */

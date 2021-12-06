@@ -16,7 +16,7 @@
 /**
  * \brief The number of builtins commands
  */
-#define BLT_NB 4
+#define BLT_NB 5
 
 /**
  * \brief The number of redirection operators
@@ -91,8 +91,8 @@ static int fork_exec(char *cmd)
 
 int cmd_exec(char *cmd)
 {
-    char *builtins[] = { "echo", "exit", "cd", "export" };
-    commands cmds[BLT_NB] = { &echo, &builtin_exit, &cd, &export };
+    char *builtins[] = { "echo", "exit", "cd", "export" , "."};
+    commands cmds[BLT_NB] = { &echo, &builtin_exit, &cd, &export, &dot };
 
     int arg_index = 0;
     char *cmd_name = getcmdname(cmd, &arg_index);

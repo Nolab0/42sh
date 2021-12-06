@@ -855,7 +855,6 @@
         -   exitcode
         -   stderr
 
-
 -   name: BAD EXPORT INVALID NAME
     input: |
         export 4p
