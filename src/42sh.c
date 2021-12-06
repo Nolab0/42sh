@@ -12,6 +12,60 @@
 
 struct list *vars;
 
+static void setinitvars(int argc, char **argv)
+{
+    char *value = my_itoa(argc);
+    char *var = build_var("#", value);
+    var_assign_special(var, NULL);
+    free(var);
+    free(value);
+
+    int len = 0;
+    for (int i = 0; i < argc - 1; i++)
+    {
+        len += strlen(argv[i + 1]);
+    }
+    value = zalloc(sizeof(char) * (len * 2 + 3));
+    if (argc > 1)
+    {
+        for (int i = 1; i < argc - 1; i++)
+        {
+            strcat(value, " ");
+            strcat(value, argv[i + 1]);
+        }
+    }
+    var = build_var("@", value);
+    var_assign_special(var, NULL);
+    free(var);
+    free(value);
+
+    value = zalloc(sizeof(char) * (len * 2 + 3));
+    if (argc > 1)
+    {
+        value[0] = '\"';
+        strcat(value, argv[1]);
+        for (int i = 1; i < argc - 1; i++)
+        {
+            strcat(value, " ");
+            strcat(value, argv[i + 1]);
+        }
+        strcat(value, "\"");
+    }
+    var = build_var("*", value);
+    var_assign_special(var, NULL);
+    free(value);
+    free(var);
+
+    for (int i = 1; i < argc; i++)
+    {
+        char *value = my_itoa(i);
+        char *var = build_var(value, argv[i]);
+        var_assign_special(var, NULL);
+        free(var);
+        free(value);
+    }
+}
+
 static struct opts *parse_opts(int argc, char **argv)
 {
     struct opts *opts = zalloc(sizeof(struct opts));
@@ -25,20 +79,20 @@ static struct opts *parse_opts(int argc, char **argv)
     {
         switch (c)
         {
-        case 'p':
-            opts->p = 1;
-            break;
-        case 'c':
-            opts->c = 1;
-            opts->input = optarg;
-            break;
-        case '?':
-            fprintf(stderr, "Usage: %s [OPTIONS] [SCRIPTS] [ARGUMENTS ...]\n",
-                    argv[0]);
-            free(opts);
-            return NULL;
-        default:
-            break;
+            case 'p':
+                opts->p = 1;
+                break;
+            case 'c':
+                opts->c = 1;
+                opts->input = optarg;
+                break;
+            case '?':
+                fprintf(stderr, "Usage: %s [OPTIONS] [SCRIPTS] [ARGUMENTS ...]\n",
+                        argv[0]);
+                free(opts);
+                return NULL;
+            default:
+                break;
         }
     }
     opts->optind = optind;
@@ -83,7 +137,7 @@ static struct cstream *parse_args(int argc, char *argv[], struct opts **opts)
  * \return An error code
  */
 enum error read_print_loop(struct cstream *cs, struct vec *line,
-                           struct parser *parser, struct opts *opts)
+        struct parser *parser, struct opts *opts)
 {
     enum error err;
     struct vec *final = NULL;
@@ -157,6 +211,8 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
 
 int main(int argc, char *argv[])
 {
+    setinitvars(argc, argv);
+
     int rc = 0;
 
     srand(time(NULL));

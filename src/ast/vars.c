@@ -45,7 +45,11 @@ char *my_strstr(char *str, char *var)
                     break;
             }
             if (var[j] == 0)
-                return str + i;
+            {
+                int n = i + j;
+                if (str[n] == 0 || !isalnum(str[n]) || str[n - 1] == '}')
+                    return str + i;
+            }
         }
     }
     return NULL;
@@ -75,36 +79,100 @@ char *replace_vars(char *str, char *var, char *replace)
     return cmd;
 }
 
-char *expand_vars(char *str)
+int is_var_sep(char c)
 {
+    if (is_separator(c))
+        return 1;
+    return c == '$' || c == '=' || c == '\'' || c == '\"';
+}
+
+static char *replace_at_by(char *str, int status, int len, char *replace)
+{
+    char *new = zalloc(sizeof(char) * (strlen(str) + strlen(replace) + 1));
+    int spaces = 0;
+    if (strcmp(replace, "") == 0 && (str[status + len] == ' ' || str[status + len] == 0))
+        spaces++;
+    char *before = strndup(str, status - spaces);
+    char *after = strdup(str + status + len);
+    sprintf(new, "%s%s%s", before, replace, after);
+    free(str);
+    free(before);
+    free(after);
+    return new;
+}
+
+static char *sub_replace(char *str, int status, int *i, int brackets, char *var, char *var_rep)
+{
+    char *name = strndup(str + status + 1 + brackets, *i - status - brackets * 2 - 1);
     struct list *cur = vars;
-    char *new = strdup(str);
+    char *replace = "";
     while (cur)
     {
-        if (strcmp("RANDOM", cur->name) == 0)
+        if (strcmp(cur->name, name) == 0)
         {
-            free(cur->value);
-            cur->value = zalloc(sizeof(char) * 6);
-            sprintf(cur->value, "%d", rand() % 32768);
+            replace = cur->value;
+            break;
         }
-        char *tmp = new;
-        char *var = strdup(cur->name);
-        char *newvar = zalloc(sizeof(char) * strlen(var) + 4);
-        sprintf(newvar, "\"$%s\"", var);
-        new = replace_vars(new, newvar, cur->value);
-        free(tmp);
-        free(newvar);
-        newvar = zalloc(sizeof(char) * strlen(var) + 6);
-        sprintf(newvar, "\"${%s}\"", var);
-        tmp = new;
-        new = replace_vars(new, newvar, cur->value);
-        free(newvar);
-        free(var);
-        free(tmp);
         cur = cur->next;
     }
-    free(str);
-    return new;
+    if (var != NULL && strcmp(name, var + 1) == 0)
+        replace = var_rep;
+    str = replace_at_by(str, status, *i - status, replace);
+    *i = status;
+    if (*i > 0)
+        (*i)--;
+    free(name);
+    return str;
+}
+
+
+char *expand_vars(char *str, char *var, char *var_rep)
+{
+    int i = 0;
+    int status = -1;
+    int brackets = 0;
+    int context = NONE;
+    while (str[i] != 0)
+    {
+        if (str[i] == '\'')
+        {
+            if (context == NONE)
+                context = SIMPLE;
+            else if (context == SIMPLE)
+                context = NONE;
+        }
+        if (str[i] == '\"')
+        {
+            if (context == NONE)
+                context = DOUBLE;
+            else if (context == DOUBLE)
+                context = NONE;
+        }
+        if (context != SIMPLE && status == -1 && str[i] == '$' && (i == 0 || str[i - 1] != '\\')
+                && !is_var_sep(str[i + 1]))
+        {
+            if (str[i + 1] == '{')
+                brackets = 1;
+            status = i;
+        }
+        else if ((is_var_sep(str[i]) || (brackets == 1 && str[i] == '}'))
+                && status != -1)
+        {
+            if (str[i] == '}' && brackets == 1)
+                i++;
+
+            str = sub_replace(str, status, &i, brackets, var, var_rep);
+
+            status = -1;
+            brackets = 0;
+        }
+        i++;
+    }
+    if (status != -1)
+    {
+        str = sub_replace(str, status, &i, brackets, var, var_rep);
+    }
+    return str;
 }
 
 char *remove_quotes(char *str)
@@ -205,6 +273,8 @@ int is_var_assign(char *str)
     char *space = strchr(str, ' ');
     char *quote = strchr(str, '\"');
     char *squote = strchr(str, '\'');
+    if (equal == str)
+        return 0;
     if (isdigit(str[0]) || !equal || (space && space < equal))
         return 0;
     if ((quote && quote < equal) || (squote && squote < equal))
@@ -222,15 +292,15 @@ int is_var_assign(char *str)
     return 1;
 }
 
-int var_assign_special(char *str)
+void var_assign_special(char *str, char **args)
 {
     char *equal = strchr(str, '=');
     char *before = strndup(str, equal - str);
     struct list *var = zalloc(sizeof(struct list));
     var->name = before;
     var->value = strdup(equal + 1);
+    var->args = args;
     add_var(var);
-    return 1;
 }
 
 char *build_var(char *name, char *value)
@@ -252,63 +322,33 @@ void set_special_vars(void)
     int pid = getpid();
     char *value = my_itoa(pid);
     char *var = build_var("$", value);
-    var_assign_special(var);
+    var_assign_special(var, NULL);
 
     free(var);
     free(value);
 
     var = build_var("?", "0");
-    var_assign_special(var);
+    var_assign_special(var, NULL);
     free(var);
 
     var = build_var("RANDOM", "");
-    var_assign_special(var);
+    var_assign_special(var, NULL);
     free(var);
 
     int uid = getuid();
     value = my_itoa(uid);
     var = build_var("UID", value);
-    var_assign_special(var);
+    var_assign_special(var, NULL);
 
     free(var);
     free(value);
-}
 
-char *remove_vars(char *str)
-{
-    int i = 0;
-    int index = 0;
-    char *new = zalloc(sizeof(char) * (strlen(str) + 1));
-    int status = 0;
-    while (str[i] != 0)
-    {
-        if (str[i] == '\'')
-        {
-            if (status != -1)
-                status = -1;
-            else if (status == -1)
-                status = 0;
-        }
-        if (status != -1)
-        {
-            if (str[i] == '"' && status == 1)
-                status = 0;
-            if (str[i] == '}' && status == 2)
-                status = 0;
+    var = build_var("IFS", " \t\n");
+    var_assign_special(var, NULL);
+    free(var);
 
-            if (str[i] == '$' && str[i + 1] != '='
-                && (i == 0 || str[i - 1] != '\\'))
-            {
-                if (str[i + 1] == '{')
-                    status = 2;
-                else
-                    status = 1;
-            }
-        }
-        if (status == 0 || status == -1)
-            new[index++] = str[i];
-        i++;
-    }
-    free(str);
-    return new;
+    char *home = getenv("HOME");
+    var = build_var("OLDPWD", home);
+    var_assign_special(var, NULL);
+    free(var);
 }
