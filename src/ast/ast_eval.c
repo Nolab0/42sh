@@ -235,7 +235,7 @@ int ast_eval(struct ast *ast, int *return_code)
             return left;
         return ast_eval(ast->right, return_code);
     }
-    else if (ast->type == AST_IF)
+    else if (ast->type == AST_IF || ast->type == AST_ELIF)
     {
         int test_cond = ast_eval(ast->cond, return_code);
         if (current_mode == EXIT)
@@ -359,6 +359,7 @@ int ast_eval(struct ast *ast, int *return_code)
     }
     else
     {
+        printf("ast->type = %d\n", ast->type);
         fprintf(stderr, "ast_eval: node type not known\n");
         return 2;
     }
