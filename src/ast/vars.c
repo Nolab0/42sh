@@ -93,6 +93,13 @@ static char *replace_at_by(char *str, int status, int len, char *replace)
     if (strcmp(replace, "") == 0
         && (str[status + len] == ' ' || str[status + len] == 0))
         spaces++;
+    if (strncmp(str + status + 1, "@", 1) == 0)
+    {
+        if (status > 0 && str[status - 1] == '\"' && str[status + len] == '\"')
+            spaces++;
+        if (status > 1 && str[status - 2] == ' ')
+            spaces++;
+    }
     char *before = strndup(str, status - spaces);
     char *after = strdup(str + status + len);
     sprintf(new, "%s%s%s", before, replace, after);

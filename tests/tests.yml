@@ -975,3 +975,37 @@
         -   stdout
         -   exitcode
         -   stderr
+
+-   name: VAR REPLACE SPACES QUOTES
+    input: |
+        a=
+        echo cc "$a" cc
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: VAR REPLACE SPACES
+    input: |
+        a=
+        echo cc $a cc
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: $@ REPLACE SPACES
+    input: |
+        echo cc $@ cc
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: $@ REPLACE SPACES QUOTES
+    input: |
+        echo cc "$@" cc
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
