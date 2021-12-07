@@ -800,6 +800,39 @@
         -   exitcode
         -   has_stderr
 
+-   name: IF IN IF
+    input: |
+        if true; then
+        if false || true; then
+        echo working?
+        else
+        echo not working
+        fi
+        else
+        echo didnt enter first
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: IF IN IF ENTERING ELSE
+    input: |
+        if true; then
+            if false || false; then
+            echo not working
+            elif true && false; then
+            echo hi
+            else
+            echo working correctly
+            fi
+        else
+        echo didnt enter first
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
 
 -   name: BAD IF ELIF WITHOUT THEN
     input: |
@@ -1005,6 +1038,73 @@
 -   name: $@ REPLACE SPACES QUOTES
     input: |
         echo cc "$@" cc
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: TOO MUCH TABULATIONS OR SPACES
+    input: |
+        if      echo    hello;              then
+        echo hahahahah               it works                               
+        else          
+        echo                    maybe  not              
+        fi                        
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: INVALID COMMAND
+    input: |
+        why are you working?
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: VALID WEIRD ECHO
+    input: |
+        echo this is
+        echo th_eT_EST__        
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: IF ELIF WITHOUT THEN
+    input: |
+        if echo hello && false; then
+            echo nope
+        elif echo hi
+            echo why
+        else
+            YOPPEEE
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: VALID ECHO NO EXIT
+    input: |
+        echo entering here && echo also passing by || exit 33 && echo nope
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ECHO E OPT RANDOM DASH
+    input: |
+        echo -e - ---e -e yop -e--e --n -n
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ECHO UNVALID OPT RANDOM DASH
+    input: |
+        echo -o -e ---e -e yop -e--e --n -n
     checks:
         -   stdout
         -   exitcode
