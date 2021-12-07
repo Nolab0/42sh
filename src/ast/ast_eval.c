@@ -257,7 +257,6 @@ int ast_eval(struct ast *ast, int *return_code)
 
         cmd2 = expand_vars(cmd2, ast->var, ast->replace);
         cmd2 = remove_quotes(cmd2);
-        cmd2 = escape_chars(cmd2);
         if (!is_var_assign(cmd2))
             res = cmd_exec(cmd2);
         free(cmd2);
@@ -288,7 +287,6 @@ int ast_eval(struct ast *ast, int *return_code)
     {
         char *tmp = expand_vars(ast->val->data, NULL, NULL);
         tmp = remove_quotes(tmp);
-        tmp = escape_chars(tmp);
         ast->val->data = tmp;
         ast->val->size = strlen(tmp);
         ast->val->capacity = strlen(tmp) + 1;

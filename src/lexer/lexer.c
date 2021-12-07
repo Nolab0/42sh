@@ -99,13 +99,14 @@ static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
 {
     char quote_type = lexer->input[lexer->pos]; // ' or "
     vec_push(vec, lexer->input[lexer->pos++]);
-    while (lexer->pos < len
+    size_t save_pos = lexer->pos;
+    while (lexer->pos < len && lexer->input[lexer->pos] != '\n'
            && (lexer->input[lexer->pos] != quote_type
-               || (lexer->pos != 0 && lexer->input[lexer->pos - 1] == '\\')))
+           || (lexer->pos != 0 && (quote_type == '\'' || lexer->input[lexer->pos - 1] == '\\'))))
         vec_push(vec, lexer->input[lexer->pos++]);
     if (lexer->input[lexer->pos] == quote_type)
         vec_push(vec, lexer->input[lexer->pos++]);
-    if (lexer->pos == len && lexer->input[lexer->pos - 1] != quote_type)
+    if (vec->data[vec->size - 1] != quote_type || save_pos == lexer->pos)
     {
         fprintf(stderr, "Syntax error: Unterminated quoted string\n");
         return -1;

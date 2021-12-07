@@ -105,8 +105,6 @@ char *replace_vars(char *str, char *var, char *replace);
 
 char *expand_vars(char *str, char *var, char *var_rep);
 
-char *escape_chars(char *str);
-
 char *remove_quotes(char *str);
 
 void add_var(struct list *new);
