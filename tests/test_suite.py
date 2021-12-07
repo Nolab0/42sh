@@ -28,10 +28,10 @@ def run_shell(shell: str, stdin: str) -> sp.CompletedProcess:
 
 def perform_checks(expected: sp.CompletedProcess, actual: sp.CompletedProcess, checks):
     assert "has_stderr" not in checks or actual.stderr != "", \
-            "Something was expected on stderr"
+        "Something was expected on stderr"
 
     assert "exitcode" not in checks or expected.returncode == actual.returncode, \
-            f"Exited with {actual.returncode} expected {expected.returncode}"
+            f"Exited with {actual.returncode} expected {expected.returncode}\n\n{actual.stderr}"
 
     assert "stdout" not in checks or expected.stdout == actual.stdout, \
             f"stdout differ\n{diff(expected.stdout, actual.stdout)}"

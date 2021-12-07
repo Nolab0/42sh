@@ -187,57 +187,56 @@ char *expand_vars(char *str, char *var, char *var_rep)
 char *remove_quotes(char *str)
 {
     int i = 0;
-    int quote_type = 0;
+    int context = NONE;
     int index = 0;
     char *new = zalloc(sizeof(char) * (strlen(str) + 1));
     while (str[i] != 0)
     {
-        if (str[i] == '\'' && (i == 0 || str[i - 1] != '\\'))
+        if (str[i + 1] != '\0' && str[i] == '\\' && !isspace(str[i + 1]))
         {
-            if (quote_type == 0)
+            if ((context != DOUBLE || str[i + 1] != '\'') && context != SIMPLE)
             {
-                quote_type = 1;
                 i++;
                 continue;
             }
-            if (quote_type == 1)
+            else if (str[i + 1] == '\'')
             {
-                quote_type = 0;
+                new[index++] = str[i];
+                i += 2;
+                continue;
+            }
+        }
+        if (str[i] == '\'' && (i == 0 || str[i - 1] != '\\'))
+        {
+            if (context == NONE)
+            {
+                context = SIMPLE;
+                i++;
+                continue;
+            }
+            if (context == SIMPLE)
+            {
+                context = NONE;
                 i++;
                 continue;
             }
         }
         if (str[i] == '\"' && (i == 0 || str[i - 1] != '\\'))
         {
-            if (quote_type == 0)
+            if (context == NONE)
             {
-                quote_type = 2;
+                context = DOUBLE;
                 i++;
                 continue;
             }
-            if (quote_type == 2)
+            if (context == DOUBLE)
             {
-                quote_type = 0;
+                context = NONE;
                 i++;
                 continue;
             }
         }
-        new[index++] = str[i];
-        i++;
-    }
-    free(str);
-    return new;
-}
 
-char *escape_chars(char *str)
-{
-    int i = 0;
-    int index = 0;
-    char *new = zalloc(sizeof(char) * (strlen(str) + 1));
-    while (str[i] != 0)
-    {
-        if (str[i] == '\\')
-            i++;
         new[index++] = str[i];
         i++;
     }
