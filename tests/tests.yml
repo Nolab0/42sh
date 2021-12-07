@@ -172,6 +172,25 @@
     -   exitcode
     -   has_stderr
 
+-   name: IF MISSING SEPARATOR
+    input: |
+        if true then
+        echo test
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: IF MISSING SECOND SEPARATOR
+    input: |
+        if true; then
+        echo test fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
 -   name: PIPE MISSING RIGHT
     input: |
         echo test |
