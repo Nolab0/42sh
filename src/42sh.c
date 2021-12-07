@@ -79,20 +79,20 @@ static struct opts *parse_opts(int argc, char **argv)
     {
         switch (c)
         {
-            case 'p':
-                opts->p = 1;
-                break;
-            case 'c':
-                opts->c = 1;
-                opts->input = optarg;
-                break;
-            case '?':
-                fprintf(stderr, "Usage: %s [OPTIONS] [SCRIPTS] [ARGUMENTS ...]\n",
-                        argv[0]);
-                free(opts);
-                return NULL;
-            default:
-                break;
+        case 'p':
+            opts->p = 1;
+            break;
+        case 'c':
+            opts->c = 1;
+            opts->input = optarg;
+            break;
+        case '?':
+            fprintf(stderr, "Usage: %s [OPTIONS] [SCRIPTS] [ARGUMENTS ...]\n",
+                    argv[0]);
+            free(opts);
+            return NULL;
+        default:
+            break;
         }
     }
     opts->optind = optind;
@@ -137,7 +137,7 @@ static struct cstream *parse_args(int argc, char *argv[], struct opts **opts)
  * \return An error code
  */
 enum error read_print_loop(struct cstream *cs, struct vec *line,
-        struct parser *parser, struct opts *opts)
+                           struct parser *parser, struct opts *opts)
 {
     enum error err;
     struct vec *final = NULL;

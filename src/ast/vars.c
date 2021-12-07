@@ -90,7 +90,8 @@ static char *replace_at_by(char *str, int status, int len, char *replace)
 {
     char *new = zalloc(sizeof(char) * (strlen(str) + strlen(replace) + 1));
     int spaces = 0;
-    if (strcmp(replace, "") == 0 && (str[status + len] == ' ' || str[status + len] == 0))
+    if (strcmp(replace, "") == 0
+        && (str[status + len] == ' ' || str[status + len] == 0))
         spaces++;
     char *before = strndup(str, status - spaces);
     char *after = strdup(str + status + len);
@@ -101,9 +102,11 @@ static char *replace_at_by(char *str, int status, int len, char *replace)
     return new;
 }
 
-static char *sub_replace(char *str, int status, int *i, int brackets, char *var, char *var_rep)
+static char *sub_replace(char *str, int status, int *i, int brackets, char *var,
+                         char *var_rep)
 {
-    char *name = strndup(str + status + 1 + brackets, *i - status - brackets * 2 - 1);
+    char *name =
+        strndup(str + status + 1 + brackets, *i - status - brackets * 2 - 1);
     struct list *cur = vars;
     char *replace = "";
     while (cur)
@@ -124,7 +127,6 @@ static char *sub_replace(char *str, int status, int *i, int brackets, char *var,
     free(name);
     return str;
 }
-
 
 char *expand_vars(char *str, char *var, char *var_rep)
 {
@@ -148,15 +150,15 @@ char *expand_vars(char *str, char *var, char *var_rep)
             else if (context == DOUBLE)
                 context = NONE;
         }
-        if (context != SIMPLE && status == -1 && str[i] == '$' && (i == 0 || str[i - 1] != '\\')
-                && !is_var_sep(str[i + 1]))
+        if (context != SIMPLE && status == -1 && str[i] == '$'
+            && (i == 0 || str[i - 1] != '\\') && !is_var_sep(str[i + 1]))
         {
             if (str[i + 1] == '{')
                 brackets = 1;
             status = i;
         }
         else if ((is_var_sep(str[i]) || (brackets == 1 && str[i] == '}'))
-                && status != -1)
+                 && status != -1)
         {
             if (str[i] == '}' && brackets == 1)
                 i++;

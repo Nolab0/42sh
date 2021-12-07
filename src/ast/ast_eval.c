@@ -293,8 +293,8 @@ int ast_eval(struct ast *ast, int *return_code)
     }
     else if (ast->type == AST_REDIR)
     {
-        //char *tmp = remove_vars(ast->val->data, "");
-        //tmp = expand_vars(tmp);
+        // char *tmp = remove_vars(ast->val->data, "");
+        // tmp = expand_vars(tmp);
         char *tmp = expand_vars(ast->val->data, NULL, NULL);
         tmp = remove_quotes(tmp);
         tmp = escape_chars(tmp);

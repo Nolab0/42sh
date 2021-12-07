@@ -122,6 +122,6 @@ void var_assign_special(char *str, char **args);
 
 char *my_itoa(int n);
 
-//char *remove_vars(char *str, char *exclude);
+// char *remove_vars(char *str, char *exclude);
 
 #endif /* ! AST_H */

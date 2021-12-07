@@ -502,7 +502,7 @@ static enum parser_state parse_rule_for(struct parser *parser, struct ast **ast)
 }
 
 static enum parser_state parse_rule_while(struct parser *parser,
-        struct ast **ast)
+                                          struct ast **ast)
 {
     struct ast *while_node = create_ast(AST_WHILE);
     enum parser_state state = parse_compound_list(parser, &(while_node->cond));
@@ -516,7 +516,7 @@ static enum parser_state parse_rule_while(struct parser *parser,
 }
 
 static enum parser_state parse_rule_until(struct parser *parser,
-        struct ast **ast)
+                                          struct ast **ast)
 {
     struct ast *until_node = create_ast(AST_UNTIL);
     enum parser_state state = parse_compound_list(parser, &(until_node->cond));
@@ -530,7 +530,7 @@ static enum parser_state parse_rule_until(struct parser *parser,
 }
 
 static enum parser_state parse_shell_command(struct parser *parser,
-        struct ast **ast)
+                                             struct ast **ast)
 {
     struct token *tok = lexer_peek(parser->lexer);
     if (tok->type == TOKEN_FOR)
@@ -701,9 +701,9 @@ static enum parser_state parse_input(struct parser *parser, struct ast **ast)
 
     enum parser_state state = PARSER_PANIC;
     if (*ast
-            && ((*ast)->type == AST_ROOT || (*ast)->type == AST_PIPE
-                || (*ast)->type == AST_AND || (*ast)->type == AST_OR
-                || (*ast)->type == AST_REDIR))
+        && ((*ast)->type == AST_ROOT || (*ast)->type == AST_PIPE
+            || (*ast)->type == AST_AND || (*ast)->type == AST_OR
+            || (*ast)->type == AST_REDIR))
         state = parse_list(parser, &((*ast)->right));
     else
         state = parse_list(parser, ast);
@@ -719,8 +719,8 @@ static enum parser_state parse_input(struct parser *parser, struct ast **ast)
         return PARSER_OK;
 
     if (tok->type == TOKEN_NEWL || tok->type == TOKEN_PIPE
-            || tok->type == TOKEN_AND || tok->type == TOKEN_OR
-            || tok->type == TOKEN_REDIR)
+        || tok->type == TOKEN_AND || tok->type == TOKEN_OR
+        || tok->type == TOKEN_REDIR)
     {
         struct ast *placeholder;
         if (tok->type == TOKEN_NEWL || tok->type == TOKEN_REDIR)

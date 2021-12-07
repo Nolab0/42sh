@@ -1,3 +1,4 @@
+#include <ast/ast.h>
 #include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -6,7 +7,6 @@
 #include <unistd.h>
 #include <utils/alloc.h>
 #include <utils/vec.h>
-#include <ast/ast.h>
 
 #include "builtin.h"
 
