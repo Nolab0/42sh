@@ -210,6 +210,13 @@ static void set_replace(char *value, struct ast *ast)
 
 void free_var(struct list *var)
 {
+    if (var->args)
+    {
+        int i = 0;
+        while (var->args[i])
+            free(var->args[i++]);
+        free(var->args);
+    }
     free(var->name);
     free(var->value);
     free(var);
@@ -253,26 +260,9 @@ int ast_eval(struct ast *ast, int *return_code)
     else if (ast->type == AST_CMD)
     {
         int res = 0;
-        char *cmd2;
-        if (ast->var != NULL)
-        {
-            char *newvar = zalloc(sizeof(char) * strlen(ast->var) + 3);
-            sprintf(newvar, "\"%s\"", ast->var);
-            char *cmd = replace_vars(ast->val->data, newvar, ast->replace);
-            char *tmp = strdup(ast->var + 1);
-            free(newvar);
-            newvar = zalloc(sizeof(char) * strlen(tmp) + 6);
-            sprintf(newvar, "\"${%s}\"", tmp);
-            cmd2 = replace_vars(cmd, newvar, ast->replace);
-            free(newvar);
-            free(cmd);
-            free(tmp);
-        }
-        else
-            cmd2 = strdup(ast->val->data);
+        char *cmd2 = strdup(ast->val->data);
 
-        cmd2 = expand_vars(cmd2);
-        cmd2 = remove_vars(cmd2);
+        cmd2 = expand_vars(cmd2, ast->var, ast->replace);
         cmd2 = remove_quotes(cmd2);
         cmd2 = escape_chars(cmd2);
         if (!is_var_assign(cmd2))
@@ -288,7 +278,7 @@ int ast_eval(struct ast *ast, int *return_code)
         {
             char *value = my_itoa(res);
             char *var = build_var("?", value);
-            var_assign_special(var);
+            var_assign_special(var, NULL);
             free(var);
             free(value);
             return res;
@@ -296,15 +286,16 @@ int ast_eval(struct ast *ast, int *return_code)
         res = ast_eval(ast->left, return_code);
         char *value = my_itoa(res);
         char *var = build_var("?", value);
-        var_assign_special(var);
+        var_assign_special(var, NULL);
         free(var);
         free(value);
         return res;
     }
     else if (ast->type == AST_REDIR)
     {
-        char *tmp = expand_vars(ast->val->data);
-        tmp = remove_vars(tmp);
+        //char *tmp = remove_vars(ast->val->data, "");
+        //tmp = expand_vars(tmp);
+        char *tmp = expand_vars(ast->val->data, NULL, NULL);
         tmp = remove_quotes(tmp);
         tmp = escape_chars(tmp);
         ast->val->data = tmp;
@@ -345,11 +336,36 @@ int ast_eval(struct ast *ast, int *return_code)
     {
         set_var(ast->val->data, ast->left);
         int ret_code = 0;
-        for (size_t i = 0; i < ast->size; ++i)
+        char **total = zalloc(100000);
+        size_t size = 0;
+        for (size_t i = 0; i < ast->size; i++)
         {
-            set_replace(ast->list[i], ast->left);
-            ret_code = ast_eval(ast->left, return_code);
+            char *s = strdup(ast->list[i]);
+            s = expand_vars(s, NULL, NULL);
+            if (s[0] != '\"')
+            {
+                char **args = zalloc(sizeof(char *) * strlen(s));
+                char *save = NULL;
+                char *val = strtok_r(s, " \n", &save);
+                int index = 0;
+                args[index++] = val;
+                while ((val = strtok_r(NULL, " \n", &save)) != NULL)
+                    args[index++] = val;
+                for (int i = 0; i < index; i++)
+                    total[size++] = strdup(args[i]);
+                free(args);
+            }
+            else
+                total[size++] = strdup(s);
+            free(s);
         }
+        for (size_t i = 0; i < size; ++i)
+        {
+            set_replace(total[i], ast->left);
+            ret_code = ast_eval(ast->left, return_code);
+            free(total[i]);
+        }
+        free(total);
         return ret_code;
     }
     else

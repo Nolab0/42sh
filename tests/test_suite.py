@@ -6,6 +6,7 @@ from typing import List
 import subprocess as sp
 import termcolor
 import yaml
+from difflib import unified_diff
 
 @dataclass
 class TestCase:

@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <utils/alloc.h>
 #include <utils/vec.h>
+#include <ast/ast.h>
 
 #include "builtin.h"
 
@@ -40,6 +41,12 @@ int cd(char *args)
         return 0;
     }
     char *old = looping();
+
+    // update oldpwd in local variables
+    char *var = build_var("OLDPWD", old);
+    var_assign_special(var, NULL);
+    free(var);
+
     if (setenv("OLDPWD", old, 1) == -1)
     {
         free(old);

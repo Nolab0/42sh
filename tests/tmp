@@ -1,3 +1,4 @@
-b=c
-a="$b"
-echo "$a"
+x="coucou test"
+for i in "$x"; do
+echo $i cc
+done

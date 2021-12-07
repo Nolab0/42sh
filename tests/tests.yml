@@ -246,7 +246,7 @@
 -   name: FOR WITH ONE VAR EXP
     input: |
         for i in test coucou; do
-        echo "$i"
+        echo $i
         done
     checks:
     -   stdout
@@ -256,7 +256,7 @@
 -   name: FOR WITH TWO VAR EXP
     input: |
         for i in test coucou; do
-        echo "$i" hello "$i" cc
+        echo $i hello $i cc
         done
     checks:
     -   stdout
@@ -266,7 +266,7 @@
 -   name: FOR WITH ONE {VAR} EXP
     input: |
         for i in test coucou; do
-        echo "${i}"
+        echo ${i}
         done
     checks:
     -   stdout
@@ -276,7 +276,7 @@
 -   name: FOR MISSING VAR
     input: |
         for in test coucou; do
-        echo "$i" hello "$icc" "${i}" "${i}"abc "$iabc""${i}"def
+        echo $i hello $icc ${i} ${i}abc $iabc${i}def
         done
     checks:
     -   stdout
@@ -286,7 +286,7 @@
 -   name: FOR MISSING IN
     input: |
         for i test coucou; do
-        echo "$i" hello "$icc" "${i}" "${i}"abc "$iabc""${i}"def
+        echo $i hello $icc ${i} ${i}abc $iabc${i}def
         done
     checks:
     -   stdout
@@ -296,21 +296,21 @@
 -   name: FOR MISSING DONE
     input: |
         for i test coucou; do
-        echo "$i" hello "$icc" "${i}" "${i}"abc "$iabc""${i}"def
+        echo $i hello $icc ${i} ${i}abc $iabc${i}def
     checks:
     -   stdout
     -   exitcode
     -   has_stderr
-#
-#-   name: FOR HARD
-#    input: |
-#        for i in test coucou; do
-#        echo $i hello $icc ${i} ${i}abc $iabc${i}def
-#        done
-#    checks:
-#    -   stdout
-#    -   stderr
-#    -   exitcode
+
+-   name: FOR HARD
+    input: |
+        for i in test coucou; do
+        echo $i hello $icc ${i} ${i}abc $iabc${i}def
+        done
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
 
 -   name: SIMPLE LEFT REDIR
     input: |
@@ -465,7 +465,7 @@
 -   name: SIMPLE VAR
     input: |
         a=b
-        echo "$a"
+        echo $a
     checks:
     -   stdout
     -   stderr
@@ -475,7 +475,7 @@
     input: |
         a=b
         a=c
-        echo "$a"
+        echo $a
     checks:
     -   stdout
     -   stderr
@@ -485,7 +485,7 @@
     input: |
         a=b
         for i in test coucou; do
-        echo "$i" "$a"
+        echo $i $a
         done
     checks:
     -   stdout
@@ -496,7 +496,7 @@
     input: |
         abc=coucou
         test=gg
-        echo "$abc""$test"
+        echo $abc$test
     checks:
     -   stdout
     -   stderr
@@ -505,7 +505,7 @@
 -   name: SIMPLE WHILE
     input: |
         a=b
-        while [ "$a" = b ]; do
+        while [ $a = b ]; do
         echo test
         a=c
         done
@@ -517,7 +517,7 @@
 -   name: SIMPLE UNTIL
     input: |
         a=c
-        until [ "$a" = b ]; do
+        until [ $a = b ]; do
         a=b
         echo test
         done
@@ -529,7 +529,7 @@
 -   name: IF IN WHILE
     input: |
         a=b
-        while [ "$a" = b ]; do
+        while [ $a = b ]; do
         if true; then
         a=c
         echo test
@@ -543,7 +543,7 @@
 -   name: SIMPLE IN DOUBLE QUOTES
     input: |
         a=b
-        echo "'""$a""'"
+        echo "'"$a"'"
     checks:
     -   stdout
     -   stderr
@@ -614,10 +614,18 @@
     -   exitcode
     -   has_stderr
 
+-   name: WRONG ASSIGN 4
+    input: |
+        $a=test
+    checks:
+    -   stdout
+    -   exitcode
+    -   has_stderr
+
 -   name: EMPTY VAR
     input: |
         a=b
-        echo "$a" "$gg"
+        echo $a $gg
     checks:
     -   stdout
     -   stderr
@@ -626,8 +634,8 @@
 -   name: CHAIN SUB
     input: |
         b=c
-        a="$b"
-        echo "$a"
+        a=$b
+        echo $a
     checks:
     -   stdout
     -   stderr
@@ -803,6 +811,25 @@
         -   stdout
         -   exitcode
         -   has_stderr
+
+-   name: ECHO $1
+    input: |
+        echo $1
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: FOR EXPAND VAR
+    input: |
+        x="coucou test"
+        for i in "$x"; do
+        echo $i cc
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
 
 -   name: SIMPLE EXPORT
     input: |

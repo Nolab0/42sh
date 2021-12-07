@@ -8,6 +8,7 @@ struct list
 {
     char *name;
     char *value;
+    char **args;
     struct list *next;
 };
 
@@ -103,7 +104,7 @@ char *my_strstr(char *str, char *var);
 
 char *replace_vars(char *str, char *var, char *replace);
 
-char *expand_vars(char *str);
+char *expand_vars(char *str, char *var, char *var_rep);
 
 char *escape_chars(char *str);
 
@@ -117,10 +118,10 @@ void set_special_vars(void);
 
 char *build_var(char *name, char *value);
 
-int var_assign_special(char *str);
+void var_assign_special(char *str, char **args);
 
 char *my_itoa(int n);
 
-char *remove_vars(char *str);
+//char *remove_vars(char *str, char *exclude);
 
 #endif /* ! AST_H */
