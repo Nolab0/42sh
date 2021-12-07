@@ -104,6 +104,8 @@ int cmd_exec(char *cmd)
         if (strcmp(cmd_name, builtins[i]) == 0)
         {
             free(cmd_name);
+            if (cmd[arg_index + 1] == ' ')
+                arg_index++;
             int return_code = cmds[i](cmd + arg_index + 1);
             if (i == 1)
                 current_mode = EXIT;

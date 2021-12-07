@@ -10,10 +10,12 @@
 static size_t parse_options(char *args, int *opt, size_t len)
 {
     size_t i = 0;
+    int found = 0;
     for (; i < len; ++i)
     {
         if (args[i] == '-')
         {
+            found = 1;
             char option[3] = {
                 0,
             };
@@ -39,8 +41,14 @@ static size_t parse_options(char *args, int *opt, size_t len)
             i = j;
         }
         else if (args[i] != ' ' || (i < len - 1 && args[i + 1] == ' '))
+        {
+            if (!found)
+                return 0;
             return i;
+        }
     }
+    if (!found)
+        return 0;
     return i;
 }
 
