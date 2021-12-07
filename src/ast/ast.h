@@ -8,7 +8,6 @@ struct list
 {
     char *name;
     char *value;
-    char **args;
     struct list *next;
 };
 
@@ -118,7 +117,7 @@ void set_special_vars(void);
 
 char *build_var(char *name, char *value);
 
-void var_assign_special(char *str, char **args);
+void var_assign_special(char *str);
 
 char *my_itoa(int n);
 

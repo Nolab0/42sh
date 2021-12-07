@@ -44,7 +44,7 @@ int cd(char *args)
 
     // update oldpwd in local variables
     char *var = build_var("OLDPWD", old);
-    var_assign_special(var, NULL);
+    var_assign_special(var);
     free(var);
 
     if (setenv("OLDPWD", old, 1) == -1)

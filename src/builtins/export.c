@@ -19,7 +19,7 @@ static int specific_separator(char c)
 static void put_var(char *name, char *value)
 {
     char *var = build_var(name, value);
-    var_assign_special(var, NULL);
+    var_assign_special(var);
     free(var);
     setenv(name, value, 1);
 }

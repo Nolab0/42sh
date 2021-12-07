@@ -16,7 +16,7 @@ static void setinitvars(int argc, char **argv)
 {
     char *value = my_itoa(argc);
     char *var = build_var("#", value);
-    var_assign_special(var, NULL);
+    var_assign_special(var);
     free(var);
     free(value);
 
@@ -35,7 +35,7 @@ static void setinitvars(int argc, char **argv)
         }
     }
     var = build_var("@", value);
-    var_assign_special(var, NULL);
+    var_assign_special(var);
     free(var);
     free(value);
 
@@ -52,7 +52,7 @@ static void setinitvars(int argc, char **argv)
         strcat(value, "\"");
     }
     var = build_var("*", value);
-    var_assign_special(var, NULL);
+    var_assign_special(var);
     free(value);
     free(var);
 
@@ -60,7 +60,7 @@ static void setinitvars(int argc, char **argv)
     {
         char *value = my_itoa(i);
         char *var = build_var(value, argv[i]);
-        var_assign_special(var, NULL);
+        var_assign_special(var);
         free(var);
         free(value);
     }

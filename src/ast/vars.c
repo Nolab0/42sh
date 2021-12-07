@@ -294,14 +294,13 @@ int is_var_assign(char *str)
     return 1;
 }
 
-void var_assign_special(char *str, char **args)
+void var_assign_special(char *str)
 {
     char *equal = strchr(str, '=');
     char *before = strndup(str, equal - str);
     struct list *var = zalloc(sizeof(struct list));
     var->name = before;
     var->value = strdup(equal + 1);
-    var->args = args;
     add_var(var);
 }
 
@@ -324,33 +323,33 @@ void set_special_vars(void)
     int pid = getpid();
     char *value = my_itoa(pid);
     char *var = build_var("$", value);
-    var_assign_special(var, NULL);
+    var_assign_special(var);
 
     free(var);
     free(value);
 
     var = build_var("?", "0");
-    var_assign_special(var, NULL);
+    var_assign_special(var);
     free(var);
 
     var = build_var("RANDOM", "");
-    var_assign_special(var, NULL);
+    var_assign_special(var);
     free(var);
 
     int uid = getuid();
     value = my_itoa(uid);
     var = build_var("UID", value);
-    var_assign_special(var, NULL);
+    var_assign_special(var);
 
     free(var);
     free(value);
 
     var = build_var("IFS", " \t\n");
-    var_assign_special(var, NULL);
+    var_assign_special(var);
     free(var);
 
     char *home = getenv("HOME");
     var = build_var("OLDPWD", home);
-    var_assign_special(var, NULL);
+    var_assign_special(var);
     free(var);
 }

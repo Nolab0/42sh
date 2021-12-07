@@ -210,13 +210,6 @@ static void set_replace(char *value, struct ast *ast)
 
 void free_var(struct list *var)
 {
-    if (var->args)
-    {
-        int i = 0;
-        while (var->args[i])
-            free(var->args[i++]);
-        free(var->args);
-    }
     free(var->name);
     free(var->value);
     free(var);
@@ -278,7 +271,7 @@ int ast_eval(struct ast *ast, int *return_code)
         {
             char *value = my_itoa(res);
             char *var = build_var("?", value);
-            var_assign_special(var, NULL);
+            var_assign_special(var);
             free(var);
             free(value);
             return res;
@@ -286,15 +279,13 @@ int ast_eval(struct ast *ast, int *return_code)
         res = ast_eval(ast->left, return_code);
         char *value = my_itoa(res);
         char *var = build_var("?", value);
-        var_assign_special(var, NULL);
+        var_assign_special(var);
         free(var);
         free(value);
         return res;
     }
     else if (ast->type == AST_REDIR)
     {
-        // char *tmp = remove_vars(ast->val->data, "");
-        // tmp = expand_vars(tmp);
         char *tmp = expand_vars(ast->val->data, NULL, NULL);
         tmp = remove_quotes(tmp);
         tmp = escape_chars(tmp);
