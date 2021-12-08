@@ -143,6 +143,18 @@ static enum parser_state parse_element(struct parser *parser, struct ast **ast)
             vec_push((*ast)->val, ' ');
             vec_push((*ast)->val, '\0');
         }
+        if (strncmp((*ast)->val->data, "break", 5) == 0)
+        {
+            if (!is_valid_bc((*ast)->val->data + 5))
+                return PARSER_PANIC;
+            (*ast)->type = AST_BREAK;
+        }
+        if (strncmp((*ast)->val->data, "continue", 8) == 0)
+        {
+            if (!is_valid_bc((*ast)->val->data + 8))
+                return PARSER_PANIC;
+            (*ast)->type = AST_CONTINUE;
+        }
         return PARSER_OK;
     }
     return parse_redir(parser, ast);

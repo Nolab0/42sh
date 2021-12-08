@@ -332,7 +332,6 @@ int ast_eval(struct ast *ast, int *return_code)
         return !ast_eval(ast->left, return_code);
     else if (ast->type == AST_WHILE)
     {
-        global->current_mode->depth++;
         set_loop(ast->left);
         set_loop(ast->cond);
         int a = 0;
@@ -344,12 +343,10 @@ int ast_eval(struct ast *ast, int *return_code)
             global->current_mode->nb--;
         if (global->current_mode->nb == 0)
             global->current_mode->mode = NORMAL;
-        global->current_mode->depth--;
         return a;
     }
     else if (ast->type == AST_UNTIL)
     {
-        global->current_mode->depth++;
         set_loop(ast->left);
         set_loop(ast->cond);
         int a = 0;
@@ -361,12 +358,10 @@ int ast_eval(struct ast *ast, int *return_code)
             global->current_mode->nb--;
         if (global->current_mode->nb == 0)
             global->current_mode->mode = NORMAL;
-        global->current_mode->depth--;
         return a;
     }
     else if (ast->type == AST_FOR)
     {
-        global->current_mode->depth++;
         set_loop(ast->left);
         set_var(ast->val->data, ast->left);
         int ret_code = 0;
@@ -410,7 +405,6 @@ int ast_eval(struct ast *ast, int *return_code)
                 free(total[i]);
         }
         free(total);
-        global->current_mode->depth--;
         return ret_code;
     }
     else if (ast->type == AST_BREAK)

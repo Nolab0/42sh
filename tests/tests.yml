@@ -1112,3 +1112,121 @@
         -   stdout
         -   exitcode
         -   stderr
+
+-   name: BREAK NOT IN WHILE
+    input: |
+        echo test
+        break
+        echo coucou
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: WHILE BREAK AT FIRST
+    input: |
+        while true; do
+        echo test
+        break
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: UNTIL BREAK AT FIRST
+    input: |
+        until false; do
+        echo test
+        break
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: FOR BREAK AT FIRST
+    input: |
+        for i in false coucou; do
+        echo $i
+        break
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: WHILE IN WHILE BREAK
+    input: |
+        a=b
+        while [ $a = b ]; do
+        while true; do
+        echo coucou
+        break
+        done
+        a=c
+        echo test
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: WHILE IN WHILE BREAK 2
+    input: |
+        a=b
+        while [ $a = b ]; do
+        while true; do
+        echo coucou
+        break 2
+        done
+        a=c
+        echo test
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: WHILE IN WHILE BREAK 1000
+    input: |
+        a=b
+        while [ $a = b ]; do
+        while true; do
+        echo coucou
+        break 1000
+        done
+        a=c
+        echo test
+        done
+        a=d
+        while [ $a = d ]; do
+        echo oui
+        a=e
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: WHILE IN WHILE BREAK 1000
+    input: |
+        a=b
+        while [ $a = b ]; do
+        while true; do
+        echo coucou
+        break 1000
+        done
+        a=c
+        echo test
+        done
+        a=d
+        while [ $a = d ]; do
+        echo oui
+        a=e
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+

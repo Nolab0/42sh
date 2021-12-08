@@ -37,4 +37,9 @@ char *getcmdname(char *cmd, int *i);
  */
 int stop_echo(enum token_type type);
 
+/**
+ * \brief Return if str is a number among spaces
+ */
+int is_valid_bc(char *str);
+
 #endif /* ! UTILS_H */

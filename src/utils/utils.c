@@ -1,5 +1,6 @@
 #include "utils.h"
 
+#include <ctype.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -40,4 +41,16 @@ int stop_echo(enum token_type type)
         && type != TOKEN_REDIR)
         return 1;
     return 0;
+}
+
+int is_valid_bc(char *str)
+{
+    int i = 0;
+    while (str[i] != 0 && isblank(str[i]))
+        i++;
+    if (str[i] == 0)
+        return 1;
+    while (str[i] != 0 && isdigit(str[i]))
+        i++;
+    return str[i] == 0;
 }

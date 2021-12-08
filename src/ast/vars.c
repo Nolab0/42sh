@@ -12,7 +12,7 @@
 #define SIMPLE 1
 #define DOUBLE 2
 
-struct list *vars;
+struct global *global;
 
 char *my_strstr(char *str, char *var)
 {
@@ -114,7 +114,7 @@ static char *sub_replace(char *str, int status, int *i, int brackets, char *var,
 {
     char *name =
         strndup(str + status + 1 + brackets, *i - status - brackets * 2 - 1);
-    struct list *cur = vars;
+    struct list *cur = global->vars;
     char *replace = "";
     while (cur)
     {
@@ -246,12 +246,12 @@ char *remove_quotes(char *str)
 
 void add_var(struct list *new)
 {
-    if (!vars)
+    if (!global->vars)
     {
-        vars = new;
+        global->vars = new;
         return;
     }
-    struct list *cur = vars;
+    struct list *cur = global->vars;
     struct list *prev = NULL;
     while (cur && strcmp(cur->name, new->name) != 0)
     {
@@ -266,7 +266,7 @@ void add_var(struct list *new)
     if (!prev)
     {
         new->next = cur->next;
-        vars = new;
+        global->vars = new;
         free_var(cur);
         return;
     }

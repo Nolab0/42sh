@@ -31,9 +31,9 @@ enum token_type
     TOKEN_IN = 19,
     TOKEN_ECHO = 20,
     TOKEN_EXIT = 21,
-    TOKEN_EXPORT = 23,
-    TOKEN_DOT = 24,
-    TOKEN_ERROR = 25
+    TOKEN_EXPORT = 22,
+    TOKEN_DOT = 23,
+    TOKEN_ERROR = 24
 };
 
 /**
