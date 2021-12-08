@@ -11,7 +11,13 @@ struct list
     struct list *next;
 };
 
-extern struct list *vars;
+struct global
+{
+    struct mode *current_mode;
+    struct list *vars;
+};
+
+extern struct global *global;
 
 /**
  * \brief Possible nodes types for ast structure.
@@ -32,7 +38,9 @@ enum ast_type
     AST_WHILE,
     AST_UNTIL,
     AST_FOR,
-    AST_SUBSHELL
+    AST_SUBSHELL,
+    AST_BREAK,
+    AST_CONTINUE
 };
 
 /**
@@ -40,10 +48,19 @@ enum ast_type
  */
 enum cmd_mode
 {
+    NORMAL = 0,
     EXIT = 1,
     BREAK = 2,
     CONTINUE = 3
 };
+
+struct mode
+{
+    enum cmd_mode mode;
+    size_t nb;
+    int depth;
+};
+
 
 /**
  * \brief Structure for ast.
@@ -51,14 +68,20 @@ enum cmd_mode
  */
 struct ast
 {
+    int is_loop;
+
     enum ast_type type;
+
     char **list;
     size_t size;
     size_t capacity;
+
     char *var;
     char *replace;
+
     struct vec *val;
     struct ast *cond;
+
     struct ast *left;
     struct ast *right;
 };
