@@ -206,6 +206,8 @@ static void set_var(char *var, struct ast *ast)
 {
     if (ast == NULL)
         return;
+    if (ast->var)
+        free(ast->var);
     ast->var = strdup(var);
     set_var(var, ast->left);
     set_var(var, ast->right);

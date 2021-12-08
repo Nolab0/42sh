@@ -1230,7 +1230,72 @@
         -   exitcode
         -   stderr
 
+-   name: FOR BREAK
+    input: |
+        for i in test coucou; do
+        echo $i
+        break
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
 
+-   name: FOR BREAK;
+    input: |
+        for i in test coucou; do
+        echo $i
+        break;
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: FOR BREAK AS VAR
+    input: |
+        for break in test coucou; do
+        echo $break
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: FOR BREAK AS VAR
+    input: |
+        for i in break test; do
+        echo $i
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: FOR BREAK 2
+    input: |
+        for i in coucou test; do
+        echo $i
+        break 2
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: FOR IN FOR BREAK 2
+    input: |
+        for i in coucou test; do
+        for j in la le li; do
+        echo $j
+        break 2
+        done
+        echo $i
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
 
 -   name: VALID SUBSHELL
     input: |

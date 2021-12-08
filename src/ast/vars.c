@@ -145,7 +145,7 @@ char *expand_vars(char *str, char *var, char *var_rep)
     {
         if (str[i] == '$' && str[i + 1] == '$')
         {
-            struct list *cur = vars;
+            struct list *cur = global->vars;
             while (cur)
             {
                 if (strcmp("$", cur->name) == 0)
