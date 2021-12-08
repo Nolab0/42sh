@@ -547,7 +547,8 @@ static enum parser_state parse_rule_until(struct parser *parser,
     return parse_do_group(parser, &((*ast)->left));
 }
 
-static enum parser_state parse_subshells(struct parser *parser, struct ast **ast)
+static enum parser_state parse_subshells(struct parser *parser,
+                                         struct ast **ast)
 {
     struct token *tok = lexer_peek(parser->lexer);
     if (tok->type != TOKEN_OPEN_PAR)

@@ -338,7 +338,8 @@ int ast_eval(struct ast *ast, int *return_code)
         set_loop(ast->left);
         set_loop(ast->cond);
         int a = 0;
-        while (global->current_mode->mode != BREAK && ast_eval(ast->cond, return_code) == 0)
+        while (global->current_mode->mode != BREAK
+               && ast_eval(ast->cond, return_code) == 0)
         {
             a = ast_eval(ast->left, return_code);
         }
@@ -355,7 +356,8 @@ int ast_eval(struct ast *ast, int *return_code)
         set_loop(ast->left);
         set_loop(ast->cond);
         int a = 0;
-        while (global->current_mode->mode != BREAK && ast_eval(ast->cond, return_code) != 0)
+        while (global->current_mode->mode != BREAK
+               && ast_eval(ast->cond, return_code) != 0)
         {
             a = ast_eval(ast->left, return_code);
         }

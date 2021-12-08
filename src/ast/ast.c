@@ -62,7 +62,7 @@ static void pretty_rec(struct ast *ast)
         return;
     if (ast->type == AST_ROOT)
     {
-        //printf("root ");
+        // printf("root ");
         pretty_rec(ast->left);
         pretty_rec(ast->right);
     }

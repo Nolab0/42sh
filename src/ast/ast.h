@@ -61,7 +61,6 @@ struct mode
     int depth;
 };
 
-
 /**
  * \brief Structure for ast.
  * @details: cond use for ifs conditions
