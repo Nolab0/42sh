@@ -9,7 +9,7 @@
 #include <utils/utils.h>
 #include <utils/vec.h>
 
-#define SIZE 21
+#define SIZE 25
 
 static int isvalidampersand(char *str)
 {
@@ -70,13 +70,13 @@ static int match_token(char *str, int quote)
     char *names[SIZE] = { "if",   "then",   "else", "elif", "fi", ";",
                           "\n",   "!",      "||",   "&&",   "|",  "while",
                           "for",  "until",  "do",   "done", "in", "echo",
-                          "exit", "export", "." };
+                          "exit", "export", ".", "(", ")", "{", "}" };
     int types[SIZE] = { TOKEN_IF,  TOKEN_THEN,  TOKEN_ELSE, TOKEN_ELIF,
                         TOKEN_FI,  TOKEN_SEMIC, TOKEN_NEWL, TOKEN_NEG,
                         TOKEN_OR,  TOKEN_AND,   TOKEN_PIPE, TOKEN_WHILE,
                         TOKEN_FOR, TOKEN_UNTIL, TOKEN_DO,   TOKEN_DONE,
                         TOKEN_IN,  TOKEN_ECHO,  TOKEN_EXIT, TOKEN_EXPORT,
-                        TOKEN_DOT };
+                        TOKEN_DOT, TOKEN_OPEN_PAR, TOKEN_CLOSE_PAR, TOKEN_OPEN_BRAC, TOKEN_CLOSE_BRAC };
     for (size_t i = 0; i < SIZE; i++)
     {
         if (strcmp(str, names[i]) == 0)
@@ -152,6 +152,12 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
     size_t redir_index = get_redir_idx(lexer, len);
     if (redir_index == lexer->pos)
         redir_index = len;
+    if (lexer->input[lexer->pos] == '(' || lexer->input[lexer->pos] == ')')
+    {
+        vec_push(vec, lexer->input[lexer->pos]);
+        lexer->pos++;
+        return 0;
+    }
     while (lexer->pos < len
            && (!is_separator(lexer->input[lexer->pos])
                || (lexer->input[lexer->pos] == '|' && lexer->pos != 0
@@ -159,6 +165,8 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
            && lexer->pos < redir_index)
     {
         char current = lexer->input[lexer->pos];
+        if (current == ')' || current == '(')
+            break;
         if ((current == '\'' || current == '\"')
             && (lexer->pos == 0 || lexer->input[lexer->pos - 1] != '\\'))
         {

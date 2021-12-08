@@ -29,11 +29,15 @@ enum token_type
     TOKEN_DO = 17,
     TOKEN_DONE = 18,
     TOKEN_IN = 19,
-    TOKEN_ECHO = 20,
-    TOKEN_EXIT = 21,
-    TOKEN_EXPORT = 23,
-    TOKEN_DOT = 24,
-    TOKEN_ERROR = 25
+    TOKEN_OPEN_PAR = 20,
+    TOKEN_CLOSE_PAR = 21,
+    TOKEN_OPEN_BRAC = 22,
+    TOKEN_CLOSE_BRAC = 23,
+    TOKEN_ECHO = 24,
+    TOKEN_EXIT = 25,
+    TOKEN_EXPORT = 26,
+    TOKEN_DOT = 27,
+    TOKEN_ERROR = 28
 };
 
 /**

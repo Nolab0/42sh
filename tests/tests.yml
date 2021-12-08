@@ -1112,3 +1112,21 @@
         -   stdout
         -   exitcode
         -   stderr
+
+-   name: VALID SUBSHELL
+    input: |
+        echo parent
+        (echo child)
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: INVALID SUBSHELL
+    input: |
+        echo parent
+        (echo child
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr

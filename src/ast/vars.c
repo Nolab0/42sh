@@ -143,6 +143,20 @@ char *expand_vars(char *str, char *var, char *var_rep)
     int context = NONE;
     while (str[i] != 0)
     {
+        if (str[i] == '$' && str[i + 1] == '$')
+        {
+            struct list *cur = vars;
+            while (cur)
+            {
+                if (strcmp("$", cur->name) == 0)
+                {
+                    str = replace_at_by(str, i, 2, cur->value);
+                    break;
+                }
+                cur = cur->next;
+            }
+            continue;
+        }
         if (str[i] == '\'')
         {
             if (context == NONE)
@@ -158,7 +172,7 @@ char *expand_vars(char *str, char *var, char *var_rep)
                 context = NONE;
         }
         if (context != SIMPLE && status == -1 && str[i] == '$'
-            && (i == 0 || str[i - 1] != '\\') && !is_var_sep(str[i + 1]))
+            && (i == 0 || str[i - 1] != '\\') && (!is_var_sep(str[i + 1])))
         {
             if (str[i + 1] == '{')
                 brackets = 1;

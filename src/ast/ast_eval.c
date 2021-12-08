@@ -359,6 +359,10 @@ int ast_eval(struct ast *ast, int *return_code)
         free(total);
         return ret_code;
     }
+    else if (ast->type == AST_SUBSHELL)
+    {
+        return subshell(vec_cstring(ast->val));
+    }
     else
     {
         printf("ast->type = %d\n", ast->type);

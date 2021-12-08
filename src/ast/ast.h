@@ -31,7 +31,8 @@ enum ast_type
     AST_NEG,
     AST_WHILE,
     AST_UNTIL,
-    AST_FOR
+    AST_FOR,
+    AST_SUBSHELL
 };
 
 /**
@@ -118,6 +119,8 @@ char *build_var(char *name, char *value);
 void var_assign_special(char *str);
 
 char *my_itoa(int n);
+
+int subshell(char *args);
 
 // char *remove_vars(char *str, char *exclude);
 

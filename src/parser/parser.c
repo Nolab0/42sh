@@ -272,6 +272,7 @@ static enum parser_state parse_compound_list(struct parser *parser,
     tok = lexer_peek(parser->lexer);
     if (tok->type != TOKEN_SEMIC && tok->type != TOKEN_NEWL)
         return PARSER_PANIC;
+
     while (42)
     {
         struct ast *root = create_ast(AST_ROOT);
@@ -534,10 +535,56 @@ static enum parser_state parse_rule_until(struct parser *parser,
     return parse_do_group(parser, &((*ast)->left));
 }
 
+static enum parser_state parse_subshells(struct parser *parser, struct ast **ast)
+{
+    struct token *tok = lexer_peek(parser->lexer);
+    if (tok->type != TOKEN_OPEN_PAR)
+        return PARSER_PANIC;
+    lexer_pop(parser->lexer); // Skip '('
+    token_free(tok);
+    tok = lexer_peek(parser->lexer);
+    struct ast *subs = create_ast(AST_SUBSHELL);
+    struct vec *vec = vec_init();
+    while (tok->type != TOKEN_CLOSE_PAR && tok->type != TOKEN_EOF)
+    {
+        for (size_t i = 0; i < strlen(tok->value); i++)
+            vec_push(vec, tok->value[i]);
+        vec_push(vec, ' ');
+        token_free(tok);
+        lexer_pop(parser->lexer);
+        tok = lexer_peek(parser->lexer);
+    }
+    /*if (tok->type == TOKEN_EOF)
+    {
+        ast_free(subs);
+        vec_destroy(vec);
+        free(vec);
+        return PARSER_PANIC;
+    }*/
+    if (tok->type == TOKEN_CLOSE_PAR)
+        vec_push(vec, ')');
+    else if (tok->type == TOKEN_EOF)
+        vec_push(vec, '\0');
+    subs->val = vec;
+    subs->left = (*ast);
+    (*ast) = subs;
+    tok = lexer_pop(parser->lexer); // skip ')'
+    token_free(tok);
+    return PARSER_OK;
+}
+
 static enum parser_state parse_shell_command(struct parser *parser,
                                              struct ast **ast)
 {
     struct token *tok = lexer_peek(parser->lexer);
+    if (tok->type == TOKEN_OPEN_PAR)
+    {
+        enum parser_state state = parse_subshells(parser, ast);
+        if (state != PARSER_OK)
+            return PARSER_PANIC;
+        else
+            return PARSER_OK;
+    }
     if (tok->type == TOKEN_FOR)
     {
         tok = lexer_pop(parser->lexer);
