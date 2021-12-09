@@ -1420,3 +1420,198 @@
         -   stdout
         -   exitcode
         -   has_stderr
+
+-   name: CONTINUE USELESS
+    input: |
+        echo coucou
+        continue
+        echo test
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CONTINUE 5 USELESS
+    input: |
+        echo coucou
+        continue 5
+        echo test
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CONTINUE IN WHILE
+    input: |
+        a=b
+        while [ $a = b ]; do
+        echo coucou
+        a=c
+        continue
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CONTINUE 2 IN WHILE
+    input: |
+        a=b
+        while [ $a = b ]; do
+        echo coucou
+        a=c
+        continue 2
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CONTINUE 0 IN WHILE
+    input: |
+        a=b
+        while [ $a = b ]; do
+        echo coucou
+        a=c
+        continue 0
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: BREAK 0 IN WHILE
+    input: |
+        a=b
+        while [ $a = b ]; do
+        echo coucou
+        a=c
+        break 0
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: CONTINUE IN UNTIL
+    input: |
+        a=b
+        until [ $a = c ]; do
+        echo coucou
+        a=c
+        continue
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CONTINUE IN FOR
+    input: |
+        for i in test coucou; do
+        echo $i
+        continue
+        echo cc
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CONTINUE 2 IN FOR FOR
+    input: |
+        for j in ll pp jj; do
+        for i in test coucou; do
+        echo $i
+        continue 2
+        echo cc
+        done
+        echo rr
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CONTINUE 2 IN WHILE WHILE
+    input: |
+        a=b
+        g=h
+        while [ $g = h ]; do
+        while [ $a = b ]; do
+        echo coucou
+        a=c
+        continue 2
+        done
+        echo rr
+        g=l
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CONTINUE IN WHILE WHILE
+    input: |
+        a=b
+        g=h
+        while [ $g = h ]; do
+        while [ $a = b ]; do
+        echo coucou
+        a=c
+        continue
+        done
+        echo rr
+        g=l
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CONTINUE IN FOR FOR
+    input: |
+        for j in ll pp jj; do
+        for i in test coucou; do
+        echo $i
+        continue 2
+        echo cc
+        done
+        echo rr
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CONTINUE BREAK IN FOR FOR
+    input: |
+        for j in ll pp jj; do
+        for i in test coucou; do
+        echo $i
+        continue 2
+        break 2
+        echo cc
+        done
+        echo rr
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: BREAK 2 IN FOR CONTINUE FOR
+    input: |
+        for j in ll pp jj; do
+        for i in test coucou; do
+        echo $i
+        break 2
+        echo cc
+        done
+        continue
+        echo rr
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr

@@ -289,17 +289,12 @@ static enum parser_state parse_compound_list(struct parser *parser,
     {
         struct ast *root = create_ast(AST_ROOT);
         root->left = *ast;
+        *ast = root;
         tok = lexer_peek(parser->lexer);
         if (tok->type == TOKEN_ERROR)
-        {
-            ast_free(root);
             return PARSER_PANIC;
-        }
         if (tok->type != TOKEN_NEWL && tok->type != TOKEN_SEMIC)
-        {
-            *ast = root;
             break;
-        }
         lexer_pop(parser->lexer);
         token_free(tok);
         while ((tok = lexer_peek(parser->lexer))->type == TOKEN_NEWL)
@@ -308,23 +303,13 @@ static enum parser_state parse_compound_list(struct parser *parser,
             token_free(tok);
         }
         if (tok->type == TOKEN_ERROR)
-        {
-            ast_free(root);
             return PARSER_PANIC;
-        }
 
         state = parse_and_or(parser, &(root->right));
         if (state == PARSER_ABSENT)
-        {
-            *ast = root;
             break;
-        }
         else if (state == PARSER_PANIC)
-        {
-            ast_free(root);
             return state;
-        }
-        *ast = root;
     }
     return PARSER_OK;
 }
