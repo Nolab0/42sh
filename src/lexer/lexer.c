@@ -12,6 +12,24 @@
 
 #define SIZE 25
 
+static char *string_remove(char c, char *str, long begin, long end)
+{
+    if (!str)
+        return NULL;
+
+    char *res = strdup(str);
+    char *sub = NULL;
+    while ((sub = strchr(res + begin + 1, c)) && sub - res < end)
+    {
+        char *before = strndup(res, sub - res);
+        char *after = strdup(sub + 1);
+        sprintf(res, "%s%s", before, after);
+        free(before);
+        free(after);
+    }
+    return res;
+}
+
 static int isvalidampersand(char *str)
 {
     int i = 0;
@@ -178,6 +196,12 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
             fprintf(stderr, "Synthax error: '`' unmatched\n");
             return -1;
         }
+
+        // char *prev = lexer->input;
+        // LEAK HERE, PREVIOUS VALUE OF LEXER->INPUT LOST
+        lexer->input = string_remove('`', lexer->input, lexer->pos, next - lexer->input);
+        //free(prev);
+        //lexer->input = clean;
         char *tmp = cmd_sub(lexer->input, lexer->pos, next - lexer->input);
         if (tmp == NULL)
             return -1;
