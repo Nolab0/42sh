@@ -1306,6 +1306,15 @@
         -   exitcode
         -   stderr
 
+-   name: INVALID SUBSUBSHELL
+    input: |
+        echo parent
+        (echo child (echo child2))
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
 -   name: INVALID SUBSHELL
     input: |
         echo parent

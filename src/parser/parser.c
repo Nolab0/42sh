@@ -543,8 +543,13 @@ static enum parser_state parse_subshells(struct parser *parser,
     tok = lexer_peek(parser->lexer);
     struct ast *subs = create_ast(AST_SUBSHELL);
     struct vec *vec = vec_init();
-    while (tok->type != TOKEN_CLOSE_PAR && tok->type != TOKEN_EOF)
+    int in_subsubshell = 0;
+    while (tok->type != TOKEN_EOF && (tok->type != TOKEN_CLOSE_PAR || in_subsubshell))
     {
+        if (tok->type == TOKEN_OPEN_PAR)
+            in_subsubshell = 1;
+        if (tok->type == TOKEN_CLOSE_PAR && in_subsubshell)
+            in_subsubshell = 0;
         for (size_t i = 0; i < strlen(tok->value); i++)
             vec_push(vec, tok->value[i]);
         vec_push(vec, ' ');
@@ -553,7 +558,7 @@ static enum parser_state parse_subshells(struct parser *parser,
         tok = lexer_peek(parser->lexer);
     }
     if (tok->type == TOKEN_CLOSE_PAR)
-        vec_push(vec, '}');
+        vec_push(vec, ')');
     else if (tok->type == TOKEN_EOF)
         vec_push(vec, '\0');
     subs->val = vec;
@@ -575,8 +580,13 @@ static enum parser_state parse_cmdblocks(struct parser *parser,
     tok = lexer_peek(parser->lexer);
     struct ast *subs = create_ast(AST_CMDBLOCK);
     struct vec *vec = vec_init();
-    while (tok->type != TOKEN_CLOSE_BRAC && tok->type != TOKEN_EOF)
+    int in_subbracket = 0;
+    while (tok->type != TOKEN_EOF && (tok->type != TOKEN_CLOSE_BRAC || in_subbracket) )
     {
+        if (tok->type == TOKEN_OPEN_BRAC)
+            in_subbracket = 1;
+        if (tok->type == TOKEN_CLOSE_BRAC && in_subbracket)
+            in_subbracket = 0;
         for (size_t i = 0; i < strlen(tok->value); i++)
             vec_push(vec, tok->value[i]);
         vec_push(vec, ' ');
@@ -748,6 +758,7 @@ static enum parser_state parse_list(struct parser *parser, struct ast **ast)
         state = parse_command(parser, &(root->right));
         if (state == PARSER_ABSENT)
         {
+            state = PARSER_OK;
             *ast = root;
             break;
         }

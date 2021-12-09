@@ -62,9 +62,16 @@ int echo(char *args)
     size_t begin = parse_options(args, options, len);
 
     struct vec *vector = vec_init();
-
     for (size_t i = begin; i < len; ++i)
     {
+        if (args[i] == '(' || args[i] == ')')
+        {
+            fprintf(stderr, "42sh: Syntax error: Unexpected character: %c\n", args[i]);
+            free(options);
+            vec_destroy(vector);
+            free(vector);
+            return 2;
+        }
         if ((args[i] == '\\') && options[1] && i < len - 1)
         {
             if (args[i + 1] == '\\')

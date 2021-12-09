@@ -19,7 +19,6 @@ static int is_valid(char *str)
     if (str[len - 1] == '}')
     {
         str[len - 1] = '\0'; // Remove closing parenthesis
-        str[len - 2] = '\0';
         return 1;
     }
     return 0;
@@ -34,7 +33,6 @@ int cmdblock(char *args)
     }
     struct parser *parser = create_parser();
     parser->lexer = lexer_create(args);
-    printf("ARGS: '%s'\n", args);
     enum parser_state state = parsing(parser);
     int return_code = 0;
     if (state != PARSER_OK)
