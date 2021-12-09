@@ -1314,3 +1314,59 @@
         -   stdout
         -   exitcode
         -   has_stderr
+
+-   name: SIMPLE IN SIMPLE QUOTE ESCAPE
+    input: |
+        echo '\'
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: SIMPLE IN DOUBLE QUOTE ESCAPE
+    input: |
+        echo "\'"
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: SIMPLE IN DOUBLE QUOTE
+    input: |
+        echo "'"
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: DOUBLE IN SIMPLE QUOTE
+    input: |
+        echo '"'
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: TWO ESCAPE THEN ERROR
+    input: |
+        echo \"\''
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: QUOTE ESCAPE HARD 1
+    input: |
+        echo "\"\\'\"'"
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: QUOTE ESCAPE HARD 2
+    input: |
+        echo \"\\'\"
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr

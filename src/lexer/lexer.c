@@ -103,20 +103,27 @@ static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
 {
     char quote_type = lexer->input[lexer->pos]; // ' or "
     vec_push(vec, lexer->input[lexer->pos++]);
-    size_t save_pos = lexer->pos;
-    while (lexer->pos < len && lexer->input[lexer->pos] != '\n'
-           && (lexer->input[lexer->pos] != quote_type
-               || (lexer->pos != 0
-                   && (quote_type == '\''
-                       || lexer->input[lexer->pos - 1] == '\\'))))
-        vec_push(vec, lexer->input[lexer->pos++]);
-    if (lexer->input[lexer->pos] == quote_type)
-        vec_push(vec, lexer->input[lexer->pos++]);
-    if (vec->data[vec->size - 1] != quote_type || save_pos == lexer->pos)
+    while (lexer->pos < len)
+    {
+        if (quote_type == '\'')
+        {
+            if (lexer->input[lexer->pos] == '\'')
+                break;
+            vec_push(vec, lexer->input[lexer->pos++]);
+        }
+        else if (quote_type == '\"')
+        {
+            if (lexer->input[lexer->pos] == '\"' && lexer->input[lexer->pos - 1] != '\\')
+                break;
+            vec_push(vec, lexer->input[lexer->pos++]);
+        }
+    }
+    if (lexer->input[lexer->pos] != quote_type)
     {
         fprintf(stderr, "Syntax error: Unterminated quoted string\n");
         return -1;
     }
+    vec_push(vec, lexer->input[lexer->pos++]);
     return 0;
 }
 
@@ -163,16 +170,16 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
         return 0;
     }
     while (lexer->pos < len
-           && (!is_separator(lexer->input[lexer->pos])
-               || (lexer->input[lexer->pos] == '|' && lexer->pos != 0
-                   && lexer->input[lexer->pos - 1] == '>'))
-           && lexer->pos < redir_index)
+            && (!is_separator(lexer->input[lexer->pos])
+                || (lexer->input[lexer->pos] == '|' && lexer->pos != 0
+                    && lexer->input[lexer->pos - 1] == '>'))
+            && lexer->pos < redir_index)
     {
         char current = lexer->input[lexer->pos];
         if (current == ')' || current == '(')
             break;
         if ((current == '\'' || current == '\"')
-            && (lexer->pos == 0 || lexer->input[lexer->pos - 1] != '\\'))
+                && (lexer->pos == 0 || (lexer->input[lexer->pos - 1] != '\\' || not_as_escape(lexer->input, lexer->pos - 1))))
         {
             quote = 1;
             int error = handle_quotes(lexer, vec, len);
@@ -183,7 +190,7 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
         {
             vec_push(vec, current);
             if ((current == '<' || current == '>' || current == '|')
-                && lexer->input[lexer->pos + 1] == ' ')
+                    && lexer->input[lexer->pos + 1] == ' ')
             {
                 vec_push(vec, lexer->input[lexer->pos + 1]);
                 lexer->pos++;

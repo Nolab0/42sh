@@ -17,6 +17,8 @@ struct opts
     char *input;
 };
 
+int not_as_escape(char *str, int pos);
+
 /**
  * \brief Return if the char c is a separator
  */

@@ -208,19 +208,25 @@ char *remove_quotes(char *str)
     {
         if (str[i + 1] != '\0' && str[i] == '\\' && !isspace(str[i + 1]))
         {
+            if (context != SIMPLE && str[i + 1] == '\\')
+            {
+                new[index++] = str[i];
+                i += 2;
+                continue;
+            }
             if ((context != DOUBLE || str[i + 1] != '\'') && context != SIMPLE)
             {
                 i++;
                 continue;
             }
-            else if (str[i + 1] == '\'')
+            else if (str[i + 1] == '\'' && context != DOUBLE)
             {
                 new[index++] = str[i];
                 i += 2;
                 continue;
             }
         }
-        if (str[i] == '\'' && (i == 0 || str[i - 1] != '\\'))
+        if (str[i] == '\'' && (i == 0 || str[i - 1] != '\\' || not_as_escape(str, i - 1)))
         {
             if (context == NONE)
             {

@@ -4,6 +4,20 @@
 #include <stddef.h>
 #include <string.h>
 
+/**
+ * \brief: Return wether the sequence of \ escape itself
+ */
+int not_as_escape(char *str, int pos)
+{
+    int count = 0;
+    while (pos >= 0 && str[pos] == '\\')
+    {
+        count++;
+        pos--;
+    }
+    return count % 2 == 0;
+}
+
 int is_separator(char c)
 {
     char separator[7] = ";|\0\n "; // Array of possible separator
