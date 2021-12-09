@@ -8,6 +8,7 @@
 #include <utils/alloc.h>
 #include <utils/utils.h>
 #include <utils/vec.h>
+#include <ast/ast.h>
 
 #define SIZE 25
 
@@ -157,20 +158,35 @@ static size_t get_redir_idx(struct lexer *lexer, size_t len)
  * @return value: return wether the lexed word is quoted.
  *                -1 if lexing error
  */
-static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
+static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
 {
     size_t before = lexer->pos;
     int quote = 0;
-    size_t redir_index = get_redir_idx(lexer, len);
+    size_t redir_index = get_redir_idx(lexer, *len);
     if (redir_index == lexer->pos)
-        redir_index = len;
+        redir_index = *len;
     if (lexer->input[lexer->pos] == '(' || lexer->input[lexer->pos] == ')')
     {
-        vec_push(vec, lexer->input[lexer->pos]);
-        lexer->pos++;
+        vec_push(vec, lexer->input[lexer->pos++]);
         return 0;
     }
-    while (lexer->pos < len
+    if (lexer->input[lexer->pos] == '`')
+    {
+        char *next = strrchr(lexer->input + lexer->pos + 1, '`');
+        if (next == NULL)
+        {
+            fprintf(stderr, "Synthax error: '`' unmatched\n");
+            return -1;
+        }
+        char *tmp = cmd_sub(lexer->input, lexer->pos, next - lexer->input);
+        if (tmp == NULL)
+            return -1;
+        free(lexer->input);
+        lexer->input = tmp;
+        *len = strlen(tmp);
+        return 0;
+    }
+    while (lexer->pos < *len
            && (!is_separator(lexer->input[lexer->pos])
                || (lexer->input[lexer->pos] == '|' && lexer->pos != 0
                    && lexer->input[lexer->pos - 1] == '>'))
@@ -185,7 +201,7 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
                     || not_as_escape(lexer->input, lexer->pos - 1))))
         {
             quote = 1;
-            int error = handle_quotes(lexer, vec, len);
+            int error = handle_quotes(lexer, vec, *len);
             if (error == -1)
                 return -1;
         }
@@ -208,7 +224,7 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t len)
         {
             char c = lexer->input[lexer->pos++];
             vec_push(vec, c);
-            if (lexer->pos < len && lexer->input[lexer->pos] == c)
+            if (lexer->pos < *len && lexer->input[lexer->pos] == c)
                 vec_push(vec, lexer->input[lexer->pos++]);
         }
     }
@@ -227,7 +243,7 @@ struct token *get_token(struct lexer *lexer)
     if (lexer->pos >= input_len)
         return token_create(TOKEN_EOF);
     struct vec *vec = vec_init();
-    int quote = get_substr(lexer, vec, input_len);
+    int quote = get_substr(lexer, vec, &input_len);
     struct token *tok = NULL;
     if (quote == -1)
         tok = token_create(TOKEN_ERROR);
@@ -245,7 +261,7 @@ struct token *get_token(struct lexer *lexer)
 struct lexer *lexer_create(char *input)
 {
     struct lexer *new = zalloc(sizeof(struct lexer));
-    new->input = input;
+    new->input = strdup(input);
     new->pos = 0;
     new->current_tok = get_token(new);
     return new;
@@ -255,6 +271,7 @@ void lexer_free(struct lexer *lexer)
 {
     if (lexer->current_tok != NULL)
         token_free(lexer->current_tok);
+    free(lexer->input);
     free(lexer);
 }
 

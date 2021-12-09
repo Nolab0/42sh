@@ -1615,3 +1615,27 @@
         -   stdout
         -   exitcode
         -   stderr
+
+-   name: CMD SUB ERROR
+    input: |
+        echo `echo test
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: CMD SUB 1
+    input: |
+        echo `echo test`
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB 2
+    input: |
+        echo `echo `echo test``
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr

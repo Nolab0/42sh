@@ -137,6 +137,8 @@ static enum parser_state parse_element(struct parser *parser, struct ast **ast)
         tok = lexer_peek(parser->lexer);
         if (tok->type == TOKEN_ERROR)
             return PARSER_PANIC;
+        if (tok->value == NULL || strlen(tok->value) == 0)
+            return PARSER_OK;
         if (stop_echo(tok->type))
         {
             (*ast)->val->size--;
@@ -553,7 +555,7 @@ static enum parser_state parse_subshells(struct parser *parser,
         tok = lexer_peek(parser->lexer);
     }
     if (tok->type == TOKEN_CLOSE_PAR)
-        vec_push(vec, '}');
+        vec_push(vec, ')');
     else if (tok->type == TOKEN_EOF)
         vec_push(vec, '\0');
     subs->val = vec;
