@@ -242,7 +242,10 @@ int ast_eval(struct ast *ast, int *return_code)
         int left = ast_eval(ast->left, return_code);
         if (left == 0 || !ast->right)
             return left;
-        if (ast->is_loop && global->current_mode->mode == BREAK)
+        if (ast->is_loop
+            && (global->current_mode->mode == BREAK
+                || (global->current_mode->mode == CONTINUE
+                    && global->current_mode->nb >= 1)))
             return left;
         return ast_eval(ast->right, return_code);
     }
@@ -251,7 +254,10 @@ int ast_eval(struct ast *ast, int *return_code)
         int left = ast_eval(ast->left, return_code);
         if (!ast->right)
             return left;
-        if (ast->is_loop && global->current_mode->mode == BREAK)
+        if (ast->is_loop
+            && (global->current_mode->mode == BREAK
+                || (global->current_mode->mode == CONTINUE
+                    && global->current_mode->nb >= 1)))
             return left;
         return ast_eval(ast->right, return_code);
     }
@@ -264,13 +270,19 @@ int ast_eval(struct ast *ast, int *return_code)
             return test_cond;
         }
 
-        if (ast->is_loop && global->current_mode->mode == BREAK)
+        if (ast->is_loop
+            && (global->current_mode->mode == BREAK
+                || (global->current_mode->mode == CONTINUE
+                    && global->current_mode->nb >= 1)))
             return 0;
         if (!test_cond) // true
             return ast_eval(ast->left, return_code);
         else
         {
-            if (ast->is_loop && global->current_mode->mode == BREAK)
+            if (ast->is_loop
+                && (global->current_mode->mode == BREAK
+                    || (global->current_mode->mode == CONTINUE
+                        && global->current_mode->nb >= 1)))
                 return 0;
             return ast_eval(ast->right, return_code);
         }
@@ -326,7 +338,10 @@ int ast_eval(struct ast *ast, int *return_code)
         int left = ast_eval(ast->left, return_code);
         if (left != 0)
             return left;
-        if (ast->is_loop && global->current_mode->mode == BREAK)
+        if (ast->is_loop
+            && (global->current_mode->mode == BREAK
+                || (global->current_mode->mode == CONTINUE
+                    && global->current_mode->nb >= 1)))
             return 0;
         return ast_eval(ast->right, return_code);
     }
@@ -341,11 +356,22 @@ int ast_eval(struct ast *ast, int *return_code)
         while (global->current_mode->mode != BREAK
                && ast_eval(ast->cond, return_code) == 0)
         {
+            if (global->current_mode->mode == CONTINUE)
+            {
+                if (global->current_mode->nb == 1)
+                {
+                    global->current_mode->nb--;
+                    global->current_mode->mode = NORMAL;
+                }
+                else
+                    break;
+            }
             a = ast_eval(ast->left, return_code);
         }
-        if (global->current_mode->mode == BREAK)
+        if (global->current_mode->mode == BREAK
+            || global->current_mode->mode == CONTINUE)
             global->current_mode->nb--;
-        if (global->current_mode->nb == 0)
+        if (global->current_mode->nb <= 0)
             global->current_mode->mode = NORMAL;
         global->current_mode->depth--;
         return a;
@@ -359,11 +385,22 @@ int ast_eval(struct ast *ast, int *return_code)
         while (global->current_mode->mode != BREAK
                && ast_eval(ast->cond, return_code) != 0)
         {
+            if (global->current_mode->mode == CONTINUE)
+            {
+                if (global->current_mode->nb == 1)
+                {
+                    global->current_mode->nb--;
+                    global->current_mode->mode = NORMAL;
+                }
+                else
+                    break;
+            }
             a = ast_eval(ast->left, return_code);
         }
-        if (global->current_mode->mode == BREAK)
+        if (global->current_mode->mode == BREAK
+            || global->current_mode->mode == CONTINUE)
             global->current_mode->nb--;
-        if (global->current_mode->nb == 0)
+        if (global->current_mode->nb <= 0)
             global->current_mode->mode = NORMAL;
         global->current_mode->depth--;
         return a;
@@ -399,14 +436,25 @@ int ast_eval(struct ast *ast, int *return_code)
         }
         for (size_t i = 0; global->current_mode->mode != BREAK && i < size; ++i)
         {
+            if (global->current_mode->mode == CONTINUE)
+            {
+                if (global->current_mode->nb == 1)
+                {
+                    global->current_mode->nb--;
+                    global->current_mode->mode = NORMAL;
+                }
+                else
+                    break;
+            }
             set_replace(total[i], ast->left);
             ret_code = ast_eval(ast->left, return_code);
             free(total[i]);
             total[i] = NULL;
         }
-        if (global->current_mode->mode == BREAK)
+        if (global->current_mode->mode == BREAK
+            || global->current_mode->mode == CONTINUE)
             global->current_mode->nb--;
-        if (global->current_mode->nb == 0)
+        if (global->current_mode->nb <= 0)
             global->current_mode->mode = NORMAL;
         for (size_t i = 0; i < size; i++)
         {
@@ -426,6 +474,7 @@ int ast_eval(struct ast *ast, int *return_code)
             if (nb == 0)
             {
                 fprintf(stderr, "Break: invalid parameter '0'\n");
+                return 2;
             }
             if (nb > global->current_mode->depth)
                 nb = global->current_mode->depth;
@@ -447,7 +496,11 @@ int ast_eval(struct ast *ast, int *return_code)
             if (nb == 0)
             {
                 fprintf(stderr, "Continue: invalid parameter '0'\n");
+                return 2;
             }
+            if (nb > global->current_mode->depth)
+                nb = global->current_mode->depth;
+
             global->current_mode->nb = nb;
         }
         else
