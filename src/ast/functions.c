@@ -19,7 +19,7 @@ static int is_valid(char *str)
     if (str[len - 1] == '}')
     {
         str[len - 1] = '\0'; // Remove closing parenthesis
-        str[len - 2]= '\0';
+        str[len - 2] = '\0';
         return 1;
     }
     return 0;

@@ -91,7 +91,9 @@ static int fork_exec(char *cmd)
 int cmd_exec(char *cmd)
 {
     char *builtins[] = { "echo", "exit", "cd", "export", ".", "unset" };
-    commands cmds[BLT_NB] = { &echo, &builtin_exit, &cd, &export, &dot, &unset };
+    commands cmds[BLT_NB] = {
+        &echo, &builtin_exit, &cd, &export, &dot, &unset
+    };
 
     int arg_index = 0;
     char *cmd_name = getcmdname(cmd, &arg_index);

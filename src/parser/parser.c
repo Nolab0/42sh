@@ -564,7 +564,8 @@ static enum parser_state parse_subshells(struct parser *parser,
     return PARSER_OK;
 }
 
-static enum parser_state parse_cmdblocks(struct parser *parser, struct ast **ast)
+static enum parser_state parse_cmdblocks(struct parser *parser,
+                                         struct ast **ast)
 {
     struct token *tok = lexer_peek(parser->lexer);
     if (tok->type != TOKEN_OPEN_BRAC)

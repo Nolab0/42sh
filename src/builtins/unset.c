@@ -21,7 +21,7 @@ static size_t parse_options(char *args, int *opt, size_t len)
             found = 1;
             char option[3] = {
                 0,
-                };
+            };
             size_t j = i + 1;
             for (; j < len && args[j] != ' '; ++j)
             {
@@ -77,12 +77,13 @@ int unset(char *args)
         {
             if (vector->data[0] != '_' && !isalpha(vector->data[0]))
             {
-                fprintf(stderr, "42sh: Syntax error: '%c' unexpected\n", args[i]);
+                fprintf(stderr, "42sh: Syntax error: '%c' unexpected\n",
+                        args[i]);
                 code = 2;
                 break;
             }
             if (options[0])
-                printf("FUNC\n"); //unset_func(vec_cstring(vector));
+                printf("FUNC\n"); // unset_func(vec_cstring(vector));
             if (options[1])
             {
                 unset_var(vec_cstring(vector));
