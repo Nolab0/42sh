@@ -39,6 +39,7 @@ enum ast_type
     AST_UNTIL,
     AST_FOR,
     AST_SUBSHELL,
+    AST_CMDBLOCK,
     AST_BREAK,
     AST_CONTINUE
 };
@@ -142,7 +143,17 @@ void var_assign_special(char *str);
 
 char *my_itoa(int n);
 
+void unset_var(char *name);
+
+/**
+ * \brief Exectue args in a new process
+ */
 int subshell(char *args);
+
+/**
+ * \brief Exectue args in a whole block
+ */
+int cmdblock(char *args);
 
 // char *remove_vars(char *str, char *exclude);
 

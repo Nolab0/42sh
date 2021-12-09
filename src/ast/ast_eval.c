@@ -16,7 +16,7 @@
 /**
  * \brief The number of builtins commands
  */
-#define BLT_NB 5
+#define BLT_NB 6
 
 /**
  * \brief The number of redirection operators
@@ -90,8 +90,8 @@ static int fork_exec(char *cmd)
 
 int cmd_exec(char *cmd)
 {
-    char *builtins[] = { "echo", "exit", "cd", "export", "." };
-    commands cmds[BLT_NB] = { &echo, &builtin_exit, &cd, &export, &dot };
+    char *builtins[] = { "echo", "exit", "cd", "export", ".", "unset" };
+    commands cmds[BLT_NB] = { &echo, &builtin_exit, &cd, &export, &dot, &unset };
 
     int arg_index = 0;
     char *cmd_name = getcmdname(cmd, &arg_index);
@@ -458,9 +458,9 @@ int ast_eval(struct ast *ast, int *return_code)
         return ast_eval(ast->left, return_code);
     }
     else if (ast->type == AST_SUBSHELL)
-    {
         return subshell(vec_cstring(ast->val));
-    }
+    else if (ast->type == AST_CMDBLOCK)
+        return cmdblock(vec_cstring(ast->val));
     else
     {
         printf("ast->type = %d\n", ast->type);

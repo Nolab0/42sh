@@ -1315,6 +1315,56 @@
         -   exitcode
         -   has_stderr
 
+-   name: UNSET DEFAULT
+    input: |
+        export a=7
+        echo $a
+        unset a
+        echo $a
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: UNSET SEVERAL VARS
+    input: |
+        export a=7 b=2
+        echo $a $b
+        unset a b
+        echo $a $b
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: UNSET FUNC VAR
+    input: |
+        export func=10
+        echo $func
+        unset -fv func
+        echo $func
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: UNSET FUNC
+    input: |
+        unset -f func
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: UNSET INVALID
+    input: |
+        unset 1
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+
 -   name: SIMPLE IN SIMPLE QUOTE ESCAPE
     input: |
         echo '\'
