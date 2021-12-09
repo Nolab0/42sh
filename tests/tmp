@@ -1,14 +1,4 @@
-a=b
-while [ $a = b ]; do
-while true; do
-echo coucou
-break 1000
-done
-a=c
-echo test
-done
-a=d
-while [ $a = d ]; do
-echo oui
-a=e
-done
+export func=7
+echo $func
+unset -fv func
+echo $func

@@ -373,3 +373,22 @@ void set_special_vars(void)
     var_assign_special(var);
     free(var);
 }
+
+void unset_var(char *name)
+{
+    struct list *cur = global->vars;
+    struct list *before = global->vars;
+
+    while (cur)
+    {
+        // it should work with only one var in the list
+        if (!strcmp(name, cur->name))
+        {
+            before->next = cur->next;
+            free_var(cur);
+            return;
+        }
+        before = cur;
+        cur = cur->next;
+    }
+}
