@@ -1624,3 +1624,91 @@
         -   stdout
         -   exitcode
         -   stderr
+
+-   name: CMDBLOCK SEMICOLON
+    input: |
+        { echo hello; echo hello; } | tr o a
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name:  CMDBLOCK NEWLINE
+    input: |
+        {
+            echo hello
+            echo hello
+        } | tr o a
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: DOUBLE CMDBLOCK
+    input: |
+        {
+            echo hello
+            {
+                echo World
+            }
+        } | tr o a
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: INVALID CMDBLOCK 1
+    input: |
+        {
+            echo hello
+            {
+                echo World
+            }
+         | tr o a
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: INVALID CMDBLOCK 2
+    input: |
+        {echo hello}
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: INVALID CMDBLOCK 3
+    input: |
+        {echo hello
+        }
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: INVALID CMDBLOCK 4
+    input: |
+        { echo hello echo hello}
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: INVALID CMDBLOCK 5
+    input: |
+        { echo hello echo hello }
+        { echo world echo world }
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: VALID CMDBLOCK MULTILINES
+    input: |
+        { echo hello echo hello; }
+        { echo world echo world; }
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr

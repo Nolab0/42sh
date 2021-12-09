@@ -66,7 +66,8 @@ int echo(char *args)
     {
         if (args[i] == '(' || args[i] == ')')
         {
-            fprintf(stderr, "42sh: Syntax error: Unexpected character: %c\n", args[i]);
+            fprintf(stderr, "42sh: Syntax error: Unexpected character: %c\n",
+                    args[i]);
             free(options);
             vec_destroy(vector);
             free(vector);

@@ -40,6 +40,7 @@ enum ast_type
     AST_FOR,
     AST_SUBSHELL,
     AST_CMDBLOCK,
+    AST_FUNCTION,
     AST_BREAK,
     AST_CONTINUE
 };
