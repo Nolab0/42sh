@@ -14,6 +14,9 @@
 #include "ast.h"
 
 #define BUFFER_SIZE 1024
+#define NONE 0
+#define SIMPLE 1
+#define DOUBLE 2
 
 static int is_valid(char *str)
 {
@@ -62,7 +65,7 @@ int subshell(char *args)
     return WEXITSTATUS(wstatus);
 }
 
-char *cmd_sub(char *str, size_t quote_pos, size_t quote_end)
+char *cmd_sub(char *str, size_t quote_pos, size_t quote_end, int is_dollar)
 {
     char *cmd = strndup(str + quote_pos + 1, quote_end - quote_pos - 1);
 
@@ -125,7 +128,7 @@ char *cmd_sub(char *str, size_t quote_pos, size_t quote_end)
     while (size > 0 && res[size - 1] == '\n')
         res[--size] = 0;
 
-    char *before = strndup(str, quote_pos);
+    char *before = strndup(str, quote_pos - is_dollar);
     char *after = strdup(str + quote_end + 1);
     char *new = zalloc(sizeof(char) * (strlen(before) + strlen(after) + size + 1));
     sprintf(new, "%s%s%s", before, res, after);
@@ -140,22 +143,80 @@ char *cmd_sub(char *str, size_t quote_pos, size_t quote_end)
 char *substitute_cmds(char *s)
 {
     char *str = strdup(s);
-    char *first;
-    while ((first = strchr(str, '`')) != NULL)
+    size_t i = 0;
+    int context = NONE;
+    while (str[i] != 0)
     {
-        char *next = strchr(first + 1, '`');
-        if (next == NULL)
+        if (str[i] == '\'')
         {
-            free(str);
-            fprintf(stderr, "Synthax error: '`' unmatched\n");
-            return NULL;
+            if (context == NONE)
+                context = SIMPLE;
+            else if (context == SIMPLE)
+                context = NONE;
+        }
+        if (str[i] == '\"')
+        {
+            if (context == NONE)
+                context = DOUBLE;
+            else if (context == DOUBLE)
+                context = NONE;
         }
 
-        char *tmp = cmd_sub(str, first - str, next - str);
-        if (tmp == NULL)
-            return NULL;
-        free(str);
-        str = tmp;
+        if (str[i] == '`' && context != SIMPLE && not_as_escape(str, i - 1))
+        {
+            char *next = strchr(str + i + 1, '`');
+            if (next == NULL)
+            {
+                free(str);
+                fprintf(stderr, "Synthax error: '`' unmatched\n");
+                return NULL;
+            }
+
+            char *tmp = cmd_sub(str, i, next - str, 0);
+            if (tmp == NULL)
+                return NULL;
+            free(str);
+            str = tmp;
+            i = 0;
+        }
+        i++;
+    }
+    i = strlen(str) - 1;
+    context = NONE;
+    while (i > 0)
+    {
+        if (str[i] == '\'')
+        {
+            if (context == NONE)
+                context = SIMPLE;
+            else if (context == SIMPLE)
+                context = NONE;
+        }
+        if (str[i] == '\"')
+        {
+            if (context == NONE)
+                context = DOUBLE;
+            else if (context == DOUBLE)
+                context = NONE;
+        }
+
+        if (str[i] == '(' && str[i - 1] == '$' && not_as_escape(str, i - 2))
+        {
+            char *next = strchr(str + i, ')');
+            if (next == NULL)
+            {
+                free(str);
+                fprintf(stderr, "Synthax error: '(' unmatched\n");
+                return NULL;
+            }
+            char *tmp = cmd_sub(str, i, next - str, 1);
+            if (tmp == NULL)
+                return NULL;
+            free(str);
+            str = tmp;
+            i = strlen(str) - 1;
+        }
+        i--;
     }
     return str;
 }
