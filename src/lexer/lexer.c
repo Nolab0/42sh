@@ -12,24 +12,6 @@
 
 #define SIZE 25
 
-static char *string_remove(char c, char *str, long begin, long end)
-{
-    if (!str)
-        return NULL;
-
-    char *res = strdup(str);
-    char *sub = NULL;
-    while ((sub = strchr(res + begin + 1, c)) && sub - res < end)
-    {
-        char *before = strndup(res, sub - res);
-        char *after = strdup(sub + 1);
-        sprintf(res, "%s%s", before, after);
-        free(before);
-        free(after);
-    }
-    return res;
-}
-
 static int isvalidampersand(char *str)
 {
     int i = 0;
@@ -188,28 +170,7 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
         vec_push(vec, lexer->input[lexer->pos++]);
         return 0;
     }
-    if (lexer->input[lexer->pos] == '`')
-    {
-        char *next = strrchr(lexer->input + lexer->pos + 1, '`');
-        if (next == NULL)
-        {
-            fprintf(stderr, "Synthax error: '`' unmatched\n");
-            return -1;
-        }
 
-        // char *prev = lexer->input;
-        // LEAK HERE, PREVIOUS VALUE OF LEXER->INPUT LOST
-        lexer->input = string_remove('`', lexer->input, lexer->pos, next - lexer->input);
-        //free(prev);
-        //lexer->input = clean;
-        char *tmp = cmd_sub(lexer->input, lexer->pos, next - lexer->input);
-        if (tmp == NULL)
-            return -1;
-        free(lexer->input);
-        lexer->input = tmp;
-        *len = strlen(tmp);
-        return 0;
-    }
     while (lexer->pos < *len
            && (!is_separator(lexer->input[lexer->pos])
                || (lexer->input[lexer->pos] == '|' && lexer->pos != 0
@@ -285,7 +246,10 @@ struct token *get_token(struct lexer *lexer)
 struct lexer *lexer_create(char *input)
 {
     struct lexer *new = zalloc(sizeof(struct lexer));
-    new->input = strdup(input);
+    if (input == NULL)
+        new->input = strdup("");
+    else
+        new->input = strdup(input);
     new->pos = 0;
     new->current_tok = get_token(new);
     return new;

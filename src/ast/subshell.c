@@ -136,3 +136,26 @@ char *cmd_sub(char *str, size_t quote_pos, size_t quote_end)
 
     return new;
 }
+
+char *substitute_cmds(char *s)
+{
+    char *str = strdup(s);
+    char *first;
+    while ((first = strchr(str, '`')) != NULL)
+    {
+        char *next = strchr(first + 1, '`');
+        if (next == NULL)
+        {
+            free(str);
+            fprintf(stderr, "Synthax error: '`' unmatched\n");
+            return NULL;
+        }
+
+        char *tmp = cmd_sub(str, first - str, next - str);
+        if (tmp == NULL)
+            return NULL;
+        free(str);
+        str = tmp;
+    }
+    return str;
+}

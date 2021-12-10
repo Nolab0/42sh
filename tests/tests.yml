@@ -1639,3 +1639,11 @@
         -   stdout
         -   exitcode
         -   stderr
+
+-   name: CMD SUB 3
+    input: |
+        echo `echo `echo `echo test```
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr

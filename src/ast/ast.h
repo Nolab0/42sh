@@ -155,6 +155,8 @@ int subshell(char *args);
  */
 char *cmd_sub(char *str, size_t quote_pos, size_t quote_end);
 
+char *substitute_cmds(char *s);
+
 /**
  * \brief Exectue args in a whole block
  */

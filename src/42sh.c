@@ -184,7 +184,15 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
         final->size = strlen(opts->input);
         final->capacity = strlen(opts->input);
     }
-    parser->lexer = lexer_create(vec_cstring(final));
+    char *str = substitute_cmds(vec_cstring(final));
+    parser->lexer = lexer_create(str);
+    if (str == NULL)
+    {
+        vec_destroy(final);
+        free(final);
+        return 2;
+    }
+    free(str);
     enum parser_state state = parsing(parser);
     if (state != PARSER_OK)
     {
