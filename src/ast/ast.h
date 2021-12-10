@@ -156,6 +156,11 @@ int subshell(char *args);
  */
 int cmdblock(char *args);
 
+/**
+ * \brief Add a function in the global list
+ */
+int add_function(struct ast *ast);
+
 // char *remove_vars(char *str, char *exclude);
 
 #endif /* ! AST_H */

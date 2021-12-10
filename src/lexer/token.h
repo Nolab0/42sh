@@ -54,4 +54,9 @@ struct token *token_create(enum token_type type);
 
 void token_free(struct token *token);
 
+/**
+ * \brief Duplicate a token
+ */
+struct token *token_dup(struct token *tok);
+
 #endif /* ! TOKEN_H */

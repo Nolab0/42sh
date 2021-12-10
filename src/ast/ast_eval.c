@@ -516,6 +516,10 @@ int ast_eval(struct ast *ast, int *return_code)
         return subshell(vec_cstring(ast->val));
     else if (ast->type == AST_CMDBLOCK)
         return cmdblock(vec_cstring(ast->val));
+    else if (ast->type == AST_FUNCTION)
+    {
+        return add_function(ast);
+    }
     else
     {
         printf("ast->type = %d\n", ast->type);

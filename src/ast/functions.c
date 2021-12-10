@@ -41,3 +41,10 @@ int cmdblock(char *args)
     parser_free(parser);
     return return_code;
 }
+
+int add_function(struct ast *ast)
+{
+    printf("ADD");
+    ast->val->data--;
+    return 0;
+}
