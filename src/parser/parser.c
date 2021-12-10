@@ -125,7 +125,6 @@ static enum parser_state parse_element(struct parser *parser, struct ast **ast)
          || tok->type == TOKEN_EXIT || tok->type == TOKEN_DOT || in_echo)
         && tok->type != TOKEN_REDIR)
     {
-
         struct vec *tmp = vec_init();
         tmp->data = strdup(tok->value);
         tmp->size = strlen(tok->value);
