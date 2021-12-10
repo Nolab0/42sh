@@ -130,7 +130,8 @@ char *cmd_sub(char *str, size_t quote_pos, size_t quote_end, int is_dollar)
 
     char *before = strndup(str, quote_pos - is_dollar);
     char *after = strdup(str + quote_end + 1);
-    char *new = zalloc(sizeof(char) * (strlen(before) + strlen(after) + size + 1));
+    char *new =
+        zalloc(sizeof(char) * (strlen(before) + strlen(after) + size + 1));
     sprintf(new, "%s%s%s", before, res, after);
     free(before);
     free(after);

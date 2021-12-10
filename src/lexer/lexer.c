@@ -1,5 +1,6 @@
 #include "lexer.h"
 
+#include <ast/ast.h>
 #include <ctype.h>
 #include <err.h>
 #include <stddef.h>
@@ -8,7 +9,6 @@
 #include <utils/alloc.h>
 #include <utils/utils.h>
 #include <utils/vec.h>
-#include <ast/ast.h>
 
 #define SIZE 25
 
