@@ -35,7 +35,7 @@ struct global *global;
 
 static char **split_in_array(char *cmd, int *size)
 {
-    char **args = xmalloc(sizeof(char *) * strlen(cmd));
+    char **args = zalloc(sizeof(char *) * strlen(cmd));
     int index = 0;
     int i = 0;
     while (cmd[i] != 0)
@@ -48,7 +48,6 @@ static char **split_in_array(char *cmd, int *size)
         if (i != index)
             args[(*size)++] = strndup(cmd + index, i - index);
     }
-    args[*size] = NULL;
     return args;
 }
 
@@ -293,6 +292,8 @@ int ast_eval(struct ast *ast, int *return_code)
         return ast_eval(ast->left, return_code);
     else if (ast->type == AST_CMD)
     {
+        if (ast->val == NULL)
+            return 2;
         int res = 0;
         char *cmd2 = strdup(ast->val->data);
 

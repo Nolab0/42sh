@@ -48,8 +48,10 @@ void ast_free(struct ast *ast)
 
 void add_to_list(struct ast *ast, char *str)
 {
-    if (ast->size == ast->capacity)
+    if (ast->size >= ast->capacity || ast->capacity == 0)
     {
+        if (ast->capacity == 0)
+            ast->capacity = 5;
         ast->capacity *= 2;
         ast->list = xrealloc(ast->list, ast->capacity);
     }
