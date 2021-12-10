@@ -152,6 +152,13 @@ void unset_var(char *name);
 int subshell(char *args);
 
 /**
+ * \brief Execute cmd substitution 
+ */
+char *cmd_sub(char *str, size_t quote_pos, size_t quote_end, int is_dollar);
+
+char *substitute_cmds(char *s);
+
+/**
  * \brief Exectue args in a whole block
  */
 int cmdblock(char *args);

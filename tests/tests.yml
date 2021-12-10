@@ -1625,6 +1625,102 @@
         -   exitcode
         -   stderr
 
+-   name: CMD SUB ERROR
+    input: |
+        echo `echo test
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: CMD SUB 1
+    input: |
+        echo `echo test`
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB 2
+    input: |
+        echo `echo `echo test``
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB 3
+    input: |
+        echo `echo `echo `echo test```
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB 4
+    input: |
+        echo `cd `echo `echo test```
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB 5
+    input: |
+        echo `echo `echo `ls test```
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB 6
+    input: |
+        echo $(echo test
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: CMD SUB 7
+    input: |
+        echo $(echo test)
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB 8
+    input: |
+        echo $(printf oui)
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB 9
+    input: |
+        echo $(echo $(echo oui))
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB 10
+    input: |
+        echo \` `echo test`
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB 11
+    input: |
+        echo \$ $(echo test)
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
 -   name: CMDBLOCK SEMICOLON
     input: |
         { echo hello; echo hello; } | tr o a

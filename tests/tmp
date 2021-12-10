@@ -1,6 +1,1 @@
-a=b
-while [ $a = b ]; do
-echo coucou
-a=c
-break 0
-done
+echo \`

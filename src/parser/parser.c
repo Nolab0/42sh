@@ -137,6 +137,8 @@ static enum parser_state parse_element(struct parser *parser, struct ast **ast)
         tok = lexer_peek(parser->lexer);
         if (tok->type == TOKEN_ERROR)
             return PARSER_PANIC;
+        if (tok->value == NULL || strlen(tok->value) == 0)
+            return PARSER_OK;
         if (stop_echo(tok->type))
         {
             (*ast)->val->size--;
