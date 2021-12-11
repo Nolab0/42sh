@@ -384,18 +384,31 @@ void set_special_vars(void)
 void unset_var(char *name)
 {
     struct list *cur = global->vars;
-    struct list *before = global->vars;
+    struct list *before = NULL;
 
     while (cur)
     {
         // it should work with only one var in the list
         if (!strcmp(name, cur->name))
         {
-            before->next = cur->next;
+            if (!before)
+                global->vars = cur->next;
+            else
+                before->next = cur->next;
             free_var(cur);
             return;
         }
         before = cur;
         cur = cur->next;
     }
+}
+
+void push_front(char *name, char *value)
+{
+    struct list *tmp = global->vars;
+    struct list *var = zalloc(sizeof(struct list));
+    var->name = strdup(name);
+    var->value = value;
+    var->next = tmp;
+    global->vars = var;
 }

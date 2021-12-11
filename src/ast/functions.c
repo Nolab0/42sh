@@ -44,7 +44,65 @@ int cmdblock(char *args)
 
 int add_function(struct ast *ast)
 {
-    printf("ADD");
-    ast->val->data--;
+    struct function *new = zalloc(sizeof(struct function));
+    new->name = strdup(vec_cstring(ast->val));
+    new->body = ast->left;
+    new->next = global->functions;
+    global->functions = new;
     return 0;
+}
+
+int eval_func(char *cmd)
+{
+    struct function *fs = global->functions;
+    char *params = strchr(cmd, ' ');
+    char *name = strndup(cmd, params - cmd);
+
+    while (fs)
+    {
+        if (!strcmp(name, fs->name))
+            break;
+        fs = fs->next;
+    }
+    free(name);
+    if (!fs)
+    {
+        return -1;
+    }
+
+    int nb_params = 1;
+    char *save_params = params;
+    if (!params)
+        nb_params = 0;
+    while (nb_params <= 9 && nb_params != 0)
+    {
+        char *current_param = strchr(params, ' ');
+        if (!current_param)
+            current_param = params + strlen(params);
+        if (current_param == params)
+        {
+            nb_params = 0;
+            break;
+        }
+        push_front(my_itoa(nb_params), strndup(params, params - current_param));
+        params = current_param + 1;
+        ++nb_params;
+        if (!(*current_param))
+            break;
+    }
+
+    push_front("*", strndup(save_params, save_params - params));
+    push_front("@", strndup(save_params, save_params - params));
+    push_front("#", my_itoa(nb_params));
+
+    int ret = 0;
+    int return_val = ast_eval(fs->body, &ret);
+
+    unset_var("*");
+    unset_var("@");
+    unset_var("#");
+    for (int i = 1; i <= nb_params; ++i)
+        unset_var(my_itoa(i));
+
+    return return_val;
 }

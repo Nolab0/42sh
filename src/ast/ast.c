@@ -154,6 +154,8 @@ static void pretty_rec(struct ast *ast)
         printf("%s ", ast->val->data);
         pretty_rec(ast->left);
     }
+    else if (ast->type == AST_FUNCTION)
+        printf("Function declaration %s\n", ast->val->data);
     else
         printf("pretty-print : Unknown node type\n");
 }

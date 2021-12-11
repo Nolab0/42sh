@@ -196,7 +196,19 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
         pretty_print(parser->ast);
     set_special_vars();
     int return_code = 0;
+    global->functions = NULL;
     int eval = ast_eval(parser->ast, &return_code);
+
+    // Free functions
+    while (global->functions)
+    {
+        struct function *save = global->functions->next;
+        free(global->functions->name);
+        free(global->functions);
+        global->functions = save;
+    }
+
+    // Free variables
     struct list *cur = global->vars;
     while (cur)
     {

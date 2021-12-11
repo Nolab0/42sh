@@ -1712,3 +1712,15 @@
         -   stdout
         -   exitcode
         -   stderr
+
+-   name: SIMPLE ECHO FUNCTION CALL
+    input: |
+        foo()
+        {
+            echo hello
+        }
+        foo
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
