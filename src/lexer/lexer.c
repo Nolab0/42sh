@@ -72,7 +72,8 @@ static int match_token(char *str, int quote)
                           ";",    "\n",    "!",    "||",    "&&",
                           "|",    "while", "for",  "until", "do",
                           "done", "in",    "echo", "exit",  "export",
-                          ".",    "(",     ")",    "{",     "}" };
+                          ".",    "(",     ")",    "{",     "}",
+                          "case", "esac"};
     int types[SIZE] = { TOKEN_IF,        TOKEN_THEN,      TOKEN_ELSE,
                         TOKEN_ELIF,      TOKEN_FI,        TOKEN_SEMIC,
                         TOKEN_NEWL,      TOKEN_NEG,       TOKEN_OR,
@@ -81,7 +82,7 @@ static int match_token(char *str, int quote)
                         TOKEN_DONE,      TOKEN_IN,        TOKEN_ECHO,
                         TOKEN_EXIT,      TOKEN_EXPORT,    TOKEN_DOT,
                         TOKEN_OPEN_PAR,  TOKEN_CLOSE_PAR, TOKEN_OPEN_BRAC,
-                        TOKEN_CLOSE_BRAC };
+                        TOKEN_CLOSE_BRAC, TOKEN_CASE, TOKEN_ESAC};
     for (size_t i = 0; i < SIZE; i++)
     {
         if (strcmp(str, names[i]) == 0)

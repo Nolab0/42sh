@@ -63,6 +63,13 @@ struct mode
     int depth;
 };
 
+struct cas
+{
+    char *pattern;
+    struct ast *ast;
+    struct cas *next;
+};
+
 /**
  * \brief Structure for ast.
  * @details: cond use for ifs conditions
@@ -79,6 +86,9 @@ struct ast
 
     char *var;
     char *replace;
+
+    char *word;
+    struct cas *case;
 
     struct vec *val;
     struct ast *cond;
@@ -167,7 +177,5 @@ int cmdblock(char *args);
  * \brief Add a function in the global list
  */
 int add_function(struct ast *ast);
-
-// char *remove_vars(char *str, char *exclude);
 
 #endif /* ! AST_H */
