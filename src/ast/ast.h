@@ -183,6 +183,11 @@ int eval_func(char *cmd);
  */
 void push_front(char *name, char *value);
 
+/**
+ * \brief Remove a variable from the global list
+ */
+void remove_function(char *name);
+
 // char *remove_vars(char *str, char *exclude);
 
 #endif /* ! AST_H */

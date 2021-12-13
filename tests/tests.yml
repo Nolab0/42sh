@@ -1853,3 +1853,56 @@
         -   stdout
         -   exitcode
         -   has_stderr
+
+-   name: FUNCTION UNSET
+    input: |
+        foo()
+        {
+            echo foobar
+        }
+        foo
+        unset -f foo
+        foo
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: FUNCTION UNSET AND REDEF
+    input: |
+        foo()
+        {
+            echo foobar
+        }
+        foo
+        unset -f foo
+        foo()
+        {
+            echo foobar2
+        }
+        foo
+        unset -f foo
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: FUNCTION UNSET AND REDEF AND RECALL
+    input: |
+        foo()
+        {
+            echo foobar
+        }
+        foo
+        unset -f foo
+        foo()
+        {
+            echo foobar2
+        }
+        foo
+        unset -f foo
+        foo
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr

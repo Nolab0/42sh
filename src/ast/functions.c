@@ -52,6 +52,32 @@ int add_function(struct ast *ast)
     return 0;
 }
 
+void remove_function(char *name)
+{
+    struct function *fcs = global->functions;
+    struct function *prev = NULL;
+    while (fcs != NULL)
+    {
+        if (strcmp(fcs->name, name) == 0)
+        {
+            if (prev == NULL)
+            {
+                struct function *save = global->functions;
+                global->functions = global->functions->next;
+                free(save->name);
+                free(save);
+                return;
+            }
+            prev->next = fcs->next;
+            free(fcs->name);
+            free(fcs);
+            return;
+        }
+        prev = fcs;
+        fcs = fcs->next;
+    }
+}
+
 int eval_func(char *cmd)
 {
     struct function *fs = global->functions;
