@@ -1831,6 +1831,119 @@
         -   exitcode
         -   stderr
 
+-   name: CASE SIMPLE
+    input: |
+        case work in
+            0* ) echo nop ;;
+            ( err ) echo camarche ;;
+            * ) echo default
+        esac
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CASE PIPE
+    input: |
+        case work in
+            0* ) echo nop ;;
+            ( err | wo ) echo camarche ;;
+            * ) echo default
+        esac
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CASE PIPE IN IF
+    input: |
+        if true; then
+        case work in
+            0* ) echo nop ;;
+            ( err | wo ) echo camarche ;;
+            * ) echo default
+        esac
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CASE ERROR MISSING CLOSE PAR
+    input: |
+        if true; then
+        a=abc
+        case $a in
+            a* ) echo nop ;;
+            ( err | wo echo camarche ;;
+            * ) echo default
+        esac
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: CASE ERROR MISSING DOUBLE SEMIC
+    input: |
+        if true; then
+        a=abc
+        case $a in
+            a* ) echo nop
+            ( err | wo ) echo camarche ;;
+            * ) echo default
+        esac
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: CASE ERROR MISSING WORD
+    input: |
+        if true; then
+        a=abc
+        case in
+            a* ) echo nop ;;
+            ( err | wo ) echo camarche ;;
+            * ) echo default
+        esac
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: CASE ERROR MISSING IN
+    input: |
+        if true; then
+        a=abc
+        case $a
+            a* ) echo nop ;;
+            ( err | wo ) echo camarche ;;
+            * ) echo default
+        esac
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: CASE ERROR MISSING ESAC
+    input: |
+        if true; then
+        a=abc
+        case $a in
+            a* ) echo nop
+            ( err | wo ) echo camarche ;;
+            * ) echo default
+        fi
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+
 -   name: SIMPLE ECHO FUNCTION CALL
     input: |
         foo()

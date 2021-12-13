@@ -53,7 +53,8 @@ enum ast_type
     AST_CMDBLOCK,
     AST_FUNCTION,
     AST_BREAK,
-    AST_CONTINUE
+    AST_CONTINUE,
+    AST_CASE
 };
 
 /**
@@ -74,6 +75,13 @@ struct mode
     int depth;
 };
 
+struct cas
+{
+    char *pattern;
+    struct ast *ast;
+    struct cas *next;
+};
+
 /**
  * \brief Structure for ast.
  * @details: cond use for ifs conditions
@@ -90,6 +98,9 @@ struct ast
 
     char *var;
     char *replace;
+
+    char *word;
+    struct cas *cas;
 
     struct vec *val;
     struct ast *cond;
@@ -196,5 +207,6 @@ void push_front(char *name, char *value);
 void remove_function(char *name);
 
 // char *remove_vars(char *str, char *exclude);
+int handle_case(struct ast *ast);
 
 #endif /* ! AST_H */

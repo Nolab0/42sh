@@ -1,1 +1,4 @@
-echo \`
+case abc in
+a* ) echo nop ;;
+( err echo camarche ;;
+esac
