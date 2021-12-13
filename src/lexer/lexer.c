@@ -209,7 +209,7 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
         {
             char c = lexer->input[lexer->pos++];
             vec_push(vec, c);
-            if (lexer->pos < *len && lexer->input[lexer->pos] == c)
+            if (lexer->pos < *len && lexer->input[lexer->pos] == c && c != '\n')
                 vec_push(vec, lexer->input[lexer->pos++]);
         }
     }

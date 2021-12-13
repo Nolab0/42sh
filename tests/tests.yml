@@ -68,6 +68,28 @@
     -   stderr
     -   exitcode
 
+-   name: REDIR HARD1
+    input: |
+        echo before
+        if echo test >&1; then
+        echo before hello
+        echo hello > tmp; echo after hello
+        fi
+    checks:
+        -   stdout
+        -   stderr
+        -   exitcode
+
+-   name: REDIR LEJ1
+    input: |
+        touch testd.txt
+        echo test > testd.txt; echo coucou <> testd.txt ; cat <> testd.txt
+        rm testd.txt
+    checks:
+        -   stdout
+        -   stderr
+        -   exitcode
+
 -   name: SIMPLE ECHO TR PIPE
     input: |
         echo hello | tr e a
@@ -1808,3 +1830,197 @@
         -   stdout
         -   exitcode
         -   stderr
+
+-   name: SIMPLE ECHO FUNCTION CALL
+    input: |
+        foo()
+        {
+            echo hello
+        }
+        foo
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: DOUBLE FUNCTION
+    input: |
+        bar ()
+        {
+            echo Hello World
+        }
+        foo()
+        {
+            echo hello
+            bar
+        }
+        foo
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: VARIABLES $# IN FUNCTION
+    input: |
+        foo()
+        {
+            echo $#
+        }
+        foo a b c d e
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: VARIABLES $n IN FUNCTION
+    input: |
+        foo()
+        {
+            echo $1 $2 $8 $5
+        }
+        foo 1 2 3 4 5 kfj pp 854 aedf
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+
+-   name: VARIABLES $* IN FUNCTION
+    input: |
+        foo()
+        {
+            echo $*
+        }
+        foo 1 2 3 4 5 kfj pp 854 aedf
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: VARIABLES $@ IN FUNCTION
+    input: |
+        foo()
+        {
+            echo $@
+        }
+        foo 1 2 3 4 5 kfj pp 854 aedf
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: VARIABLES MULTIPLE IN FUNCTION
+    input: |
+        foo()
+        {
+            echo This function has $# args
+            echo Theses args are: $*
+            echo The first is $1
+            echo The Last is $6
+        }
+        foo lol 1 2 3 4 5677
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: FUNCTION SUBJECT TEST
+    input: |
+        foo()
+        {
+            bar()
+            {
+                echo foobar
+            }
+        }
+        foo
+        bar
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: FUNCTION INVALID1
+    input: |
+        foo(
+        {
+            bar()
+            {
+                echo foobar
+            }
+        }
+        foo
+        bar
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: FUNCTION INVALID2
+    input: |
+        foo()
+
+            bar()
+            {
+                echo foobar
+            }
+        }
+        foo
+        bar
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: FUNCTION UNSET
+    input: |
+        foo()
+        {
+            echo foobar
+        }
+        foo
+        unset -f foo
+        foo
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: FUNCTION UNSET AND REDEF
+    input: |
+        foo()
+        {
+            echo foobar
+        }
+        foo
+        unset -f foo
+        foo()
+        {
+            echo foobar2
+        }
+        foo
+        unset -f foo
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: FUNCTION UNSET AND REDEF AND RECALL
+    input: |
+        foo()
+        {
+            echo foobar
+        }
+        foo
+        unset -f foo
+        foo()
+        {
+            echo foobar2
+        }
+        foo
+        unset -f foo
+        foo
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr

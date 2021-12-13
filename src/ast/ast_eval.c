@@ -93,6 +93,9 @@ int cmd_exec(char *cmd)
     commands cmds[BLT_NB] = {
         &echo, &builtin_exit, &cd, &export, &dot, &unset
     };
+    int is_local_func = eval_func(cmd);
+    if (is_local_func != -1)
+        return is_local_func;
 
     int arg_index = 0;
     char *cmd_name = getcmdname(cmd, &arg_index);
@@ -518,9 +521,7 @@ int ast_eval(struct ast *ast, int *return_code)
     else if (ast->type == AST_CMDBLOCK)
         return cmdblock(vec_cstring(ast->val));
     else if (ast->type == AST_FUNCTION)
-    {
         return add_function(ast);
-    }
     else
     {
         printf("ast->type = %d\n", ast->type);

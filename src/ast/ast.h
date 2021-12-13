@@ -11,10 +11,21 @@ struct list
     struct list *next;
 };
 
+struct function
+{
+    char *name;
+    struct ast *body;
+    struct function *next;
+};
+
 struct global
 {
     struct mode *current_mode;
     struct list *vars;
+    struct function *functions;
+    struct list *save_vars;
+    struct parser *parsers_to_free[100];
+    int nb_parsers;
 };
 
 extern struct global *global;
@@ -167,6 +178,22 @@ int cmdblock(char *args);
  * \brief Add a function in the global list
  */
 int add_function(struct ast *ast);
+
+/**
+ * \brief Execute a local function from global function list
+ * Returns -1 if function not found
+ */
+int eval_func(char *cmd);
+
+/**
+ * \brief Push a variable at the beginning of the var list
+ */
+void push_front(char *name, char *value);
+
+/**
+ * \brief Remove a variable from the global list
+ */
+void remove_function(char *name);
 
 // char *remove_vars(char *str, char *exclude);
 

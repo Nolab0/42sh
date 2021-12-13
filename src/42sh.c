@@ -204,7 +204,19 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
         pretty_print(parser->ast);
     set_special_vars();
     int return_code = 0;
+    global->functions = NULL;
     int eval = ast_eval(parser->ast, &return_code);
+
+    // Free functions
+    while (global->functions)
+    {
+        struct function *save = global->functions->next;
+        free(global->functions->name);
+        free(global->functions);
+        global->functions = save;
+    }
+
+    // Free variables
     struct list *cur = global->vars;
     while (cur)
     {
@@ -240,6 +252,8 @@ int main(int argc, char *argv[])
     struct vec *line = vec_init();
 
     struct parser *parser = create_parser();
+    global->nb_parsers = 0;
+    global->parsers_to_free[global->nb_parsers++] = parser;
     // Run the test loop
     rc = read_print_loop(cs, line, parser, opts);
 
@@ -250,6 +264,7 @@ int main(int argc, char *argv[])
         cstream_free(cs);
         free(cs);
     }
-    parser_free(parser);
+    while (global->nb_parsers > 0)
+        parser_free(global->parsers_to_free[--global->nb_parsers]);
     return rc;
 }
