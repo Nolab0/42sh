@@ -68,6 +68,28 @@
     -   stderr
     -   exitcode
 
+-   name: REDIR HARD1
+    input: |
+        echo before
+        if echo test >&1; then
+        echo before hello
+        echo hello > tmp; echo after hello
+        fi
+    checks:
+        -   stdout
+        -   stderr
+        -   exitcode
+
+-   name: REDIR LEJ1
+    input: |
+        touch testd.txt
+        echo test > testd.txt; echo coucou <> testd.txt ; cat <> testd.txt
+        rm testd.txt
+    checks:
+        -   stdout
+        -   stderr
+        -   exitcode
+
 -   name: SIMPLE ECHO TR PIPE
     input: |
         echo hello | tr e a
