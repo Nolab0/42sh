@@ -10,7 +10,7 @@
 #include <utils/utils.h>
 #include <utils/vec.h>
 
-#define SIZE 25
+#define SIZE 28
 
 static int isvalidampersand(char *str)
 {
@@ -68,21 +68,20 @@ static int match_token(char *str, int quote)
         fprintf(stderr, "Syntax error: '&' unexpected\n");
         return TOKEN_ERROR;
     }
-    char *names[SIZE] = { "if",   "then",  "else", "elif",  "fi",
-                          ";",    "\n",    "!",    "||",    "&&",
-                          "|",    "while", "for",  "until", "do",
-                          "done", "in",    "echo", "exit",  "export",
-                          ".",    "(",     ")",    "{",     "}",
-                          "case", "esac"};
-    int types[SIZE] = { TOKEN_IF,        TOKEN_THEN,      TOKEN_ELSE,
-                        TOKEN_ELIF,      TOKEN_FI,        TOKEN_SEMIC,
-                        TOKEN_NEWL,      TOKEN_NEG,       TOKEN_OR,
-                        TOKEN_AND,       TOKEN_PIPE,      TOKEN_WHILE,
-                        TOKEN_FOR,       TOKEN_UNTIL,     TOKEN_DO,
-                        TOKEN_DONE,      TOKEN_IN,        TOKEN_ECHO,
-                        TOKEN_EXIT,      TOKEN_EXPORT,    TOKEN_DOT,
-                        TOKEN_OPEN_PAR,  TOKEN_CLOSE_PAR, TOKEN_OPEN_BRAC,
-                        TOKEN_CLOSE_BRAC, TOKEN_CASE, TOKEN_ESAC};
+    char *names[SIZE] = { "if",   "then",   "else", "elif", "fi", ";",
+                          "\n",   "!",      "||",   "&&",   "|",  "while",
+                          "for",  "until",  "do",   "done", "in", "echo",
+                          "exit", "export", ".",    "(",    ")",  "{",
+                          "}",    "case",   "esac", ";;" };
+    int types[SIZE] = {
+        TOKEN_IF,         TOKEN_THEN,     TOKEN_ELSE,      TOKEN_ELIF,
+        TOKEN_FI,         TOKEN_SEMIC,    TOKEN_NEWL,      TOKEN_NEG,
+        TOKEN_OR,         TOKEN_AND,      TOKEN_PIPE,      TOKEN_WHILE,
+        TOKEN_FOR,        TOKEN_UNTIL,    TOKEN_DO,        TOKEN_DONE,
+        TOKEN_IN,         TOKEN_ECHO,     TOKEN_EXIT,      TOKEN_EXPORT,
+        TOKEN_DOT,        TOKEN_OPEN_PAR, TOKEN_CLOSE_PAR, TOKEN_OPEN_BRAC,
+        TOKEN_CLOSE_BRAC, TOKEN_CASE,     TOKEN_ESAC,      TOKEN_DSEMIC
+    };
     for (size_t i = 0; i < SIZE; i++)
     {
         if (strcmp(str, names[i]) == 0)
@@ -203,6 +202,10 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
             lexer->pos++;
         }
     }
+    /*  if (strncmp(lexer->input + lexer->pos, ";;", 2) == 0)
+    {
+        lexer->pos++;
+    }*/
     // check if the first character was a separator and different of space
     if (lexer->pos == before && lexer->input[before] != ' ')
     {

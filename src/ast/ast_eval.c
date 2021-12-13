@@ -521,6 +521,21 @@ int ast_eval(struct ast *ast, int *return_code)
     {
         return add_function(ast);
     }
+    else if (ast->type == AST_CASE)
+    {
+        char *tmp = expand_vars(ast->word, NULL, NULL);
+        tmp = remove_quotes(tmp);
+        ast->word = tmp;
+        struct cas *cas = ast->cas;
+        while (cas)
+        {
+            tmp = expand_vars(cas->pattern, NULL, NULL);
+            tmp = remove_quotes(tmp);
+            cas->pattern = tmp;
+            cas = cas->next;
+        }
+        return handle_case(ast);
+    }
     else
     {
         printf("ast->type = %d\n", ast->type);

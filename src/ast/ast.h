@@ -42,7 +42,8 @@ enum ast_type
     AST_CMDBLOCK,
     AST_FUNCTION,
     AST_BREAK,
-    AST_CONTINUE
+    AST_CONTINUE,
+    AST_CASE
 };
 
 /**
@@ -88,7 +89,7 @@ struct ast
     char *replace;
 
     char *word;
-    struct cas *case;
+    struct cas *cas;
 
     struct vec *val;
     struct ast *cond;
@@ -177,5 +178,7 @@ int cmdblock(char *args);
  * \brief Add a function in the global list
  */
 int add_function(struct ast *ast);
+
+int handle_case(struct ast *ast);
 
 #endif /* ! AST_H */

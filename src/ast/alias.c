@@ -7,7 +7,6 @@
 #define NAME 1
 #define VALUE 2
 
-
 // FILE NOT COMPILING BECAUSE NOT USED
 
 static char *rep_alias(char *str, int start, char *name, char *value)
@@ -92,7 +91,8 @@ char *replace_aliases(char *str)
             }
             vec_push(value, str[i]);
         }
-        else if (context == NONE && strncmp(str + i, "alias ", 6) == 0 && step == NONE)
+        else if (context == NONE && strncmp(str + i, "alias ", 6) == 0
+                 && step == NONE)
         {
             save = i;
             int j = i + 6;

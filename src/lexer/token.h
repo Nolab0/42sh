@@ -36,11 +36,12 @@ enum token_type
     TOKEN_BQUOTE = 24,
     TOKEN_CASE = 25,
     TOKEN_ESAC = 26,
-    TOKEN_ECHO = 27,
-    TOKEN_EXIT = 28,
-    TOKEN_EXPORT = 29,
-    TOKEN_DOT = 30,
-    TOKEN_ERROR = 31
+    TOKEN_DSEMIC = 27,
+    TOKEN_ECHO = 28,
+    TOKEN_EXIT = 29,
+    TOKEN_EXPORT = 30,
+    TOKEN_DOT = 31,
+    TOKEN_ERROR = 32
 };
 
 /**
