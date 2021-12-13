@@ -24,6 +24,8 @@ struct global
     struct list *vars;
     struct function *functions;
     struct list *save_vars;
+    struct parser *parsers_to_free[100];
+    int nb_parsers;
 };
 
 extern struct global *global;

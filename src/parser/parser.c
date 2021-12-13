@@ -693,7 +693,7 @@ static enum parser_state parse_funcdec(struct parser *parser, struct ast **ast)
         ast_free(fun_node);
         vec_destroy(vec);
         free(vec);
-        return PARSER_ABSENT;
+        return PARSER_PANIC;
     }
     // Skip ')'
     token_free(tok);
@@ -706,10 +706,19 @@ static enum parser_state parse_funcdec(struct parser *parser, struct ast **ast)
         token_free(tok);
     }
     if (tok->type == TOKEN_ERROR)
+    {
         return PARSER_PANIC;
+    }
+
     fun_node->val = vec;
     (*ast) = fun_node;
-    return parse_shell_command(parser, &((*ast)->left));
+    enum parser_state shell_cmd = parse_shell_command(parser, &((*ast)->left));
+    if (shell_cmd != PARSER_OK)
+    {
+        ast_free(fun_node);
+        return PARSER_PANIC;
+    }
+    return PARSER_OK;
 }
 
 static enum parser_state parse_command(struct parser *parser, struct ast **ast)

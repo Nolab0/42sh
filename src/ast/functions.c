@@ -38,7 +38,7 @@ int cmdblock(char *args)
     if (state != PARSER_OK)
         return_code = 2;
     return_code = ast_eval(parser->ast, &return_code);
-    parser_free(parser);
+    global->parsers_to_free[global->nb_parsers++] = parser;
     return return_code;
 }
 
@@ -71,6 +71,8 @@ int eval_func(char *cmd)
     }
 
     int nb_params = 1;
+    if (params)
+        params++;
     char *save_params = params;
     if (!params)
         nb_params = 0;
@@ -84,15 +86,21 @@ int eval_func(char *cmd)
             nb_params = 0;
             break;
         }
-        push_front(my_itoa(nb_params), strndup(params, params - current_param));
+        char *nb_params_alloc = my_itoa(nb_params);
+        push_front(nb_params_alloc, strndup(params, current_param - params));
+        free(nb_params_alloc);
         params = current_param + 1;
         ++nb_params;
         if (!(*current_param))
             break;
     }
 
-    push_front("*", strndup(save_params, save_params - params));
-    push_front("@", strndup(save_params, save_params - params));
+    if (save_params == NULL)
+        save_params = "";
+    if (nb_params > 0)
+        nb_params--;
+    push_front("*", strdup(save_params));
+    push_front("@", strdup(save_params));
     push_front("#", my_itoa(nb_params));
 
     int ret = 0;
@@ -102,7 +110,11 @@ int eval_func(char *cmd)
     unset_var("@");
     unset_var("#");
     for (int i = 1; i <= nb_params; ++i)
-        unset_var(my_itoa(i));
+    {
+        char *itoaed = my_itoa(i);
+        unset_var(itoaed);
+        free(itoaed);
+    }
 
     return return_val;
 }

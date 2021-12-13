@@ -244,6 +244,8 @@ int main(int argc, char *argv[])
     struct vec *line = vec_init();
 
     struct parser *parser = create_parser();
+    global->nb_parsers = 0;
+    global->parsers_to_free[global->nb_parsers++] = parser;
     // Run the test loop
     rc = read_print_loop(cs, line, parser, opts);
 
@@ -254,6 +256,7 @@ int main(int argc, char *argv[])
         cstream_free(cs);
         free(cs);
     }
-    parser_free(parser);
+    while (global->nb_parsers > 0)
+        parser_free(global->parsers_to_free[--global->nb_parsers]);
     return rc;
 }
