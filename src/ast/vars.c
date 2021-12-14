@@ -88,7 +88,7 @@ int is_var_sep(char c)
 
 static char *replace_at_by(char *str, int status, int len, char *replace)
 {
-    char *new = zalloc(sizeof(char) * (strlen(str) + strlen(replace) + 1));
+    char *new = zalloc(sizeof(char) * (strlen(str) + strlen(replace) + 100));
     int spaces = 0;
     if (strcmp(replace, "") == 0
         && (str[status + len] == ' ' || str[status + len] == 0))
@@ -242,7 +242,7 @@ char *remove_quotes(char *str)
                 continue;
             }
         }
-        if (str[i] == '\"' && (i == 0 || str[i - 1] != '\\'))
+        if (str[i] == '\"' && (i == 0 || str[i - 1] != '\\' || not_as_escape(str, i - 1)))
         {
             if (context == NONE)
             {
