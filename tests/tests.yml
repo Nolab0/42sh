@@ -73,7 +73,7 @@
         echo before
         if echo test >&1; then
         echo before hello
-        echo hello > tmp; echo after hello
+        echo hello > tmp2; echo after hello
         fi
     checks:
         -   stdout
@@ -1747,6 +1747,42 @@
 -   name: CMD SUB 11
     input: |
         echo \$ $(echo test)
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB AND VAR 1
+    input: |
+        a=b
+        echo $(echo $a)
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB AND VAR 2
+    input: |
+        a=b
+        echo `echo $a`
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB AND VAR 3
+    input: |
+        a=echo
+        echo `$a test`
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB AND VAR 4
+    input: |
+        a=echo
+        echo `${a} test`
     checks:
         -   stdout
         -   exitcode

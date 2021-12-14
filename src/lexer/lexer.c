@@ -172,6 +172,8 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
         return 0;
     }
 
+    static int sub = 0;
+
     while (lexer->pos < *len
            && (!is_separator(lexer->input[lexer->pos])
                || (lexer->input[lexer->pos] == '|' && lexer->pos != 0
@@ -180,7 +182,12 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
     {
         char current = lexer->input[lexer->pos];
         if (current == ')' || current == '(')
-            break;
+        {
+            if (lexer->input[lexer->pos - 1] == '$' || sub)
+                sub = !sub;
+            else
+                break;
+        }
         if ((current == '\'' || current == '\"')
             && (lexer->pos == 0
                 || (lexer->input[lexer->pos - 1] != '\\'
