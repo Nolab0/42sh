@@ -83,7 +83,8 @@ int is_var_sep(char c)
 {
     if (is_separator(c))
         return 1;
-    return c == '$' || c == '=' || c == '\'' || c == '\"' || c == ')' || c == '`';
+    return c == '$' || c == '=' || c == '\'' || c == '\"' || c == ')'
+        || c == '`';
 }
 
 static char *replace_at_by(char *str, int status, int len, char *replace)
@@ -171,8 +172,9 @@ char *expand_vars(char *str, char *var, char *var_rep)
             else if (context == DOUBLE)
                 context = NONE;
         }
-        if (context != SIMPLE && status == -1 && str[i] == '$' && str[i + 1] != '('
-            && (i == 0 || str[i - 1] != '\\') && (!is_var_sep(str[i + 1])))
+        if (context != SIMPLE && status == -1 && str[i] == '$'
+            && str[i + 1] != '(' && (i == 0 || str[i - 1] != '\\')
+            && (!is_var_sep(str[i + 1])))
         {
             if (str[i + 1] == '{')
                 brackets = 1;

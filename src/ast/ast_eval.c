@@ -247,298 +247,298 @@ int ast_eval(struct ast *ast, int *return_code)
     int a;
     switch (ast->type)
     {
-        case AST_OR:
-            left = ast_eval(ast->left, return_code);
-            if (left == 0 || !ast->right)
-                return left;
-            if (ast->is_loop
-                    && (global->current_mode->mode == BREAK
-                        || (global->current_mode->mode == CONTINUE
-                            && global->current_mode->nb >= 1)))
-                return left;
-            return ast_eval(ast->right, return_code);
-        case AST_ROOT:
-            left = ast_eval(ast->left, return_code);
-            if (!ast->right)
-                return left;
-            if (ast->is_loop
-                    && (global->current_mode->mode == BREAK
-                        || (global->current_mode->mode == CONTINUE
-                            && global->current_mode->nb >= 1)))
-                return left;
-            return ast_eval(ast->right, return_code);
-        case AST_IF:
-        case AST_ELIF:
-            test_cond = ast_eval(ast->cond, return_code);
-            if (global->current_mode->mode == EXIT)
-            {
-                *return_code = test_cond;
-                return test_cond;
-            }
+    case AST_OR:
+        left = ast_eval(ast->left, return_code);
+        if (left == 0 || !ast->right)
+            return left;
+        if (ast->is_loop
+            && (global->current_mode->mode == BREAK
+                || (global->current_mode->mode == CONTINUE
+                    && global->current_mode->nb >= 1)))
+            return left;
+        return ast_eval(ast->right, return_code);
+    case AST_ROOT:
+        left = ast_eval(ast->left, return_code);
+        if (!ast->right)
+            return left;
+        if (ast->is_loop
+            && (global->current_mode->mode == BREAK
+                || (global->current_mode->mode == CONTINUE
+                    && global->current_mode->nb >= 1)))
+            return left;
+        return ast_eval(ast->right, return_code);
+    case AST_IF:
+    case AST_ELIF:
+        test_cond = ast_eval(ast->cond, return_code);
+        if (global->current_mode->mode == EXIT)
+        {
+            *return_code = test_cond;
+            return test_cond;
+        }
 
-            if (ast->is_loop
-                    && (global->current_mode->mode == BREAK
-                        || (global->current_mode->mode == CONTINUE
-                            && global->current_mode->nb >= 1)))
-                return 0;
-            if (!test_cond) // true
-                return ast_eval(ast->left, return_code);
-            else
-            {
-                if (ast->is_loop
-                        && (global->current_mode->mode == BREAK
-                            || (global->current_mode->mode == CONTINUE
-                                && global->current_mode->nb >= 1)))
-                    return 0;
-                return ast_eval(ast->right, return_code);
-            }
-        case AST_THEN:
-        case AST_ELSE:
+        if (ast->is_loop
+            && (global->current_mode->mode == BREAK
+                || (global->current_mode->mode == CONTINUE
+                    && global->current_mode->nb >= 1)))
+            return 0;
+        if (!test_cond) // true
             return ast_eval(ast->left, return_code);
-        case AST_CMD:
-            if (ast->val == NULL)
-                return 2;
-            int res = 0;
-            char *cmd2 = strdup(ast->val->data);
+        else
+        {
+            if (ast->is_loop
+                && (global->current_mode->mode == BREAK
+                    || (global->current_mode->mode == CONTINUE
+                        && global->current_mode->nb >= 1)))
+                return 0;
+            return ast_eval(ast->right, return_code);
+        }
+    case AST_THEN:
+    case AST_ELSE:
+        return ast_eval(ast->left, return_code);
+    case AST_CMD:
+        if (ast->val == NULL)
+            return 2;
+        int res = 0;
+        char *cmd2 = strdup(ast->val->data);
 
-            cmd2 = expand_vars(cmd2, ast->var, ast->replace);
-            cmd2 = substitute_cmds(cmd2);
-            if (cmd2 == NULL)
-                return 2;
-            cmd2 = remove_quotes(cmd2);
-            if (!is_var_assign(cmd2))
-                res = cmd_exec(cmd2);
-            free(cmd2);
-            *return_code = res;
-            int i = 0;
-            char *command_name = getcmdname(ast->val->data, &i);
-            if (strcmp(command_name, ".") == 0 && res != 0)
-                global->current_mode->mode = EXIT;
-            free(command_name);
-            if (!ast->left)
-            {
-                char *value = my_itoa(res);
-                char *var = build_var("?", value);
-                var_assign_special(var);
-                free(var);
-                free(value);
-                return res;
-            }
-            res = ast_eval(ast->left, return_code);
+        cmd2 = expand_vars(cmd2, ast->var, ast->replace);
+        cmd2 = substitute_cmds(cmd2);
+        if (cmd2 == NULL)
+            return 2;
+        cmd2 = remove_quotes(cmd2);
+        if (!is_var_assign(cmd2))
+            res = cmd_exec(cmd2);
+        free(cmd2);
+        *return_code = res;
+        int i = 0;
+        char *command_name = getcmdname(ast->val->data, &i);
+        if (strcmp(command_name, ".") == 0 && res != 0)
+            global->current_mode->mode = EXIT;
+        free(command_name);
+        if (!ast->left)
+        {
             char *value = my_itoa(res);
             char *var = build_var("?", value);
             var_assign_special(var);
             free(var);
             free(value);
             return res;
-        case AST_REDIR:
-            tmp = expand_vars(ast->val->data, NULL, NULL);
-            tmp = substitute_cmds(tmp);
-            if (tmp == NULL)
-                return 2;
-            tmp = remove_quotes(tmp);
-            ast->val->data = tmp;
-            ast->val->size = strlen(tmp);
-            ast->val->capacity = strlen(tmp) + 1;
-            return exec_redir(ast);
-        case AST_PIPE:
-            return eval_pipe(ast);
-        case AST_AND:
-            left = ast_eval(ast->left, return_code);
-            if (left != 0)
-                return left;
-            if (ast->is_loop
-                    && (global->current_mode->mode == BREAK
-                        || (global->current_mode->mode == CONTINUE
-                            && global->current_mode->nb >= 1)))
-                return 0;
-            return ast_eval(ast->right, return_code);
-        case AST_NEG:
-            return !ast_eval(ast->left, return_code);
-        case AST_WHILE:
-            global->current_mode->depth++;
-            set_loop(ast->left);
-            set_loop(ast->cond);
-            a = 0;
-            while (global->current_mode->mode != BREAK
-                    && ast_eval(ast->cond, return_code) == 0)
+        }
+        res = ast_eval(ast->left, return_code);
+        char *value = my_itoa(res);
+        char *var = build_var("?", value);
+        var_assign_special(var);
+        free(var);
+        free(value);
+        return res;
+    case AST_REDIR:
+        tmp = expand_vars(ast->val->data, NULL, NULL);
+        tmp = substitute_cmds(tmp);
+        if (tmp == NULL)
+            return 2;
+        tmp = remove_quotes(tmp);
+        ast->val->data = tmp;
+        ast->val->size = strlen(tmp);
+        ast->val->capacity = strlen(tmp) + 1;
+        return exec_redir(ast);
+    case AST_PIPE:
+        return eval_pipe(ast);
+    case AST_AND:
+        left = ast_eval(ast->left, return_code);
+        if (left != 0)
+            return left;
+        if (ast->is_loop
+            && (global->current_mode->mode == BREAK
+                || (global->current_mode->mode == CONTINUE
+                    && global->current_mode->nb >= 1)))
+            return 0;
+        return ast_eval(ast->right, return_code);
+    case AST_NEG:
+        return !ast_eval(ast->left, return_code);
+    case AST_WHILE:
+        global->current_mode->depth++;
+        set_loop(ast->left);
+        set_loop(ast->cond);
+        a = 0;
+        while (global->current_mode->mode != BREAK
+               && ast_eval(ast->cond, return_code) == 0)
+        {
+            if (global->current_mode->mode == CONTINUE)
             {
-                if (global->current_mode->mode == CONTINUE)
+                if (global->current_mode->nb == 1)
                 {
-                    if (global->current_mode->nb == 1)
-                    {
-                        global->current_mode->nb--;
-                        global->current_mode->mode = NORMAL;
-                    }
-                    else
-                        break;
-                }
-                a = ast_eval(ast->left, return_code);
-            }
-            if (global->current_mode->mode == BREAK
-                    || global->current_mode->mode == CONTINUE)
-                global->current_mode->nb--;
-            if (global->current_mode->nb <= 0)
-                global->current_mode->mode = NORMAL;
-            global->current_mode->depth--;
-            return a;
-        case AST_UNTIL:
-            global->current_mode->depth++;
-            set_loop(ast->left);
-            set_loop(ast->cond);
-            a = 0;
-            while (global->current_mode->mode != BREAK
-                    && ast_eval(ast->cond, return_code) != 0)
-            {
-                if (global->current_mode->mode == CONTINUE)
-                {
-                    if (global->current_mode->nb == 1)
-                    {
-                        global->current_mode->nb--;
-                        global->current_mode->mode = NORMAL;
-                    }
-                    else
-                        break;
-                }
-                a = ast_eval(ast->left, return_code);
-            }
-            if (global->current_mode->mode == BREAK
-                    || global->current_mode->mode == CONTINUE)
-                global->current_mode->nb--;
-            if (global->current_mode->nb <= 0)
-                global->current_mode->mode = NORMAL;
-            global->current_mode->depth--;
-            return a;
-        case AST_FOR:
-            global->current_mode->depth++;
-            set_loop(ast->left);
-            set_var(ast->val->data, ast->left);
-            int ret_code = 0;
-            char **total = zalloc(100000);
-            size_t size = 0;
-            for (size_t i = 0; i < ast->size; i++)
-            {
-                char *s = strdup(ast->list[i]);
-                s = expand_vars(s, NULL, NULL);
-                s = substitute_cmds(s);
-                if (s == NULL)
-                    return 2;
-                if (s[0] != '\"')
-                {
-                    char **args = zalloc(sizeof(char *) * strlen(s));
-                    char *save = NULL;
-                    char *val = strtok_r(s, " \n", &save);
-                    int index = 0;
-                    args[index++] = val;
-                    while ((val = strtok_r(NULL, " \n", &save)) != NULL)
-                        args[index++] = val;
-                    for (int i = 0; i < index; i++)
-                        total[size++] = strdup(args[i]);
-                    free(args);
+                    global->current_mode->nb--;
+                    global->current_mode->mode = NORMAL;
                 }
                 else
-                    total[size++] = strdup(s);
-                free(s);
+                    break;
             }
-            for (size_t i = 0; global->current_mode->mode != BREAK && i < size; ++i)
+            a = ast_eval(ast->left, return_code);
+        }
+        if (global->current_mode->mode == BREAK
+            || global->current_mode->mode == CONTINUE)
+            global->current_mode->nb--;
+        if (global->current_mode->nb <= 0)
+            global->current_mode->mode = NORMAL;
+        global->current_mode->depth--;
+        return a;
+    case AST_UNTIL:
+        global->current_mode->depth++;
+        set_loop(ast->left);
+        set_loop(ast->cond);
+        a = 0;
+        while (global->current_mode->mode != BREAK
+               && ast_eval(ast->cond, return_code) != 0)
+        {
+            if (global->current_mode->mode == CONTINUE)
             {
-                if (global->current_mode->mode == CONTINUE)
+                if (global->current_mode->nb == 1)
                 {
-                    if (global->current_mode->nb == 1)
-                    {
-                        global->current_mode->nb--;
-                        global->current_mode->mode = NORMAL;
-                    }
-                    else
-                        break;
+                    global->current_mode->nb--;
+                    global->current_mode->mode = NORMAL;
                 }
-                set_replace(total[i], ast->left);
-                ret_code = ast_eval(ast->left, return_code);
+                else
+                    break;
+            }
+            a = ast_eval(ast->left, return_code);
+        }
+        if (global->current_mode->mode == BREAK
+            || global->current_mode->mode == CONTINUE)
+            global->current_mode->nb--;
+        if (global->current_mode->nb <= 0)
+            global->current_mode->mode = NORMAL;
+        global->current_mode->depth--;
+        return a;
+    case AST_FOR:
+        global->current_mode->depth++;
+        set_loop(ast->left);
+        set_var(ast->val->data, ast->left);
+        int ret_code = 0;
+        char **total = zalloc(100000);
+        size_t size = 0;
+        for (size_t i = 0; i < ast->size; i++)
+        {
+            char *s = strdup(ast->list[i]);
+            s = expand_vars(s, NULL, NULL);
+            s = substitute_cmds(s);
+            if (s == NULL)
+                return 2;
+            if (s[0] != '\"')
+            {
+                char **args = zalloc(sizeof(char *) * strlen(s));
+                char *save = NULL;
+                char *val = strtok_r(s, " \n", &save);
+                int index = 0;
+                args[index++] = val;
+                while ((val = strtok_r(NULL, " \n", &save)) != NULL)
+                    args[index++] = val;
+                for (int i = 0; i < index; i++)
+                    total[size++] = strdup(args[i]);
+                free(args);
+            }
+            else
+                total[size++] = strdup(s);
+            free(s);
+        }
+        for (size_t i = 0; global->current_mode->mode != BREAK && i < size; ++i)
+        {
+            if (global->current_mode->mode == CONTINUE)
+            {
+                if (global->current_mode->nb == 1)
+                {
+                    global->current_mode->nb--;
+                    global->current_mode->mode = NORMAL;
+                }
+                else
+                    break;
+            }
+            set_replace(total[i], ast->left);
+            ret_code = ast_eval(ast->left, return_code);
+            free(total[i]);
+            total[i] = NULL;
+        }
+        if (global->current_mode->mode == BREAK
+            || global->current_mode->mode == CONTINUE)
+            global->current_mode->nb--;
+        if (global->current_mode->nb <= 0)
+            global->current_mode->mode = NORMAL;
+        for (size_t i = 0; i < size; i++)
+        {
+            if (total[i] != NULL)
                 free(total[i]);
-                total[i] = NULL;
-            }
-            if (global->current_mode->mode == BREAK
-                    || global->current_mode->mode == CONTINUE)
-                global->current_mode->nb--;
-            if (global->current_mode->nb <= 0)
-                global->current_mode->mode = NORMAL;
-            for (size_t i = 0; i < size; i++)
+        }
+        free(total);
+        global->current_mode->depth--;
+        return ret_code;
+    case AST_BREAK:
+        global->current_mode->mode = BREAK;
+        if (ast->val->data[5] != 0)
+        {
+            int nb = atoi(ast->val->data + 5);
+            if (nb == 0)
             {
-                if (total[i] != NULL)
-                    free(total[i]);
+                fprintf(stderr, "Break: invalid parameter '0'\n");
+                return 2;
             }
-            free(total);
-            global->current_mode->depth--;
-            return ret_code;
-        case AST_BREAK:
-            global->current_mode->mode = BREAK;
-            if (ast->val->data[5] != 0)
+            if (nb > global->current_mode->depth)
+                nb = global->current_mode->depth;
+            global->current_mode->nb = nb;
+        }
+        else
+            global->current_mode->nb = 1;
+
+        if (ast->is_loop)
+            return 0;
+        return ast_eval(ast->left, return_code);
+    case AST_CONTINUE:
+        global->current_mode->mode = CONTINUE;
+        if (ast->val->data[8] != 0)
+        {
+            int nb = atoi(ast->val->data + 8);
+            if (nb == 0)
             {
-                int nb = atoi(ast->val->data + 5);
-                if (nb == 0)
-                {
-                    fprintf(stderr, "Break: invalid parameter '0'\n");
-                    return 2;
-                }
-                if (nb > global->current_mode->depth)
-                    nb = global->current_mode->depth;
-                global->current_mode->nb = nb;
+                fprintf(stderr, "Continue: invalid parameter '0'\n");
+                return 2;
             }
-            else
-                global->current_mode->nb = 1;
+            if (nb > global->current_mode->depth)
+                nb = global->current_mode->depth;
 
-            if (ast->is_loop)
-                return 0;
-            return ast_eval(ast->left, return_code);
-        case AST_CONTINUE:
-            global->current_mode->mode = CONTINUE;
-            if (ast->val->data[8] != 0)
-            {
-                int nb = atoi(ast->val->data + 8);
-                if (nb == 0)
-                {
-                    fprintf(stderr, "Continue: invalid parameter '0'\n");
-                    return 2;
-                }
-                if (nb > global->current_mode->depth)
-                    nb = global->current_mode->depth;
+            global->current_mode->nb = nb;
+        }
+        else
+            global->current_mode->nb = 1;
 
-                global->current_mode->nb = nb;
-            }
-            else
-                global->current_mode->nb = 1;
-
-            if (ast->is_loop)
-                return 0;
-            return ast_eval(ast->left, return_code);
-        case AST_SUBSHELL:
-            return subshell(vec_cstring(ast->val));
-        case AST_CMDBLOCK:
-            return cmdblock(vec_cstring(ast->val));
-        case AST_FUNCTION:
-            return add_function(ast);
-        case AST_CASE:
-            tmp = expand_vars(ast->word, NULL, NULL);
+        if (ast->is_loop)
+            return 0;
+        return ast_eval(ast->left, return_code);
+    case AST_SUBSHELL:
+        return subshell(vec_cstring(ast->val));
+    case AST_CMDBLOCK:
+        return cmdblock(vec_cstring(ast->val));
+    case AST_FUNCTION:
+        return add_function(ast);
+    case AST_CASE:
+        tmp = expand_vars(ast->word, NULL, NULL);
+        tmp = substitute_cmds(tmp);
+        if (tmp == NULL)
+            return 2;
+        tmp = remove_quotes(tmp);
+        ast->word = tmp;
+        struct cas *cas = ast->cas;
+        while (cas)
+        {
+            tmp = expand_vars(cas->pattern, NULL, NULL);
             tmp = substitute_cmds(tmp);
             if (tmp == NULL)
                 return 2;
             tmp = remove_quotes(tmp);
-            ast->word = tmp;
-            struct cas *cas = ast->cas;
-            while (cas)
-            {
-                tmp = expand_vars(cas->pattern, NULL, NULL);
-                tmp = substitute_cmds(tmp);
-                if (tmp == NULL)
-                    return 2;
-                tmp = remove_quotes(tmp);
-                cas->pattern = tmp;
-                cas = cas->next;
-            }
-            return handle_case(ast);
-        default:
-            printf("ast->type = %d\n", ast->type);
-            fprintf(stderr, "ast_eval: node type not known\n");
-            return 2;
+            cas->pattern = tmp;
+            cas = cas->next;
+        }
+        return handle_case(ast);
+    default:
+        printf("ast->type = %d\n", ast->type);
+        fprintf(stderr, "ast_eval: node type not known\n");
+        return 2;
     }
 }
