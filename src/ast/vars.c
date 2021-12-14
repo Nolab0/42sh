@@ -242,7 +242,8 @@ char *remove_quotes(char *str)
                 continue;
             }
         }
-        if (str[i] == '\"' && (i == 0 || str[i - 1] != '\\' || not_as_escape(str, i - 1)))
+        if (str[i] == '\"'
+            && (i == 0 || str[i - 1] != '\\' || not_as_escape(str, i - 1)))
         {
             if (context == NONE)
             {
