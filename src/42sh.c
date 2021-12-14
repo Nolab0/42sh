@@ -192,12 +192,13 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
         free(final);
         return 2;
     }
-    free(str);
+
     enum parser_state state = parsing(parser);
     if (state != PARSER_OK)
     {
         vec_destroy(final);
         free(final);
+        free(str);
         return 2;
     }
     if (opts->p)
@@ -226,6 +227,7 @@ enum error read_print_loop(struct cstream *cs, struct vec *line,
     }
     vec_destroy(final);
     free(final);
+    free(str);
     return eval;
 }
 
