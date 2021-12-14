@@ -914,6 +914,15 @@
         -   exitcode
         -   stderr
 
+-   name: SIMPLE INVALID EXPORT
+    input: |
+        export 1_a=42
+        echo "$a"
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
 -   name: MULTIPLE SEMICOLON EXPORT
     input: |
         export a=42; b=78; c=abc
