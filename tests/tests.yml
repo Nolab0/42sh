@@ -2146,3 +2146,19 @@
         -   stdout
         -   exitcode
         -   has_stderr
+
+-   name: ESCAPE QUOTE FIX 1
+    input: |
+        echo \\" ' " 
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ESCAPE QUOTE FIX 2
+    input: |
+        echo \\" ' " " ' a b c d \\| " 
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr

@@ -115,7 +115,8 @@ static int handle_quotes(struct lexer *lexer, struct vec *vec, size_t len)
         else if (quote_type == '\"')
         {
             if (lexer->input[lexer->pos] == '\"'
-                && lexer->input[lexer->pos - 1] != '\\')
+                && (lexer->input[lexer->pos - 1] != '\\'
+                    || not_as_escape(lexer->input, lexer->pos - 1)))
                 break;
             vec_push(vec, lexer->input[lexer->pos++]);
         }

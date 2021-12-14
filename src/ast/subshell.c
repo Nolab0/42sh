@@ -77,6 +77,7 @@ char *cmd_sub(char *str, size_t quote_pos, size_t quote_end, int is_dollar)
     struct parser *parser = create_parser();
     parser->lexer = lexer_create(cmd);
     enum parser_state state = parsing(parser);
+
     if (state != PARSER_OK)
     {
         free(cmd);
