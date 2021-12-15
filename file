@@ -1,0 +1,8 @@
+IFS=":"
+echo "$IFS"
+string="foo:bar::foobar::"
+echo $string
+for i in $string
+do
+    echo "[$i] extracted"
+done

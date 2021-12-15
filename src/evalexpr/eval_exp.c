@@ -31,6 +31,10 @@ static int is_operator(char *op)
         return 1;
     if (strncmp(op, "~", 1) == 0)
         return 1;
+    if (strncmp(op, "(", 1) == 0)
+        return 1;
+    if (strncmp(op, ")", 1) == 0)
+        return 1;
     return 0;
 }
 
@@ -89,25 +93,26 @@ int eval_rpn(char *expr, int rpn)
             }
             char *operator= strndup(save, count);
             if (nb_stack == NULL)
-                errx(2, "Invalid expression");
+                return INT_MIN;
             struct token_stack nb1 = nb_stack->data;
             nb_stack = stack_pop(nb_stack);
             if (nb_stack == NULL)
-                errx(2, "Invalid expression");
+               return INT_MIN;
             struct token_stack nb2 = nb_stack->data;
             nb_stack = stack_pop(nb_stack);
             struct token_stack res = { NB, compute(nb2, nb1, operator) };
             free(operator);
+            if (res.data == INT_MIN)
+                return res.data;
             nb_stack = stack_add(nb_stack, res);
-            // i++;
         }
         else
-            errx(1, "Invalid character");
+            return INT_MIN;
     }
     struct token_stack res = nb_stack->data;
     nb_stack = stack_pop(nb_stack);
     if (nb_stack != NULL)
-        errx(2, "Invalid expression");
+        return INT_MIN;
     return res.data; // Success
 }
 
@@ -212,7 +217,7 @@ char *to_polish(char *expr)
             state = 1;
         }
         else
-            errx(1, "Invalid character");
+            return NULL;
     }
     while (st != NULL) // Destack remaining operators
     {
@@ -238,10 +243,12 @@ int eval_exp(char *expr)
             valid = 1;
     }
     if (valid == 0)
-        errx(2, "Invalid expression");
+        return INT_MIN;
     else
     {
         char *polish = to_polish(expr);
+        if (polish == NULL)
+            return INT_MIN;
         int res = eval_rpn(polish, 0);
         free(polish);
         return res;

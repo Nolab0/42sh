@@ -2198,3 +2198,13 @@
         -   stdout
         -   exitcode
         -   stderr
+
+-   name: ARTHMETIC EXPRESSION INVALID EXPANSION
+    input: |
+        x=$((1+2+9+8+/2*5+3**98))
+        echo $x
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+

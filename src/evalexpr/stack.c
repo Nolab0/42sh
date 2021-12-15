@@ -47,19 +47,19 @@ static int compute_errors(int a, int b, char op)
     if (op == '/')
     {
         if (b == 0)
-            errx(3, "division by 0");
+            return INT_MIN;
         else
             return a / b;
     }
     else if (op == '%')
     {
         if (b == 0)
-            errx(3, "modulo by 0");
+            return INT_MIN;
         else
             return a % b;
     }
     else if (b < 0)
-        errx(3, "negative power");
+        return INT_MIN;
     else
     {
         int res = 1;

@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <err.h>
 #include <errno.h>
+#include <evalexpr/eval_exp.h>
 #include <parser/parser.h>
 #include <stdio.h>
 #include <string.h>
@@ -31,6 +32,7 @@ static int is_valid(char *str)
 
 int subshell(char *args)
 {
+    //printf("ARGS: %s\n", args);
     if (!is_valid(args))
     {
         fprintf(stderr, "42sh: Syntax error: end of file unexpected\n");
@@ -228,4 +230,27 @@ char *substitute_cmds(char *s)
         i--;
     }
     return str;
+}
+
+char *arithmetic_exp(char *cmd)
+{
+    int equ_index = 0;
+    while (cmd[equ_index] != '\0' && cmd[equ_index] != '=')
+        ++equ_index;
+    int i = equ_index + 1;
+    if (cmd[equ_index] == '\0' || cmd[i] == '\0' || cmd[i++] != '$')
+        return NULL;
+    if (cmd[i] == '\0' || cmd[i] != '(')
+        return NULL;
+    if (cmd[i + 1] == '\0' || cmd[i + 1] != '(')
+        return NULL;
+    int res = eval_exp(cmd + i);
+    if (res == INT_MIN)
+        return NULL;
+    char *to_sprintf = zalloc(sizeof(char) * (equ_index + 21));
+    char *before_eq = strndup(cmd, equ_index + 1);
+    sprintf(to_sprintf, "%s%d", before_eq, res);
+    free(cmd);
+    free(before_eq);
+    return to_sprintf;
 }

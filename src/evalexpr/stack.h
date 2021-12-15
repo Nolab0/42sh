@@ -1,6 +1,8 @@
 #ifndef STACK_H
 #define STACK_H
 
+#include "eval_exp.h"
+
 /*
 ** Enum sorted in priority order
 ** Make a division per 10 to get the priority order

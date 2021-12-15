@@ -84,7 +84,8 @@ int is_var_sep(char c)
     if (is_separator(c))
         return 1;
     return c == '$' || c == '=' || c == '\'' || c == '\"' || c == ')'
-        || c == '`';
+        || c == '`' || c == '-' || c == '+' || c == '%' || c == '*' || c == '/' ||
+        c == '&' || c == '|' || c == '^';
 }
 
 static char *replace_at_by(char *str, int status, int len, char *replace)
