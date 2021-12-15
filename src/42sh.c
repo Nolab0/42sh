@@ -1,5 +1,6 @@
 #include <ast/ast.h>
 #include <err.h>
+#include <evalexpr/eval_exp.h>
 #include <getopt.h>
 #include <io/cstream.h>
 #include <parser/parser.h>

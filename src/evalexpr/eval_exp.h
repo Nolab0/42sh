@@ -5,6 +5,6 @@
 
 #include "stack.h"
 
-int eval_exp(char *expr, int rpn);
+int eval_exp(char *expr);
 
 #endif /* ! EVAL_EXP */

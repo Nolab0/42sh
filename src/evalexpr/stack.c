@@ -5,9 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct token token_op(char *op)
+struct token_stack token_op(char *op)
 {
-    struct token t;
+    struct token_stack t;
     if (strncmp(op, "**", 2) == 0)
         t.type = DOUBLE_STAR;
     else if (strncmp(op, "*", 1) == 0)
@@ -34,7 +34,10 @@ struct token token_op(char *op)
         t.type = BINARY_AND;
     else if (strncmp(op, "|", 1) == 0)
         t.type = BINARY_OR;
-
+    else if (strncmp(op, "!", 1) == 0)
+        t.type = NOT;
+    else if (strncmp(op, "~", 1) == 0)
+        t.type = TILDE;
     return t;
 }
 
@@ -70,7 +73,7 @@ static int compute_errors(int a, int b, char op)
     return 0;
 }
 
-char *char_op(struct token t)
+char *char_op(struct token_stack t)
 {
     switch (t.type)
     {
@@ -98,13 +101,17 @@ char *char_op(struct token t)
         return "&&";
     case LOGICAL_OR:
         return "||";
+    case NOT:
+        return "!";
+    case TILDE:
+        return "~";
     default:
         return "+";
     }
 }
 
 // Compute nb1 and nb2 with op
-int compute(struct token nb1, struct token nb2, char *op)
+int compute(struct token_stack nb1, struct token_stack nb2, char *op)
 {
     if (strncmp(op, "+", 1) == 0)
         return nb1.data + nb2.data;
@@ -128,11 +135,17 @@ int compute(struct token nb1, struct token nb2, char *op)
         return nb1.data & nb2.data;
     else if (strncmp(op, "|", 1) == 0)
         return nb1.data | nb2.data;
+    else if (strncmp(op, "!", 1) == 0)
+        return !nb1.data;
+    else if (strncmp(op, "!", 1) == 0)
+        return !nb1.data;
+    else if (strncmp(op, "~", 1) == 0)
+        return -nb1.data - 1;
     else
         return compute_errors(nb1.data, nb2.data, op[0]);
 }
 
-struct stack *stack_add(struct stack *s, struct token t)
+struct stack *stack_add(struct stack *s, struct token_stack t)
 {
     struct stack *new = malloc(sizeof(struct stack));
     if (!new)

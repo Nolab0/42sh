@@ -27,7 +27,7 @@ enum type
     NB
 };
 
-struct token
+struct token_stack
 {
     enum type type;
     int data;
@@ -35,21 +35,21 @@ struct token
 
 struct stack
 {
-    struct token data;
+    struct token_stack data;
     struct stack *next;
 };
 
-// Return a token according to its operator
-struct token token_op(char *op);
+// Return a token_stack according to its operator
+struct token_stack token_op(char *op);
 
-// Return the operator of a token
-char *char_op(struct token);
+// Return the operator of a token_stack
+char *char_op(struct token_stack);
 
 // 0 if t1 = t2, 1 if t1>t2, -1 otherwise
-int compute(struct token t1, struct token t2, char *op);
+int compute(struct token_stack t1, struct token_stack t2, char *op);
 
 // Add an element in the stack and return the new head, NULL return new stack
-struct stack *stack_add(struct stack *s, struct token);
+struct stack *stack_add(struct stack *s, struct token_stack);
 
 // Pop the head of the stack and return the new head
 // Carreful ! Need to save the head before pop
