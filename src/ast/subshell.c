@@ -32,7 +32,7 @@ static int is_valid(char *str)
 
 int subshell(char *args)
 {
-    //printf("ARGS: %s\n", args);
+    // printf("ARGS: %s\n", args);
     if (!is_valid(args))
     {
         fprintf(stderr, "42sh: Syntax error: end of file unexpected\n");

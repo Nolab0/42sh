@@ -2199,12 +2199,27 @@
         -   exitcode
         -   stderr
 
--   name: ARTHMETIC EXPRESSION INVALID EXPANSION
+-   name: ARTHMETIC EXPRESSION EXPANSION
     input: |
-        x=$((1+2+9+8+/2*5+3**98))
+        x=100
+        echo $x
+        x=$(($x+1))
         echo $x
     checks:
         -   stdout
         -   exitcode
-        -   has_stderr
+        -   stderr
+
+-   name: ARTHMETIC EXPRESSION IN LOOP
+    input: |
+        x=100
+        while [ $x -ne 0 ]; do
+            x=$(($x-1))
+            echo $x
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
 
