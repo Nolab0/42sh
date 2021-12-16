@@ -15,7 +15,7 @@ struct global *global = NULL;
 
 static void setinitvars(int argc, char **argv)
 {
-    char *value = my_itoa(argc);
+    char *value = my_itoa(argc - 1 < 0 ? 0 : argc - 1);
     char *var = build_var("#", value);
     var_assign_special(var);
     free(var);
@@ -104,13 +104,19 @@ static struct opts *parse_opts(int argc, char **argv)
  * \brief Parse the command line arguments
  * \return A character stream
  */
-static struct cstream *parse_args(int argc, char *argv[], struct opts **opts)
+static struct cstream *parse_args(int *argc, char **argv[], struct opts **opts)
 {
     // If launched without argument, read the standard input
-    *opts = parse_opts(argc, argv);
+    *opts = parse_opts(*argc, *argv);
     if (!(*opts))
         return NULL;
-    if (argc == 1 || (argc == 2 && (*opts)->p))
+    if ((*opts)->c)
+    {
+        (*argc) -= 3;
+        (*argv) += 3;
+        return NULL;
+    }
+    if (*argc == 1 || (*argc == 2 && (*opts)->p))
     {
         if (isatty(STDIN_FILENO))
             return cstream_readline_create();
@@ -118,19 +124,15 @@ static struct cstream *parse_args(int argc, char *argv[], struct opts **opts)
     }
 
     // 42sh FILENAME
-    if ((argc == 2 && !(*opts)->p) || (argc == 3 && (*opts)->p))
+    FILE *fp = fopen((*argv)[(*opts)->optind], "r");
+    if (fp == NULL)
     {
-        FILE *fp = fopen(argv[(*opts)->optind], "r");
-        if (fp == NULL)
-        {
-            warn("failed to open input files");
-            return NULL;
-        }
-
-        return cstream_file_create(fp, /* fclose_on_free */ true);
+        warn("failed to open input files");
+        return NULL;
     }
-
-    return NULL;
+    (*argc)--;
+    (*argv)++;
+    return cstream_file_create(fp, /* fclose_on_free */ true);
 }
 
 /**
@@ -138,7 +140,7 @@ static struct cstream *parse_args(int argc, char *argv[], struct opts **opts)
  * \return An error code
  */
 enum error read_print_loop(struct cstream *cs, struct vec *line,
-                           struct parser *parser, struct opts *opts)
+        struct parser *parser, struct opts *opts)
 {
     enum error err;
     struct vec *final = NULL;
@@ -228,19 +230,19 @@ int main(int argc, char *argv[])
     global = zalloc(sizeof(struct global));
     global->current_mode = zalloc(sizeof(struct mode));
 
-    setinitvars(argc, argv);
 
     int rc = 0;
 
     srand(time(NULL));
     // Parse command line arguments and get an input stream
     struct opts *opts = NULL;
-    struct cstream *cs = parse_args(argc, argv, &opts);
+    struct cstream *cs = parse_args(&argc, &argv, &opts);
     if (!opts || (!cs && !opts->c))
     {
         free(opts);
         return 1;
     }
+    setinitvars(argc, argv);
 
     // Create a vector to hold the current line
     struct vec *line = vec_init();

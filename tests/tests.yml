@@ -933,6 +933,26 @@
         -   exitcode
         -   stderr
 
+-   name: FOR NO LIST 
+    input: |
+        for i; do
+        echo $i
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: FOR NO LIST MISSING DO 
+    input: |
+        for i;
+        echo $i
+        done
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
 -   name: SIMPLE EXPORT
     input: |
         export a=42

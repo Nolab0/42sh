@@ -103,6 +103,11 @@ static char *replace_at_by(char *str, int status, int len, char *replace)
             spaces++;
     }
     char *before = strndup(str, status - spaces);
+    if (status - spaces < 0)
+    {
+        free(before);
+        before = strdup("");
+    }
     char *after = strdup(str + status + len);
     sprintf(new, "%s%s%s", before, replace, after);
     free(str);

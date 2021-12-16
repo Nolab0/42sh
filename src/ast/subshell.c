@@ -151,6 +151,8 @@ char *cmd_sub(char *str, size_t quote_pos, size_t quote_end, int is_dollar)
 
 char *substitute_cmds(char *s)
 {
+    if (strlen(s) == 0)
+        return s;
     char *str = strdup(s);
     free(s);
     size_t i = 0;
