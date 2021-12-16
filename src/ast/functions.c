@@ -124,7 +124,8 @@ int eval_func(char *cmd)
             ++tmp;
         if (strlen(tmp))
         {
-            char *save_param_tmp = calloc(strlen(save_params) + strlen(tmp) + 2, sizeof(char));
+            char *save_param_tmp =
+                calloc(strlen(save_params) + strlen(tmp) + 2, sizeof(char));
             if (!strcmp("", save_params))
                 sprintf(save_param_tmp, "%s", tmp);
             else

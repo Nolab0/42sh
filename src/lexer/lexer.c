@@ -177,7 +177,8 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
     int backquotes = 0;
     while (lexer->pos < *len
            && (backquotes || arithmetic
-           || (!is_separator(lexer->input[lexer->pos]) || (arithmetic && lexer->input[lexer->pos] == '|'))
+               || (!is_separator(lexer->input[lexer->pos])
+                   || (arithmetic && lexer->input[lexer->pos] == '|'))
                || (lexer->input[lexer->pos] == '|' && lexer->pos != 0
                    && lexer->input[lexer->pos - 1] == '>'))
            && lexer->pos < redir_index)
