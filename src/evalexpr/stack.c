@@ -126,7 +126,7 @@ int compute(struct token_stack nb1, struct token_stack nb2, char *op)
     else if (strncmp(op, "%", 1) == 0)
         return nb1.data % nb2.data;
     else if (strncmp(op, "^", 1) == 0)
-        return compute_errors(nb1.data, nb2.data, '^');
+        return nb1.data ^ nb2.data;
     else if (strncmp(op, "&&", 2) == 0)
         return nb1.data && nb2.data;
     else if (strncmp(op, "||", 2) == 0)
