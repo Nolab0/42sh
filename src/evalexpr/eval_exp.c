@@ -93,11 +93,17 @@ int eval_rpn(char *expr, int rpn)
             }
             char *operator= strndup(save, count);
             if (nb_stack == NULL)
+            {
+                free(operator);
                 return INT_MIN;
+            }
             struct token_stack nb1 = nb_stack->data;
             nb_stack = stack_pop(nb_stack);
             if (nb_stack == NULL)
+            {
+                free(operator);
                 return INT_MIN;
+            }
             struct token_stack nb2 = nb_stack->data;
             nb_stack = stack_pop(nb_stack);
             struct token_stack res = { NB, compute(nb2, nb1, operator) };

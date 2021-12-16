@@ -716,6 +716,7 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
 
 -   name: SIMPLE EXIT INVALID
     input: |
@@ -731,6 +732,7 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
 
 -   name: EXIT WITH ECHO AT BEGINING
     input: |
@@ -747,6 +749,7 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
 
 -   name: EXIT WITH IF 2
     input: |
@@ -756,6 +759,7 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
 
 -   name: EXIT WITH IF ERROR
     input: |
@@ -773,6 +777,7 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
 
 -   name: EXIT IN ELSE
     input: |
@@ -782,6 +787,7 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
 
 -   name: EXIT NOTHING
     input: |
@@ -789,6 +795,7 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
 
 -   name: ECHO EXIT
     input: |
@@ -796,6 +803,7 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
 
 -   name: ECHO IF
     input: |
@@ -803,6 +811,7 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
 
 -   name: ECHO ELSE
     input: |
@@ -810,6 +819,7 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
 
 -   name: ECHO KEYWORD
     input: |
@@ -817,6 +827,7 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
 
 -   name: ECHO BAD OPTION
     input: |
@@ -824,6 +835,35 @@
     checks:
         -   stdout
         -   exitcode
+        -   stderr
+
+-   name: ECHO FUNCTION UNSET -F AND USE
+    input: |
+        echo()
+        {
+            ls
+        }
+        echo 4 5 8
+        unset -f echo
+        echo 7458
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ECHO FUNCTION UNSET AND USE
+    input: |
+        echo()
+        {
+            ls
+        }
+        echo 4 5 8
+        unset echo
+        echo 7458
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
 
 -   name: SIMPLE CD
     input: |
@@ -933,7 +973,7 @@
         -   exitcode
         -   stderr
 
--   name: FOR NO LIST 
+-   name: FOR NO LIST
     input: |
         for i; do
         echo $i
@@ -943,7 +983,7 @@
         -   exitcode
         -   stderr
 
--   name: FOR NO LIST MISSING DO 
+-   name: FOR NO LIST MISSING DO
     input: |
         for i;
         echo $i
@@ -961,15 +1001,6 @@
         -   stdout
         -   exitcode
         -   stderr
-
--   name: SIMPLE INVALID EXPORT
-    input: |
-        export 1_a=42
-        echo "$a"
-    checks:
-        -   stdout
-        -   exitcode
-        -   has_stderr
 
 -   name: MULTIPLE SEMICOLON EXPORT
     input: |
@@ -1012,30 +1043,6 @@
         -   stdout
         -   exitcode
         -   stderr
-
--   name: BAD EXPORT INVALID NAME
-    input: |
-        export 4p
-    checks:
-        -   stdout
-        -   exitcode
-        -   has_stderr
-
--   name: BAD EXPORT INVALID SPACE 1
-    input: |
-        export a= 78
-    checks:
-        -   stdout
-        -   exitcode
-        -   has_stderr
-
--   name: BAD EXPORT INVALID SPACE 2
-    input: |
-        export a =8
-    checks:
-        -   stdout
-        -   exitcode
-        -   has_stderr
 
 -   name: DOT SCL
     input: |
@@ -2331,6 +2338,97 @@
         -   exitcode
         -   stderr
 
+-   name: ARTHMETIC EXPRESSION &
+    input: |
+        x=100
+        echo $(($x&4))
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ARTHMETIC EXPRESSION |
+    input: |
+        x=100
+        echo $(($x|41))
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ARTHMETIC EXPRESSION ||
+    input: |
+        x=100
+        echo $(($x||41))
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ARTHMETIC EXPRESSION &&
+    input: |
+        x=100
+        echo $(($x&&41))
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ARTHMETIC EXPRESSION ^
+    input: |
+        x=10
+        echo $(($x^4))
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ARTHMETIC EXPRESSION ~
+    input: |
+        x=10
+        echo $((~$x))
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ARTHMETIC EXPRESSION !
+    input: |
+        x=10
+        echo $((!$x))
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ARTHMETIC INVALID 1
+    input: |
+        echo $((3+9-9*3+/5))
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: ARTHMETIC INVALID 2
+    input: |
+        echo $(((((((((((((((((3+9-9*3+(5)))
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: FUNCTION DOUBLE CALLS
+    input: |
+        foo()
+        {
+            echo foo
+        }
+        foo
+        foo
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
 -   name: ECHO $@
     input: |
         echo $@
