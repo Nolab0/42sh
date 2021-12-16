@@ -2429,9 +2429,20 @@
         -   stdout
         -   exitcode
         -   stderr
+
 -   name: ECHO $@
     input: |
         echo $@
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ECHO VAR BRACKETS OUT 
+    input: |
+        a=tot
+        echo aavv{$a}vewv
+        echo aavv{$a{vewv
     checks:
         -   stdout
         -   exitcode

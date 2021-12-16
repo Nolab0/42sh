@@ -187,7 +187,8 @@ char *expand_vars(char *str, char *var, char *var_rep)
             status = i;
         }
         else if (((is_var_sep(str[i]) && !(str[i] == '*' && str[i - 1] == '$'))
-                  || (brackets == 1 && str[i] == '}'))
+                  || (((str[i] == '}' || str[i] == '{') && brackets == 0)
+                      || (brackets == 1 && str[i] == '}')))
                  && status != -1)
         {
             if (str[i] == '}' && brackets == 1)

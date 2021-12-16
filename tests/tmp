@@ -1,1 +1,2 @@
-echo $@
+a=tot
+echo aavv${a}vewv
