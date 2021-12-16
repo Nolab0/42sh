@@ -503,7 +503,14 @@ static enum parser_state parse_rule_for(struct parser *parser, struct ast **ast)
         return PARSER_PANIC;
     }
     (*ast) = for_node;
-    return parse_do_group(parser, &((*ast)->left));
+
+    enum parser_state state = parse_do_group(parser, &((*ast)->left));
+    if (state != PARSER_OK)
+    {
+        ast_free(*ast);
+        return state;
+    }
+    return PARSER_OK;
 }
 
 static enum parser_state parse_rule_while(struct parser *parser,

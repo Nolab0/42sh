@@ -426,6 +426,11 @@ int ast_eval(struct ast *ast, int *return_code)
             s = substitute_cmds(s);
             if (s == NULL)
                 return 2;
+            if (strlen(s) == 0)
+            {
+                free(s);
+                break;
+            }
             if (s[0] != '\"')
             {
                 char **args = zalloc(sizeof(char *) * strlen(s));
