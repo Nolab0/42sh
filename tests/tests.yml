@@ -2331,4 +2331,10 @@
         -   exitcode
         -   stderr
 
-
+-   name: ECHO $@
+    input: |
+        echo $@
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
