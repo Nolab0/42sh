@@ -140,7 +140,7 @@ static struct cstream *parse_args(int *argc, char **argv[], struct opts **opts)
  * \return An error code
  */
 enum error read_print_loop(struct cstream *cs, struct vec *line,
-        struct parser *parser, struct opts *opts)
+                           struct parser *parser, struct opts *opts)
 {
     enum error err;
     struct vec *final = NULL;
@@ -229,7 +229,6 @@ int main(int argc, char *argv[])
 {
     global = zalloc(sizeof(struct global));
     global->current_mode = zalloc(sizeof(struct mode));
-
 
     int rc = 0;
 

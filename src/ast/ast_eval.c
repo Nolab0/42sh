@@ -472,7 +472,7 @@ int ast_eval(struct ast *ast, int *return_code)
             total[i] = NULL;
         }
         if (global->current_mode->mode == BREAK
-                || global->current_mode->mode == CONTINUE)
+            || global->current_mode->mode == CONTINUE)
             global->current_mode->nb--;
         if (global->current_mode->nb <= 0)
             global->current_mode->mode = NORMAL;

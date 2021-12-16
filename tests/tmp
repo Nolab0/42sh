@@ -1,3 +1,2 @@
-for i;
-echo $i
-done
+echo $#
+echo $1

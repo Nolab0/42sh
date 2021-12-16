@@ -176,7 +176,8 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
     int arithmetic = 0;
     int backquotes = 0;
     while (lexer->pos < *len
-           && (backquotes || arithmetic || !is_separator(lexer->input[lexer->pos])
+           && (backquotes || arithmetic
+               || !is_separator(lexer->input[lexer->pos])
                || (lexer->input[lexer->pos] == '|' && lexer->pos != 0
                    && lexer->input[lexer->pos - 1] == '>'))
            && lexer->pos < redir_index)
@@ -259,8 +260,9 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
 struct token *get_token(struct lexer *lexer)
 {
     size_t input_len = strlen(lexer->input);
-    while (lexer->pos < input_len && (lexer->input[lexer->pos] == ' ' ||
-            lexer->input[lexer->pos] == '\t'))
+    while (lexer->pos < input_len
+           && (lexer->input[lexer->pos] == ' '
+               || lexer->input[lexer->pos] == '\t'))
         lexer->pos++;
     if (lexer->pos >= input_len)
         return token_create(TOKEN_EOF);
