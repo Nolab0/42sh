@@ -174,13 +174,30 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
 
     static int sub = 0;
     int arithmetic = 0;
+    int backquotes = 0;
     while (lexer->pos < *len
-           && (!is_separator(lexer->input[lexer->pos])
+           && (backquotes || arithmetic || !is_separator(lexer->input[lexer->pos])
                || (lexer->input[lexer->pos] == '|' && lexer->pos != 0
                    && lexer->input[lexer->pos - 1] == '>'))
            && lexer->pos < redir_index)
     {
         char current = lexer->input[lexer->pos];
+
+        if ((current == '`')
+            && (lexer->pos == 0
+                || (lexer->input[lexer->pos - 1] != '\\'
+                    || not_as_escape(lexer->input, lexer->pos - 1))))
+        {
+            backquotes = !backquotes;
+            vec_push(vec, lexer->input[lexer->pos++]);
+            continue;
+        }
+        if (backquotes)
+        {
+            vec_push(vec, lexer->input[lexer->pos++]);
+            continue;
+        }
+
         if (current == ')' || current == '(')
         {
             if (current == '(')
@@ -192,6 +209,12 @@ static int get_substr(struct lexer *lexer, struct vec *vec, size_t *len)
             else if (!arithmetic)
                 break;
         }
+        if (arithmetic)
+        {
+            vec_push(vec, lexer->input[lexer->pos++]);
+            continue;
+        }
+
         if ((current == '\'' || current == '\"')
             && (lexer->pos == 0
                 || (lexer->input[lexer->pos - 1] != '\\'

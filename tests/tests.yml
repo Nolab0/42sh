@@ -361,6 +361,26 @@
     -   stderr
     -   exitcode
 
+-   name: FOR SEQ
+    input: |
+        for i in `seq 1 10`; do
+        echo $i
+        done
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
+-   name: FOR SEQ 2
+    input: |
+        for i in $(seq 1 10); do
+        echo $i
+        done
+    checks:
+    -   stdout
+    -   stderr
+    -   exitcode
+
 -   name: SIMPLE LEFT REDIR
     input: |
         echo Hello > file

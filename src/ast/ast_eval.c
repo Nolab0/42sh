@@ -339,6 +339,9 @@ int ast_eval(struct ast *ast, int *return_code)
         tmp = substitute_cmds(tmp);
         if (tmp == NULL)
             return 2;
+        tmp = arithmetic_exp(tmp);
+        if (tmp == NULL)
+            return 2;
         tmp = remove_quotes(tmp);
         ast->val->data = tmp;
         ast->val->size = strlen(tmp);
@@ -426,6 +429,9 @@ int ast_eval(struct ast *ast, int *return_code)
             s = substitute_cmds(s);
             if (s == NULL)
                 return 2;
+            s = arithmetic_exp(s);
+            if (s == NULL)
+                return 2;
             if (s[0] != '\"')
             {
                 char **args = zalloc(sizeof(char *) * strlen(s));
@@ -461,7 +467,7 @@ int ast_eval(struct ast *ast, int *return_code)
             total[i] = NULL;
         }
         if (global->current_mode->mode == BREAK
-            || global->current_mode->mode == CONTINUE)
+                || global->current_mode->mode == CONTINUE)
             global->current_mode->nb--;
         if (global->current_mode->nb <= 0)
             global->current_mode->mode = NORMAL;
@@ -525,6 +531,9 @@ int ast_eval(struct ast *ast, int *return_code)
         tmp = substitute_cmds(tmp);
         if (tmp == NULL)
             return 2;
+        tmp = arithmetic_exp(tmp);
+        if (tmp == NULL)
+            return 2;
         tmp = remove_quotes(tmp);
         ast->word = tmp;
         struct cas *cas = ast->cas;
@@ -532,6 +541,9 @@ int ast_eval(struct ast *ast, int *return_code)
         {
             tmp = expand_vars(cas->pattern, NULL, NULL);
             tmp = substitute_cmds(tmp);
+            if (tmp == NULL)
+                return 2;
+            tmp = arithmetic_exp(tmp);
             if (tmp == NULL)
                 return 2;
             tmp = remove_quotes(tmp);
