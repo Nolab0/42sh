@@ -2254,4 +2254,33 @@
         -   exitcode
         -   stderr
 
+-   name: ARTHMETIC EXPRESSION *
+    input: |
+        x=100
+        x=$(($x*100))
+        echo $x
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ARTHMETIC EXPRESSION /
+    input: |
+        x=102
+        x=$(($x/7))
+        echo $x
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: ARTHMETIC EXPRESSION WITH DIRECT ECHO
+    input: |
+        x=102
+        echo $(($x*100))
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
 
