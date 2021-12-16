@@ -29,9 +29,10 @@ static void setinitvars(int argc, char **argv)
     value = zalloc(sizeof(char) * (len * 2 + 3));
     if (argc > 1)
     {
-        for (int i = 1; i < argc - 1; i++)
+        for (int i = 0; i < argc - 1; i++)
         {
-            strcat(value, " ");
+            if (i != 0)
+                strcat(value, " ");
             strcat(value, argv[i + 1]);
         }
     }
