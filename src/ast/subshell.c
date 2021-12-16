@@ -32,7 +32,6 @@ static int is_valid(char *str)
 
 int subshell(char *args)
 {
-    // printf("ARGS: %s\n", args);
     if (!is_valid(args))
     {
         fprintf(stderr, "42sh: Syntax error: end of file unexpected\n");
@@ -234,10 +233,20 @@ char *substitute_cmds(char *s)
 
 char *arithmetic_exp(char *cmd)
 {
-    int equ_index = 0;
-    while (cmd[equ_index] != '\0' && cmd[equ_index] != '=')
+    size_t equ_index = 0;
+    while (cmd[equ_index] != '\0' && (cmd[equ_index] != '='))
         ++equ_index;
     int i = equ_index + 1;
+
+    if (equ_index == strlen(cmd))
+    {
+        int doll_idx = 0;
+        while (cmd[doll_idx] != '\0' && cmd[doll_idx] != '$')
+            doll_idx++;
+        i = doll_idx;
+        equ_index = doll_idx;
+    }
+
     if (cmd[equ_index] == '\0' || cmd[i] == '\0' || cmd[i++] != '$')
         return NULL;
     if (cmd[i] == '\0' || cmd[i] != '(')
@@ -248,7 +257,11 @@ char *arithmetic_exp(char *cmd)
     if (res == INT_MIN)
         return NULL;
     char *to_sprintf = zalloc(sizeof(char) * (equ_index + 21));
-    char *before_eq = strndup(cmd, equ_index + 1);
+    char *before_eq = NULL;
+    if (cmd[equ_index] == '=')
+        before_eq = strndup(cmd, equ_index + 1);
+    else
+        before_eq = strndup(cmd, equ_index);
     sprintf(to_sprintf, "%s%d", before_eq, res);
     free(cmd);
     free(before_eq);
