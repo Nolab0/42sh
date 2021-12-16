@@ -104,7 +104,7 @@ int redir_ampersand_right(struct ast *left, int fd, char *right)
     int save_fd = dup(fd);
     int file_fd = open(right, O_CREAT | O_RDWR);
 
-    if (file_fd == -1) // check the output strtol
+    if (file_fd == -1)
         return -1;
     if (dup2(fd, file_fd) == -1)
         return -1;

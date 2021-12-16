@@ -42,6 +42,14 @@
     -   stderr
     -   exitcode
 
+-   name: REDIR AMPERSAND LEFT INVALID
+    input: |
+        echo test >&4
+    checks:
+        -   stdout
+        -   has_stderr
+        -   exitcode
+
 -   name: REDIR DEV NULL APPENDED
     input: |
         echo test2>/dev/null
@@ -1782,7 +1790,7 @@
     checks:
         -   stdout
         -   exitcode
-        -   has_stderr
+        -   stderr
 
 -   name: CMD SUB AND VAR 1
     input: |

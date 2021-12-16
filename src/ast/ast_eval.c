@@ -302,11 +302,10 @@ int ast_eval(struct ast *ast, int *return_code)
         char *cmd2 = strdup(ast->val->data);
 
         cmd2 = expand_vars(cmd2, ast->var, ast->replace);
-        char *expr = arithmetic_exp(cmd2);
-        if (expr != NULL)
-            cmd2 = expr;
-        else
-            cmd2 = substitute_cmds(cmd2);
+        cmd2 = substitute_cmds(cmd2);
+        if (cmd2 == NULL)
+            return 2;
+        cmd2 = arithmetic_exp(cmd2);
         if (cmd2 == NULL)
             return 2;
         cmd2 = remove_quotes(cmd2);

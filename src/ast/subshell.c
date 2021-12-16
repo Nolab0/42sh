@@ -177,8 +177,8 @@ char *substitute_cmds(char *s)
             char *next = strchr(str + i + 1, '`');
             if (next == NULL)
             {
+                fprintf(stderr, "42sh: Syntax error: ` unmatched");
                 free(str);
-                fprintf(stderr, "Synthax error: '`' unmatched\n");
                 return NULL;
             }
 
@@ -216,18 +216,13 @@ char *substitute_cmds(char *s)
         if (str[i] == '(')
             opening++;
 
-        if (str[i] == '(' && str[i - 1] == '$' && not_as_escape(str, i - 2))
+        if (str[i] == '(' && str[i - 1] == '$' && not_as_escape(str, i - 2)
+            && str[i + 1] != '(')
         {
-            if (str[i + 1] == '(')
-            {
-                free(str);
-                fprintf(stderr, "arithmetic expression: unrecognized\n");
-                return NULL;
-            }
             if (closing == 0)
             {
+                fprintf(stderr, "42sh: Syntax error: ( unmatched");
                 free(str);
-                fprintf(stderr, "Synthax error: '(' unmatched\n");
                 return NULL;
             }
             char *next = str + i;
@@ -236,8 +231,8 @@ char *substitute_cmds(char *s)
                 next = strchr(next + 1, ')');
                 if (next == NULL)
                 {
+                    fprintf(stderr, "42sh: Syntax error: ( unmatched");
                     free(str);
-                    fprintf(stderr, "Synthax error: '(' unmatched\n");
                     return NULL;
                 }
             }
@@ -272,14 +267,18 @@ char *arithmetic_exp(char *cmd)
     }
 
     if (cmd[equ_index] == '\0' || cmd[i] == '\0' || cmd[i++] != '$')
-        return NULL;
+        return cmd;
     if (cmd[i] == '\0' || cmd[i] != '(')
-        return NULL;
+        return cmd;
     if (cmd[i + 1] == '\0' || cmd[i + 1] != '(')
-        return NULL;
+        return cmd;
     int res = eval_exp(cmd + i);
     if (res == INT_MIN)
+    {
+        fprintf(stderr, "42sh: Invalid arithmetic expression\n");
+        free(cmd);
         return NULL;
+    }
     char *to_sprintf = zalloc(sizeof(char) * (equ_index + 21));
     char *before_eq = NULL;
     if (cmd[equ_index] == '=')
