@@ -1752,6 +1752,38 @@
         -   exitcode
         -   stderr
 
+-   name: CMD SUB AND SUBSHELL 1 
+    input: |
+        echo $( (echo oui) )
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB AND SUBSHELL 2 
+    input: |
+        echo `(echo oui)`
+    checks:
+        -   stdout
+        -   exitcode
+        -   stderr
+
+-   name: CMD SUB AND SUBSHELL WRONG 
+    input: |
+        echo $((echo oui))
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
+-   name: CMD SUB AND SUBSHELL AND ARITHMETIC 
+    input: |
+        echo $((`echo 1` + 1))
+    checks:
+        -   stdout
+        -   exitcode
+        -   has_stderr
+
 -   name: CMD SUB AND VAR 1
     input: |
         a=b

@@ -32,7 +32,6 @@ static int is_valid(char *str)
 
 int subshell(char *args)
 {
-    // printf("ARGS: %s\n", args);
     if (!is_valid(args))
     {
         fprintf(stderr, "42sh: Syntax error: end of file unexpected\n");
@@ -194,6 +193,8 @@ char *substitute_cmds(char *s)
     }
     i = strlen(str) - 1;
     context = NONE;
+    int closing = 0;
+    int opening = 0;
     while (i > 0)
     {
         if (str[i] == '\'')
@@ -210,22 +211,44 @@ char *substitute_cmds(char *s)
             else if (context == DOUBLE)
                 context = NONE;
         }
+        if (str[i] == ')')
+            closing++;
+        if (str[i] == '(')
+            opening++;
 
         if (str[i] == '(' && str[i - 1] == '$' && not_as_escape(str, i - 2))
         {
-            char *next = strchr(str + i, ')');
-            if (next == NULL)
+            if (str[i + 1] == '(')
+            {
+                free(str);
+                fprintf(stderr, "arithmetic expression: unrecognized\n");
+                return NULL;
+            }
+            if (closing == 0)
             {
                 free(str);
                 fprintf(stderr, "Synthax error: '(' unmatched\n");
                 return NULL;
+            }
+            char *next = str + i;
+            for (int j = 0; j < closing - (closing - opening); j++)
+            {
+                next = strchr(next + 1, ')');
+                if (next == NULL)
+                {
+                    free(str);
+                    fprintf(stderr, "Synthax error: '(' unmatched\n");
+                    return NULL;
+                }
             }
             char *tmp = cmd_sub(str, i, next - str, 1);
             if (tmp == NULL)
                 return NULL;
             free(str);
             str = tmp;
-            i = strlen(str) - 1;
+            closing = 0;
+            opening = 0;
+            i = strlen(str);
         }
         i--;
     }

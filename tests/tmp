@@ -1,4 +1,1 @@
-<<<<<<< Updated upstream
-=======
-hello
->>>>>>> Stashed changes
+echo $((1 + 1))
